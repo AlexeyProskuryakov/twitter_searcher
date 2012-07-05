@@ -87,7 +87,7 @@ class engine:
         user_obj = self.create_user(start_user)
         if not user_obj:
             return
-        #prepearing list of temp users
+            #prepearing list of temp users
         rel_users = []
         #for followers or friends...
         for user_related in user_obj[by_what]:
@@ -106,3 +106,4 @@ class engine:
 
 engine = engine(inited=True)
 engine.scrap(engine.api.me())
+#todo create normal db_handler with workings feedback  
