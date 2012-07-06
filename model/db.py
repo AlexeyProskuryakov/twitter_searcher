@@ -1,29 +1,34 @@
 from pymongo import  *
+from pymongo.database import Database
 
 __author__ = '4ikist'
 
 port = 27017
-host = 'localhost'
+host = '178.49.120.77'
 db_name = 'ttr'
-coll_name = 'users'
-
+users_coll_name = 'users'
+relations_coll_name = 'relations'
+entities_coll_name = 'entities'
 class db_handler():
     def __init__(self):
-        conn = Connection(host, port)
-        db = conn[db_name]
-        self.users = db[coll_name]
+        self.conn = Connection(host, port)
+        self.db = Database(self.conn, db_named)
+        self.users = self.db[users_coll_name]
+        self.entities = self.db[entities_coll_name]
+        self.relations = self.db[relations_coll_name]
 
     def save_user(self, ser_user):
         print 'saving user: ', ser_user
         self.users.save(ser_user)
 
-    def form_nodes(self, f_name, parameter_f=lambda x: len(x['tweets_count'])):
+    def form_nodes(self, f_name, parameter_f=lambda x: x['tweets_count']):
         file = open(f_name, 'w+')
-        file.write("Label,Id;Weight;\n")
+        file.write("Label;Id;Weight;\n")
         f_users = self.users.find()
         for user in f_users:
-            file.write(user['name'] + ";" + user['name'] + ";" + parameter_f(user) + "\n")
+            file.write(user['name'] + ";" + user['name'] + ";" + str(parameter_f(user)) + "\n")
         file.close()
+        print 'nodes formed'
 
     def get_out_from(self, user):
         return user['friends']
@@ -43,5 +48,25 @@ class db_handler():
                 term = (in_, user['name'])
                 relations.add(term)
         for relation in relations:
-            file.write(relation[0] + ";" + relation[1] + ";;")
+            file.write(relation[0] + ";" + relation[1] + ";;\n")
+        print 'edges formed'
         file.close()
+
+    def form_entities_edges(self, f_name):
+        entities = self.entities.find()
+        file = open(f_name, 'w+')
+        file.write("Source;Target;Id;\n")
+
+    def get_not_used(self, is_init=False):
+        if is_init:
+            self.db.eval("result = db.users.aggregate(" +
+                         "{$match:{followers:{$exists:true}, friends:{$exists:true} }}," +
+                         "{$project:{name:1,followers:1,friends:1}}," +
+                         "{$unwind:'$followers'}," +
+                         "{$unwind:'$friends'})['result'];"
+            )
+
+if __name__ == '__main__':
+    db_handler = db_handler()
+    db_handler.form_edges("d:/temp/edges.csv")
+    db_handler.form_nodes("d:/temp/nodes.csv")

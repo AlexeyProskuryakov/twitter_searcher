@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import webbrowser
-import  tweepy
+import tweepy
 from model.db import db_handler
 
 from model.functions import get_statistic_of
@@ -87,7 +87,7 @@ class engine:
         user_obj = self.create_user(start_user)
         if not user_obj:
             return
-        #prepearing list of temp users
+            #prepearing list of temp users
         rel_users = []
         #for followers or friends...
         for user_related in user_obj[by_what]:
@@ -96,7 +96,8 @@ class engine:
             rel_user_obj = self.create_user(user_related)
             if not rel_user_obj:
                 continue
-            rel_users.extend(rel_user_obj[by_what])
+            #getting from flushed followers or another
+            rel_users = set((rel_user_obj[by_what]))
             self.db.save_user(rel_user_obj['result'].serialise())
         for user in rel_users:
             print user.screen_name
