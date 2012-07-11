@@ -35,7 +35,6 @@ def get_freq(data, element):
 
 def get_statistic_of(data):
     all_data = ' '.join(data)
-
     all_data = all_data.split()
 
     counts = {}#will be like this: {url_data: <all_urls_in_input_data>, url:len(url_data)}

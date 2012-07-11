@@ -1,11 +1,13 @@
 init = function() {
     db.createCollection('users');
+    db.users.ensureIndex({'name':1}, {unique:true});
     db.createCollection('entities');
     db.createCollection('relations');
-    db.createCollection('not_used');
+    db.createCollection('not_searched');
 };
 
 entities = function(followers_, _followers) {
+    print('create entities');
     db.entites.drop();
     db.users.aggregate(
         {$match:{tweets_stat:{$exists:true},followers_count:{$gt:followers_,$lt:_followers}}},
@@ -32,7 +34,9 @@ entities = function(followers_, _followers) {
 };
 
 relations = function (followers_, _followers, friends_, _friends) {
+    print('create relations on users');
     db.relations.drop();
+    db.relations.ensureIndex({'from':1,'to':1}, {'unique':true});
     db.users.aggregate(
         {$project:{name:1,followers:1,followers_count:1}},
         {$match:
@@ -63,16 +67,24 @@ relations = function (followers_, _followers, friends_, _friends) {
         function(x) {
             db.relations.save(x)
         });
-
+};
+create_not_searched = function() {
+    print('create not searched');
+    db.not_searched.drop();
+    db.not_searched.ensureIndex({'name':1}, {'unique':true});
     db.users.find().forEach(function(x) {
         var name = x['name'];
-        if (db.relations.findOne({'from':name}) && !db.relations.findOne({to:name})) {
-            db.relations.insert({'to':name,'from':null});
+        var friends = x['friends'];
+        for (var friend in friends) {
+            if (!db.users.findOne({name:friends[friend]})) {
+                print('find friend without our serialize ' + friends[friend]);
+                db.not_searched.insert({'name':friend});
+                print(friends);
+            }
         }
     });
-    db.relations.find().forEach(function(x) {
-        db.not_searched.insert({'name':x['to']});
-    });
 };
-relations(0, 100, 0, 100);
-entities(0, 100);
+//init();
+//relations(0, 100, 0, 100);
+//entities(0, 100);
+create_not_searched();

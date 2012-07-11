@@ -9,13 +9,19 @@ db_name = 'ttr'
 users_coll_name = 'users'
 relations_coll_name = 'relations'
 entities_coll_name = 'entities'
+not_searched = 'not_searched'
 class db_handler():
     def __init__(self):
         self.conn = Connection(host, port)
         self.db = Database(self.conn, db_named)
         self.users = self.db[users_coll_name]
+
         self.entities = self.db[entities_coll_name]
         self.relations = self.db[relations_coll_name]
+        self.not_searched = self.db[not_searched]
+
+    def get_not_searched(self):
+        return self.not_searched.find_one()
 
     def save_user(self, ser_user):
         print 'saving user: ', ser_user
@@ -41,10 +47,10 @@ class db_handler():
         file.write("Source;Target;Id;\n")
         relations = set()
         for user in self.users.find():
-            for out_ in self.get_out_from(user):
+            for out_ in user['friends']:
                 term = (user['name'], out_)
                 relations.add(term)
-            for in_ in self.get_in_to(user):
+            for in_ in user['followers']:
                 term = (in_, user['name'])
                 relations.add(term)
         for relation in relations:
@@ -52,19 +58,12 @@ class db_handler():
         print 'edges formed'
         file.close()
 
+    #todo
     def form_entities_edges(self, f_name):
         entities = self.entities.find()
         file = open(f_name, 'w+')
         file.write("Source;Target;Id;\n")
 
-    def get_not_used(self, is_init=False):
-        if is_init:
-            self.db.eval("result = db.users.aggregate(" +
-                         "{$match:{followers:{$exists:true}, friends:{$exists:true} }}," +
-                         "{$project:{name:1,followers:1,friends:1}}," +
-                         "{$unwind:'$followers'}," +
-                         "{$unwind:'$friends'})['result'];"
-            )
 
 if __name__ == '__main__':
     db_handler = db_handler()
