@@ -1,6 +1,10 @@
 #-*- coding: utf-8 -*-
 import webbrowser
+<<<<<<< HEAD
 import tweepy
+=======
+import  tweepy
+>>>>>>> 81b58d9bc1cf3b543044289988a56ed0e819ee41
 from model.db import db_handler
 
 from model.functions import get_statistic_of
@@ -96,8 +100,12 @@ class engine:
             rel_user_obj = self.create_user(user_related)
             if not rel_user_obj:
                 continue
+<<<<<<< HEAD
             #getting from flushed followers or another
             rel_users = set((rel_user_obj[by_what]))
+=======
+            rel_users.extend(rel_user_obj[by_what])
+>>>>>>> 81b58d9bc1cf3b543044289988a56ed0e819ee41
             self.db.save_user(rel_user_obj['result'].serialise())
         for user in rel_users:
             print user.screen_name
@@ -107,3 +115,7 @@ class engine:
 
 engine = engine(inited=True)
 engine.scrap(engine.api.me())
+<<<<<<< HEAD
+=======
+#todo create normal db_handler with workings feedback  
+>>>>>>> 81b58d9bc1cf3b543044289988a56ed0e819ee41
