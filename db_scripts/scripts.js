@@ -1,3 +1,10 @@
+/***
+ * some functions for initializing some data in data base.
+ * functions:
+ * init - initializing all db schema
+ * entities -
+ */
+//initialization of all schema
 init = function() {
     db.createCollection('users');
     db.users.ensureIndex({'name':1}, {unique:true});
@@ -5,7 +12,8 @@ init = function() {
     db.createCollection('relations');
     db.createCollection('not_searched');
 };
-
+//initializing entities
+//todo what is entites?
 entities = function(followers_, _followers) {
     print('create entities');
     db.entites.drop();
@@ -21,6 +29,7 @@ entities = function(followers_, _followers) {
             freq_all:'$tweets_stat.freq_all',
             tweets_stat:1}},
         {$match:{entity:{$exists:true}}},
+        //after all:
         {$group:{
             _id:"$entity",
             followers_count:{$sum:'$followers_count'},
@@ -32,7 +41,7 @@ entities = function(followers_, _followers) {
         db.entities.save(x);
     });
 };
-
+//creating relation schema of users
 relations = function (followers_, _followers, friends_, _friends) {
     print('create relations on users');
     db.relations.drop();
@@ -68,6 +77,7 @@ relations = function (followers_, _followers, friends_, _friends) {
             db.relations.save(x)
         });
 };
+//create collection for users which never have scrapper in guests
 create_not_searched = function() {
     print('create not searched');
     db.not_searched.drop();
@@ -84,6 +94,7 @@ create_not_searched = function() {
         }
     });
 };
+
 //init();
 //relations(0, 100, 0, 100);
 //entities(0, 100);
