@@ -34,6 +34,11 @@ def get_freq(data, element):
 
 
 def get_statistic_of(data):
+    """
+    input some [] with strings
+    which return [] of {freq_word :<frequency_of_this_word_in_all_words_which_have_this_type>, type:<type_name>,
+                        freq_all: <frequency_of_this_word_in_words>, entity:<word>}
+    """
     all_data = ' '.join(data)
     all_data = all_data.split()
 
@@ -49,13 +54,12 @@ def get_statistic_of(data):
         [(elem, float(all_data.count(elem)) / count_all) for elem in all_data])
 
     data_set_model = [get_freq(counts, element[0]) for element in data_set]
-
     data_set = map(lambda x:{'entity': x[0], 'freq_all': x[1]}, data_set)
-
     return [dict(data_set[i].items() + data_set_model[i].items()) for i in range(len(data_set))]
 
 
-#result = get_statistic_of(['Just posted a photo http://instagr.am/p/MlV8CDDw3M/',
-#                           '@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод.'])
-#
-#print result
+result = get_statistic_of(['Just posted a photo http://instagr.am/p/MlV8CDDw3M/',
+                           '@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод.'])
+
+for e in result:
+    print e

@@ -6,6 +6,7 @@ from model.db import db_handler
 
 from model.functions import get_statistic_of
 from model.tw_model import user
+from model.diff_machine import difference
 
 __author__ = 'Alesha'
 
@@ -16,6 +17,14 @@ access_token = "612776846-ZC55TSeiCvufmggMVz9ZKpbQFXodTXuA9JSq9Vee"
 access_token_secret = "kxm2cuq9xNaSUBKPxIlUNJI3wKJ57VHmT0h1w1PuLWE"
 
 max_time_line = 20
+
+#todo   you must know about users: if two requests will be evaluate in not far difference time, what changed?
+#todo   may be some followers will add or friends or another difference will be
+#todo   get counts of followers\friends\lists
+#todo   get counts of twitter accounts in social nets.
+#todo   what about times in your program?
+#todo   create heirarhy of this class engine and web driver engine
+
 
 def init_account():
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -37,29 +46,27 @@ class engine:
         else:
             self.auth.set_access_token(access_token, access_token_secret)
 
-        self.__init_api()
+        self.api = tweepy.API(self.auth)
         self.db = db_handler
 
-    def __init_api(self):
-        self.api = tweepy.API(self.auth)
-
-    #        self.folowers = [{'name': user.screen_name, 'obj': user} for user in tweepy.Cursor(self.api.followers).items()]
-    #        self.friends = [{'name': user.screen_name, 'obj': user} for user in tweepy.Cursor(self.api.friends).items()]
-    #        self.timeline = [{'text': status.text, 'obj': status} for status in tweepy.Cursor(self.api.home_timeline).items(
-    #            max_time_line)]
-
     def flush(self, data, name=lambda x:x.screen_name):
+        """
+        returning list of parameters which retrieving used lambda name
+        """
         return [name(element) for element in data]
 
     def get_user_by_name(self, user_name):
+        """
+        returning user in tweepy model with user_name name
+        """
         return self.api.get_user(user_name)
 
-    def create_user(self, m_user):
+    def get_user_info(self, m_user):
         """
         input is user tweepy object
-        return result: user obj in my model, followers - list of tweepy model users, friends - also
+        evaluating statistic of tweets timeline (perls, text, hashtags, etc)
+        return result: user obj in my model, wollowers: list of tweepy model users, friends: like followers
         """
-
         result = user(m_user.screen_name)
         try:
             followers = m_user.followers()
@@ -68,8 +75,11 @@ class engine:
             result.followers_count = len(followers)
             result.friends_count = len(friends)
             result.list_count = len(lists)
-            timeline = [element.text for element in m_user.timeline()]
-            result.tweets_stat = get_statistic_of(timeline)
+            #todo it must be in some another method and may be class, not?
+            timeline = [element.text for element in m_user.timeline()] #retieving user perls
+            result.tweets_stat = get_statistic_of(timeline) #creating statistic of user perls
+            result.timeline = timeline
+
             result.tweets_count = len(timeline)
             result.friends = self.flush(friends)
             result.followers = self.flush(followers)
@@ -79,22 +89,32 @@ class engine:
             print e
         return None
 
+    def get_user_diff(self, user):
+        tw_user = self.get_user_by_name(user.name)
+        my_user = self.db.get_user_by_name()
+        diff = difference(my_user, tw_user)
+        return diff
+        #here difference after tests....
+
     def scrap(self, start_user, by_what='followers'):
         """
         input: start_user - is tweepy user obj
         by_what - is parameter of create_user func.
         """
+        if not start_user:
+            start_user = self.db.get_not_searched_name()
+            start_user = self.get_user_by_name(start_user)
 
-        user_obj = self.create_user(start_user)
+        user_obj = self.get_user_info(start_user)
         if not user_obj:
             return
-            #prepearing list of temp users
+
         rel_users = []
         #for followers or friends...
         for user_related in user_obj[by_what]:
             print 'related', user_related.screen_name
-            #flushing user in my model
-            rel_user_obj = self.create_user(user_related)
+            #forming user in my model
+            rel_user_obj = self.get_user_info(user_related)
             if not rel_user_obj:
                 continue
             self.db.save_user(rel_user_obj['result'].serialise())
