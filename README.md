@@ -1,4 +1,5 @@
 Interested pathes
+
 0) \logs - path for logs
 
 1) \db_scripts - path, where will find scripts.js file. Here some functions for mutating db schema (also any function
