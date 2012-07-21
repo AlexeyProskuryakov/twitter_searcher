@@ -1,16 +1,13 @@
 import re
 import os
 
-from pip.commands.install import InstallCommand
-InstallCommand
-
 
 __author__ = 'Alesha'
 path_name = os.path.join(os.path.dirname(__file__)).replace('\\', '/')
 
 
-def foo():
-    f = open(path_name + '/serch_engine/commands.py'.replace('\\', '/'))
+def create_commands():
+    f = open(path_name + '/search_engine/commands.py'.replace('\\', '/'))
     lines = f.readlines()
     out_lines = []
     for line in lines:
@@ -36,4 +33,4 @@ def foo():
     g.writelines(out_lines)
     g.close()
 if __name__ == '__main__':
-    foo()
+    create_commands()

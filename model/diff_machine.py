@@ -67,8 +67,8 @@ class difference(user):
                 if type(o_value) == type(t_value) == list_type == type(value):
                     diff_element = self.diff_arrays(o_dict[key], t_dict[key])
                     #for date
-                elif 'date_ping' in str(key):
-                    diff_element = difference_element("pdd", t_value - o_value)
+                elif 'date_touch' in str(key):
+                    diff_element = difference_element("touch_diff", t_value - o_value)
                 #for integers parameters
                 elif type(o_value) == type(t_value) == int_type:
                     diff_element = self.diff_int(o_value, t_value)

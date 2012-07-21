@@ -57,9 +57,9 @@ def get_statistic_of(data):
     data_set = map(lambda x:{'entity': x[0], 'freq_all': x[1]}, data_set)
     return [dict(data_set[i].items() + data_set_model[i].items()) for i in range(len(data_set))]
 
+if __name__ == '__main__':
+    result = get_statistic_of(['Just posted a photo http://instagr.am/p/MlV8CDDw3M/',
+                               '@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод.'])
 
-result = get_statistic_of(['Just posted a photo http://instagr.am/p/MlV8CDDw3M/',
-                           '@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод.'])
-
-for e in result:
-    print e
+    for e in result:
+        print e

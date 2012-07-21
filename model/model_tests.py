@@ -1,3 +1,4 @@
+import loggers
 from model import diff_machine
 from model.graph_manager import db_graph
 from model.db import db_handler
@@ -90,8 +91,12 @@ class test():
         db.save_user(self.user2.serialise())
         db.save_user(self.user3.serialise())
         db.save_diffs(self.diff1_2.serialise())
+    def test_log(self):
+        log = loggers.logger
+        log.info("test logging")
 
 if __name__ == '__main__':
     test = test()
-    test.test_model()
-    test.test_db()
+#    test.test_model()
+#    test.test_db()
+    test.test_log()
