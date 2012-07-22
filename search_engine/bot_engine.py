@@ -26,7 +26,8 @@ max_time_line = 20
 #todo   get counts of followers\friends\lists
 #todo   get counts of twitter accounts in social nets.
 #todo   what about times in your program?
-#todo   create heirarhy of this class engine and web driver engine, maybe use some SOA? searcher - filler|separator|manager - database
+#todo   create heirarhy of this class engine and web driver engine, maybe use some SOA?
+#todo   searcher - filler|separator|manager - database
 
 
 def init_account():
