@@ -1,5 +1,7 @@
+from datetime import datetime
 from model.exceptions import model_exception
 from model.tw_model import user
+from properties import props
 
 __author__ = 'Alesha'
 p_diff = '_diff'
@@ -38,10 +40,8 @@ class difference(user):
     def __init__(self, one, two):
         if type(one) != type(two) != type(super):
             raise model_exception('can not have difference with not user')
-        user.__init__(self, str(one.name) + " ---> " + str(two.name))
+        user.__init__(self, str(one.name))
         self.fill_difference(one, two)
-        self.one_name = one.name
-        self.two_name = two.name
 
     def get_state_by_field_name(self, name):
         return self.__dict__[name + p_diff][d_state]
@@ -59,25 +59,24 @@ class difference(user):
             key = self_element[0]
             value = self_element[1]
             if key in o_dict.keys() and key in t_dict.keys():
-                diff_element = None
                 o_value = o_dict[key]
                 t_value = t_dict[key]
-                #      print key, o_value, t_value
                 #if type of all attribute is array
                 if type(o_value) == type(t_value) == list_type == type(value):
                     diff_element = self.diff_arrays(o_dict[key], t_dict[key])
-                    #for date
-                elif 'date_touch' in str(key):
-                    diff_element = difference_element("touch_diff", t_value - o_value)
                 #for integers parameters
                 elif type(o_value) == type(t_value) == int_type:
                     diff_element = self.diff_int(o_value, t_value)
+                #for date
+                elif 'date_touch' in str(key):
+                    diff_element = difference_element("touch", datetime.now().strftime(props.time_format))
                 #for another parameters...
                 elif o_value != t_value:
                     diff_element = difference_element(s_changed, {'old': o_value, 'new': t_value})
+                elif o_value[-1]=='_':
+                    continue
                 else:
                     diff_element = difference_element(s_not_changed, None)
-                    #     print str(key) + p_diff, diff_element
                 self.__setattr__(str(key) + p_diff, diff_element)
 
     def diff_arrays(self, one_arr, two_arr):

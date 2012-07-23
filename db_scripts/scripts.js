@@ -13,7 +13,7 @@ init = function() {
     db.createCollection('not_searched');
 };
 //initializing entities
-//todo what is entites?
+//some statistic analyse of words with their followers and etc
 entities = function(followers_, _followers) {
     print('create entities');
     db.entites.drop();
@@ -32,16 +32,17 @@ entities = function(followers_, _followers) {
         //after all:
         {$group:{
             _id:"$entity",
-            followers_count:{$sum:'$followers_count'},
-            freq_all:{$sum:'$freq_all'},
-            type:{$addToSet:'$type'},
-            name:{$addToSet:'$name'}}
+            followers_count:{$sum:'$followers_count'}, //sum of followers counts in users,  which say this word
+            freq_all:{$sum:'$freq_all'}, //sum of frequencies in users which say this word
+            type:{$addToSet:'$type'}, //types... may be it will be hash tag and simple word? ha ha :)
+            name:{$addToSet:'$name'}} //names of people which say this word
         })['result'].
         forEach(function(x) {
         db.entities.save(x);
     });
 };
 //creating relation schema of users
+//todo may be add to relations some type ne?
 relations = function (followers_, _followers, friends_, _friends) {
     print('create relations on users');
     db.relations.drop();
@@ -78,6 +79,7 @@ relations = function (followers_, _followers, friends_, _friends) {
         });
 };
 //create collection for users which never have scrapper in guests
+//todo think! about
 create_not_searched = function() {
     print('create not searched');
     db.not_searched.drop();

@@ -8,6 +8,6 @@ port = 27017
 host = '127.0.0.1'
 db_name = 'ttr'
 
-
+time_format = '%Y.%m.%d_%H:%M'
 
 
