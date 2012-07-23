@@ -3,30 +3,36 @@ from properties import props
 
 __author__ = '4ikist'
 
+s_none = 'none'
+s_saved = 'saved'
+
+class m_user_status(object):
+    def __init__(self,status,last_diff = None):
+        self.status = status
+        self.last_diff = last_diff
 
 
-class user(object):
+
+class m_user(object):
 
     def __init__(self, name):
-        self.date_touch = datetime.now().strftime(props.time_format)
-        self.name = '@'+name
-        self.followers_count = 0
-        self.friends_count = 0
-        self.list_count = 0
-
-        self.tweets_stat = [] #statistic of user perls
-        self.timeline = []
-        self.lists_names = []
-        self.timeline_count = 0
-        self.protected = False
+        self.date_touch = datetime.now()
+        self.name = name
+        self.real_name = None
+        self.followers_count = None
+        self.friends_count = None
+        self.list_count = None
+        self.tweets_stat = None #statistic of user perls
+        self.timeline = None
+        self.lists_names = None
+        self.timeline_count = None
+        self.protected = None
         self.initted_ = None
+
+        self.diffs = None
 
     def serialise(self):
         return self.__dict__
-
-    def __str__(self):
-        return '\n'.join(self.serialise())
-
 
     def set_relations(self,dict_of_relations):
         self.followers_relations = dict_of_relations['followers']

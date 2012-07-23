@@ -10,7 +10,6 @@ class log(object):
     _instance = None
     def __new__(cls):
         if not cls._instance:
-            print 'sss'
             fname = os.path.dirname(__file__)+filename
 
             __log_obj=logging.getLogger('main')

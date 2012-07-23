@@ -22,6 +22,7 @@ s_a_intersect = 'intersect'
 d_state = 'state'
 d_content = 'content'
 
+#todo refactor! create difference object and difference machine. this arch is bad!
 class difference_element(dict):
     def __init__(self, state, content, seq=[], **kwargs):
         dict.__init__(self, seq, **kwargs)
@@ -40,7 +41,8 @@ class difference(user):
     def __init__(self, one, two):
         if type(one) != type(two) != type(super):
             raise model_exception('can not have difference with not user')
-        user.__init__(self, str(one.name))
+        self.name = one.name
+        user.__init__(self, str(self.name))
         self.fill_difference(one, two)
 
     def get_state_by_field_name(self, name):
