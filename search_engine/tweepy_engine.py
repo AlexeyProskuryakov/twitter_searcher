@@ -109,7 +109,7 @@ class engine(object):
         friends = t_user.friends()
         self._count_requests+=2
         log.debug("get followers and friends +2")
-        mentions = [{'entity':obj['entity'],'weight':get_mention_weight(obj)} for obj in statistic_of_text if obj['type'] == _hash_tag_  and obj['entity'][0]== '@']
+        mentions = [m_hash_dict({'entity':obj['entity'],'weight':get_mention_weight(obj)}) for obj in statistic_of_text if obj['type'] == _hash_tag_  and obj['entity'][0]== '@']
         mentions_names = tools.flush(mentions,lambda x:x['entity'])
         mentions_users = []
         users = followers
@@ -139,7 +139,7 @@ class engine(object):
         """
         forming user in our model to save into db
         """
-        result = user('@'+t_user.screen_name)
+        result = m_user('@'+t_user.screen_name)
         result.real_name = t_user.name
         lists = t_user.lists()
         self._count_requests+=1
@@ -157,11 +157,11 @@ class engine(object):
         self._count_requests+=1
         log.debug("get timeline +1")
 
-        timeline = [{'text':element.text,'retweets':element.retweet_count,'initted':element.created_at.strftime(props.time_format)} for element in t_timeline] #retieving user perls
+        timeline = [m_hash_dict({'text':element.text,'retweets':element.retweet_count,'initted':element.created_at}) for element in t_timeline] #retieving user perls
         result.timeline = timeline
 
         result.timeline_count = t_user.statuses_count
-        result.initted_ = t_user.created_at.strftime(props.time_format)
+        result.inited_ = t_user.created_at.strftime(props.time_format)
 
         return result
 

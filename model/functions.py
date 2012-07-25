@@ -19,6 +19,9 @@ hash_tag_pattern = re.compile('^[\#\@][\d\w]+')
 
 
 def __imply_string_obj(input):
+    """
+    implying string object see objects at up
+    """
     if url_pattern.match(input):
         return objects[0]
     if hash_tag_pattern.match(input):
@@ -58,7 +61,7 @@ def get_statistic_of_tweets(data):
     data_set_model = [__get_freq(counts, element[0]) for element in data_set]
     data_set = map(lambda x:{'entity': x[0], 'freq_all': x[1]}, data_set)
     return [dict(data_set[i].items() + data_set_model[i].items()) for i in range(len(data_set))]
-#todo rewrite this piece of shit! Stop drink! I not believe that it not contains any bugs!
+
 
 def get_mention_weight(obj):
     """

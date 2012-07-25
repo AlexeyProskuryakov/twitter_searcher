@@ -1,5 +1,5 @@
 from properties import props
-from search_engine.bot_engine import engine
+from search_engine.tweepy_engine import engine
 
 __author__ = '4ikist'
 if __name__ == '__main__':

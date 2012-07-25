@@ -90,20 +90,21 @@ class db_handler():
     def verify_user(self,name):
         user = self.users.find_one({'name':name})
         if user:
-            return m_user_status(s_saved)
-        return m_user_status(s_none)
+            return m_user_status(m_user_status.s_saved)
+        return m_user_status(m_user_status.s_none)
 
     def get_user(self, req):
         user = self.users.find_one(req)
         return user
 
 if __name__ == '__main__':
-    db_handler = db_handler(truncate=True)
-    user = m_user("name")
-    user.real_name = 'test'
-    user.timeline_count = 1000
-
-    db_handler.save_user(user.serialise())
-    time.sleep(5)
-    user = db_handler.get_user({'date_touch':{'$lt':datetime.now()}})
-    print user
+    pass
+#    db_handler = db_handler(truncate=True)
+#    user = m_user("name")
+#    user.real_name = 'test'
+#    user.timeline_count = 1000
+#
+#    db_handler.save_user(user.serialise())
+#    time.sleep(5)
+#    user = db_handler.get_user({'date_touch':{'$lt':datetime.now()}})
+#    print user
