@@ -1,12 +1,16 @@
 from datetime import datetime
 from model.exceptions import model_exception
-from model.tw_model import m_user, m_difference, difference_element
+from model.tw_model import m_user, m_difference, difference_element, m_hash_dict
 from properties import props
 
 __author__ = 'Alesha'
+def __prep_fields(fields, exclude):
+    fields_ = [field for field in fields.items() if not exclude(field[0])]
+    fields_ = dict(fields_)
+    return fields_
 
 
-def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_')):
+def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_') or str(x).startswith('_')):
     """
     creating difference between two objects of user
     use it with m_users with similar names
@@ -17,14 +21,14 @@ def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_
     if user_before.name_ != user_now.name_:
         raise model_exception('can not have difference between users with differences names')
 
-    fields_before = user_before.__dict__
-    fields_now = user_now.__dict__
+    fields_before = __prep_fields(user_before.__dict__,exclude)
+    fields_now = __prep_fields(user_now.__dict__,exclude)
 
     difference = m_difference(user_now.name_)
     #if some old field was removed:
     for field in fields_before:
         if not fields_now.has_key(field):
-            was_removed = difference_element(state=difference_element.s_rem, content={field, fields_before[field]})
+            was_removed = difference_element(state=difference_element.s_rem, content={field, m_hash_dict(fields_before[field])})
             difference.set_field(field , was_removed)
 
     #if some new field added:
@@ -40,37 +44,37 @@ def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_
         if key in fields_before.keys() and key in fields_now.keys():
             #prepearing old and new values
             o_value = fields_before[key]
-            n_value = fields_now[key]
-            #if exclude
-            if exclude(key):
-                continue
 
             #if type of field is array
-            if type(o_value) == type(n_value) == type(list()) == type(value):
-                diff_element = diff_arrays(fields_before[key], fields_now[key])
+            if type(o_value) == type(value) == type(list()) == type(value):
+                diff_element = diff_arrays(o_value, value)
 
             #if type is integer
-            elif type(o_value) == type(n_value) == type(int(0)):
-                diff_element = diff_int(o_value, n_value)
+            elif type(o_value) == type(value) == type(int(0)):
+                diff_element = diff_int(o_value, value)
 
             #for another parameters...
-            elif o_value != n_value:
-                diff_element = difference_element(difference_element.s_changed, {'old': o_value, 'new': n_value})
+            elif o_value != value:
+                diff_element = difference_element(difference_element.s_changed, {'old': o_value, 'new': value})
             else:
                 continue
 
-            difference.set_field(key, diff_element)
+            if diff_element[difference_element.d_content]:
+                difference.set_field(key, diff_element)
 
     return difference
+def __validate_dict_of_array(array):
+    if isinstance(array[0],dict) and not isinstance(array[0],m_hash_dict):
+        return [m_hash_dict(el) for el in array]
+    return array
 
-
-def diff_arrays( one_arr, two_arr):
+def diff_arrays(one_arr, two_arr):
     """
     for array elements s_a_ states
     for di
     """
-    so = set(one_arr)
-    st = set(two_arr)
+    so = set(__validate_dict_of_array(one_arr))
+    st = set(__validate_dict_of_array(two_arr))
 
     if st == so:
         return difference_element(difference_element.s_no_grow, None)

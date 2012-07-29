@@ -68,7 +68,10 @@ def test_diffs():
         diff_bad = create_difference(user1,user3)
     except model_exception as e:
         assert e
+    return diff1_2,diff1_3
 
+def test_db():
+    diff_1, diff_2 = test_diffs()
 
 
 def test_functions():

@@ -1,9 +1,6 @@
-from bson import BSON
 from bson.son import SON
 from pymongo import  *
-from pymongo.collection import Collection
 from pymongo.database import Database
-import time
 import loggers
 from model.tw_model import *
 from properties.props import *
@@ -15,37 +12,42 @@ log = loggers.logger
 users_coll_name = 'users'
 relations_coll_name = 'relations'
 entities_coll_name = 'entities'
-not_searched = 'not_searched'
-diffs = 'diffs'
+not_searched_name = 'not_searched'
+diffs_name = 'c_diffs'
 
-#todo create versions for user in version - dbref into diff.
-#todo create method for ensuring indexes!
-#todo create serialisation users
 
 class db_handler():
-
-    def __is_index_presented(self, collection_name,db):
-        c = Collection(db,collection_name)
-        log.debug("index info: %s"% c.index_information())
+    def __is_index_presented(self, collection):
+        if len(collection.index_information()):
+            return True
+        return False
         
 
     def _db_ignition(self):
-        self.conn = Connection(host, port)
-        self.db = Database(self.conn, db_name)
+        try:
+            self.conn = Connection(host, port)
+            self.db = Database(self.conn, db_name)
 
-        self.users = self.db[users_coll_name]
-        self.entities = self.db[entities_coll_name]
-        self.relations = self.db[relations_coll_name]
-        self.not_searched = self.db[not_searched]
-        self.diffs = self.db[diffs]
+            self.users = self.db[users_coll_name]
+            self.entities = self.db[entities_coll_name]
+            self.relations = self.db[relations_coll_name]
+            self.not_searched = self.db[not_searched_name]
+            self.diffs = self.db[diffs_name]
 
-        self.__is_index_presented(users_coll_name,self.db)
+            if not self.__is_index_presented(self.users):
+                self.users.create_index('name_',ASCENDING,unique=True)
+            if not self.__is_index_presented(self.diffs):
+                self.diffs.create_index('date',ASCENDING,unique=False)
 
-    def ensure_indexes(self):
-        pass
+        except Exception as e:
+            log.exception(e)
+            log.error('error in initialisation of data base connection')
+            exit(-1)
 
-    def __init__(self,truncate = False):
-        log.info("init db_handler at host: %s, port: %s, db: %s"%(host,port,db_name))
+
+
+    def __init__(self, truncate=False):
+        log.info("init db_handler at host: %s, port: %s, db: %s" % (host, port, db_name))
         self._db_ignition()
         if truncate:
             try:
@@ -56,20 +58,19 @@ class db_handler():
                 raise e
 
 
-
     def get_not_searched_name(self):
         #may be it is not good solve #-,
         not_searched = self.not_searched.find_one()
         if not_searched:
             self.not_searched.remove({'name': not_searched['name']})
-            log.debug("loading not searched name: %s"%not_searched['name'])
+            log.debug("loading not searched name: %s" % not_searched['name'])
             return not_searched['name']
         else:
             log.warn('no more users for search :( update collection in db, using scripts.js/create_not_searched()')
             return None
 
     def save_user(self, ser_user):
-        log.debug( 'saving user: %s:%s:%s'% (ser_user['name'],ser_user['real_name'],ser_user['timeline_count']))
+        log.debug('saving user: %s:%s:%s' % (ser_user['name_'], ser_user['real_name'], ser_user['timeline_count']))
         son = SON(ser_user)
         self.users.save(son)
 
@@ -77,29 +78,47 @@ class db_handler():
         return self.users.find_one({'name': user_name})
 
     def save_diffs(self, ser_diffs):
-        log.debug( 'saving diffs'% ser_diffs)
-        user = self.users.find_one({'name': ser_diffs['name']})
+        log.debug('saving diffs' % ser_diffs)
+        user = self.users.find_one({'name_': ser_diffs['user_name']})
+        son = SON(ser_diffs)
+        log.debug(son)
         if user:
-            id = self.diffs.save(ser_diffs)
-            log.info('save diff with id %s'%id)
-            self.users.update({'_id':user['_id']},{"$addToSet":{'diffs':id}})
+            self.users.update({'_id': user['_id']}, {"$addToSet": {'diffs_': son}})
+            self.diffs.save({'name': ser_diffs['user_name'], 'date': son['date_touch']})
 
-    def get_users_for_diff(self,timedelta):
-        pass
+    def get_users_for_diff(self, timedelta=props.timedelta):
+        """
+        timedelta it is time between now and 'date' of first element
+        """
+        users = self.diffs.find({'date': {'$lte': datetime.datetime.now() - timedelta}})
+        users = set([user['name'] for user in users])
+        #self.diffs.remove({'name':{'$in':users}})
+        return users
 
-    def verify_user(self,name):
-        user = self.users.find_one({'name':name})
+    def verify_user(self, name):
+        user = self.users.find_one({'name': name})
         if user:
             return m_user_status(m_user_status.s_saved)
         return m_user_status(m_user_status.s_none)
 
     def get_user(self, req):
         user = self.users.find_one(req)
-        return user
+        r_user = m_user(user['name_'])
+        r_user.serialise_from_db(user)
+        return r_user
+
 
 if __name__ == '__main__':
     pass
-#    db_handler = db_handler(truncate=True)
+    db_handler = db_handler(truncate=True)
+
+    db_handler.diffs.save({'name': 'name_1', 'date': datetime.datetime.strptime('2009.12.12_12:12',props.time_format)})
+    db_handler.diffs.save({'name': 'name_2', 'date': datetime.datetime.strptime('2009.12.12_12:13',props.time_format)})
+    db_handler.diffs.save({'name': 'name_3', 'date': datetime.datetime.strptime('2009.12.12_12:14',props.time_format)})
+    db_handler.diffs.save({'name': 'name_4', 'date': datetime.datetime.strptime('2009.12.12_12:15',props.time_format)})
+    db_handler.diffs.save({'name': 'name_5', 'date': datetime.datetime.strptime('2009.12.12_12:16',props.time_format)})
+
+    print db_handler.get_users_for_diff()
 #    user = m_user("name")
 #    user.real_name = 'test'
 #    user.timeline_count = 1000

@@ -35,6 +35,7 @@ class m_user(serializable):
     """
     representing user in our model
     """
+
     def __init__(self, name):
         self.date_touch_ = datetime.now()
         self.name_ = name
@@ -51,6 +52,8 @@ class m_user(serializable):
         self.timeline_count = None
         self.protected = None
 
+        self.favorites = None
+
 
     def set_relations(self,dict_of_relations):
         """
@@ -61,7 +64,8 @@ class m_user(serializable):
         self.friends_relations = dict_of_relations['friends']
         self.mention_relations = dict_of_relations['mentions']
 
-
+    def serialise_from_db(self,dict):
+        self.__dict__ = dict
 
 class m_difference(serializable):
 

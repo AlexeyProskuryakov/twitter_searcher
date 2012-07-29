@@ -4,6 +4,7 @@ import datetime
 
 level_std = logging.DEBUG
 level_fname = logging.INFO
+
 filename = '/logs/'+datetime.datetime.now().strftime('%Y_%m_%d')+".log"
 
 class log(object):

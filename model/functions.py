@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 import re
+import tools
 
 __author__ = '4ikist'
 
@@ -37,7 +38,7 @@ def __get_freq(data, element):
 
 
 #todo rewrite this piece of shit! Stop drink! I not believe that it not contains any bugs!
-def get_statistic_of_tweets(data):
+def __get_statistic_of_tweets(data):
     """
     input some [] with strings
     which return [] of {freq_word :<frequency_of_this_word_in_all_words_which_have_this_type>, type:<type_name>,
@@ -70,6 +71,11 @@ def get_mention_weight(obj):
     """
     return float(obj['freq_hash_tag'])/float(obj['freq_all'])
 
+
+def create_statistic_of_tweets(m_user):
+    timeline = tools.flush(m_user.timeline,lambda x:x['text'])
+    result = __get_statistic_of_tweets(timeline)
+    return result
 
 
 

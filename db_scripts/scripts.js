@@ -7,7 +7,7 @@
 //initialization of all schema
 init = function() {
     db.createCollection('users');
-    db.users.ensureIndex({'name':1}, {unique:true});
+    db.users.ensureIndex({'name_':1}, {unique:true});
     db.createCollection('entities');
     db.createCollection('relations');
     db.createCollection('not_searched');
@@ -72,7 +72,7 @@ relations = function (followers_, _followers, friends_, _friends) {
         {$project:{
             '_id':0,
             to:'$friends',
-            from:'$name'}})
+            from:'$name_'}})
         ['result'].forEach(
         function(x) {
             db.relations.save(x)
@@ -85,7 +85,7 @@ create_not_searched = function() {
     db.not_searched.drop();
     db.not_searched.ensureIndex({'name':1}, {'unique':true});
     db.users.find().forEach(function(x) {
-        var name = x['name'];
+        var name = x['name_'];
         var friends = x['friends'];
         for (var friend in friends) {
             if (!db.users.findOne({name:friends[friend]})) {
@@ -97,7 +97,26 @@ create_not_searched = function() {
     });
 };
 
+//initialise differences machine
+
+init_diff_machine = function(first) {
+    print('init differences');
+    users = null;
+    if (first) {
+        users = db.users.find();
+    } else {
+        users = db.users.find({'date_touch_':{'$lte':new Date()} });
+    }
+    printjson(users);
+    users.forEach(function(x){
+        db.c_diffs.insert({'name':x['name_'],'date':new Date()})
+    })
+
+
+};
+
 //init();
 //relations(0, 100, 0, 100);
 //entities(0, 100);
-create_not_searched();
+//create_not_searched();
+init_diff_machine(true);
