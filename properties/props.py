@@ -19,6 +19,7 @@ db_name = 'ttr'
 
 #####   application properties
 time_format = '%Y.%m.%d_%H:%M'
+ttr_time_format = '%Y-%m-%d %H:%M:%S'
 
 ####    scrapper properties
 def_n = 1   #default neighbourhood

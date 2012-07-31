@@ -1,4 +1,9 @@
+import datetime
+from properties import props
+import loggers
 __author__ = '4ikist'
+
+log = loggers.logger
 
 def __get_count(input, x):
     return input.count(x)
@@ -42,13 +47,3 @@ def imply_dog(string, with_dog=False):
             return '@' + string
         else:
             return string
-
-
-if __name__ == '__main__':
-    print imply_dog('@123', True)
-    print imply_dog('123', True)
-    print imply_dog('@123', False)
-    print imply_dog('123', False)
-
-
-

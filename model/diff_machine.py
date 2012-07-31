@@ -63,6 +63,7 @@ def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_
                 difference.set_field(key, diff_element)
 
     return difference
+
 def __validate_dict_of_array(array):
     if isinstance(array[0],dict) and not isinstance(array[0],m_hash_dict):
         return [m_hash_dict(el) for el in array]
