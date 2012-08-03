@@ -32,6 +32,9 @@ def create_information_element(content):
 
 
 def create_information_streams(content):
+    """
+    create some list of sequences (sentence) on one big sequence
+    """
     return []
 
 
@@ -55,11 +58,12 @@ class text(object):
         self.content = text_content
         self.min_path = None
         self.words = text.create_words(text_content)
-        self.min, self.max = text.calculate_min_and_max_words_count(self.words)
+        self.min, self.max, self.words_range = text.calculate_min_and_max_words_count(self.words)
 
     @staticmethod
     def sift_words(words):
         """
+        #todo create fucking
         create some functionality for sifting words, and excluding some or and not but a is are etc
         """
         return [word for word in words]
@@ -77,7 +81,7 @@ class text(object):
                 min = el_count
             if max < el_count:
                 max = el_count
-        return min, max
+        return min, max, set
 
     @staticmethod
     def create_words(sequence):
@@ -85,7 +89,6 @@ class text(object):
             words = tokenizers.extract_words(sequence)
             words = text.sift_words(words)
             return words
-
 
     def get_count_element_unique(self):
         """
@@ -144,6 +147,33 @@ class text(object):
         stop = position + pos_right
         return [self.words[i] for i in range(start, stop)]
 
+    def get_paths_around(self, node, r=2, exclude=True):
+        """
+        returning sets of elements around on r of this element and
+         on any position of this element
+         a, r= 1, exclude = true
+               | ' |    |  ' |
+         a b c d a b c d a b d c
+        """
+        log.debug('getting path around element "%s" with radius "%s"' % (node, r))
+        el_count = self.get_count_element(node)
+        paths = []
+        if el_count['count'] > 0:
+            for position in el_count['positions']:
+                if position + r > self.get_count_element_all() or position - r < 0:
+                    continue
+                if exclude:
+                    path_ = self.words[position + 1:position + r + 1]
+                    _path = self.words[(position - r):position]
+                    path = _path + path_
+                else:
+                    path_ = self.words[position + 1:position + r + 1]
+                    _path = self.words[position - r:position + 1]
+                    path = _path + path_
+                paths.append(path)
+            return paths
+        log.warn('no more elements with this content')
+        return None
 
     def get_path(self, node_start, node_stop, reverse=False):
         """
@@ -165,12 +195,12 @@ class text(object):
             for start_pos in position_start['positions']:
                 for stop_pos in position_stop['positions']:
                     if start_pos < stop_pos:
-                        path = self.words[start_pos: stop_pos+1]
+                        path = self.words[start_pos: stop_pos + 1]
                     else:
                         path_ = self.words[start_pos:]
-                        _path = self.words[:stop_pos+1]
-                        path =  path_+_path
-                        
+                        _path = self.words[:stop_pos + 1]
+                        path = path_ + _path
+
                     if reverse:
                         path.reverse()
 
@@ -189,6 +219,7 @@ class information_stream(text):
 
 
 class multi_graph(text):
+    #todo what difference between multigraph and text?
     def __init__(self, content):
         text.__init__(self, content)
         try:
@@ -197,6 +228,9 @@ class multi_graph(text):
             log.exception(e)
             log.error("why it is not set?")
 
+
+    def get_words_count(self):
+        return self.words_range
 
     def get_paths_between(self, element, position, pos_left, pos_right):
         """
@@ -219,7 +253,7 @@ class multi_graph(text):
             pass
 
 
-def tematic_classification_method(text):
+def tematic_classification_method(text_content, min_word_count, radius ):
     """
     create multigraph and fill it
     get all words in range by d(word) (word's count in text in it multigraph)
@@ -228,4 +262,13 @@ def tematic_classification_method(text):
 
     lapse is n(I)/n(F) is more unicum and less all than lower accurancy of model
     """
-    pass
+    #create multigraph and fill it
+    text = multi_graph(text_content)
+    #get all words in range by d(word) (word's count in text in it multigraph)
+    words = text.get_words_count()
+    #get max words in this range
+    words = [word for word in words if word[1] >= min_word_count]
+    #get detail set on max_words range set (where detail is what around of words in prev step)
+    detail_words = [text.get_paths_around(word[0],radius,exclude=True) for word in words]
+    detail_words = set(detail_words)
+

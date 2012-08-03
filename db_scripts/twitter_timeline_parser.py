@@ -1,4 +1,5 @@
 import datetime
+import re
 import loggers
 from properties import props
 
@@ -34,3 +35,15 @@ def extract_messages(file):
                 result.append({'t': time, 'u': user_url, 'm': text})
                 buff = []
     return result
+smile_regexp = re.compile("\ {0,2}\:[\-\*]{0,1}[\)\(\*]+")
+
+def get_count_smiles(input,regexp = smile_regexp):
+    count = 0
+    for el in input:
+        count+=len(regexp.findall(el['m']))
+    return count
+
+if __name__ == '__main__':
+    result = extract_messages("d:/temp/tweets2009-12.txt")
+    print len(result)
+    print get_count_smiles(result,smile_regexp)
