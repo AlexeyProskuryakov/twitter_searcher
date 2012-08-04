@@ -9,6 +9,7 @@ log = loggers.logger
 #todo realise all passes
 #todo 2.2. Метод частотно-контекстной классификации тематики текста
 #todo test on the twitter load
+#todo retrieve from this package
 
 #+peoples to this model
 #any user is user from cluster of this parameters and cluster of this theme, where we have synonym of hashtag
@@ -36,13 +37,32 @@ def create_information_streams(content):
     create some list of sequences (sentence) on one big sequence
     """
     return []
+class user(object):
+    """
 
+    """
 
-class informational_element(object):
+class peoples(object):
+    """
+    some info about peoples which was save
+    """
     pass
+class informational_element(object):
+    """
+    some information of word about text information stream in which this laying
+    """
+    def __init__(self,information_stream_info):
+        """
+        it is may be will: {stream_id, position in stream, and another attributes in stream of word (timelines :))))}
+        """
+        pass
+class people_info_element(object):
+    def __init__(self,people_class_info):
+        """
+        some info about peoples {or class of people}
+        """
 
-
-class node(object):
+class word(object):
     def __init__(self, content):
         self.informational_element = create_information_element(content)
         self.index = get_node_index()
