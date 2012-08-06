@@ -37,7 +37,7 @@ def get_relation_ttr_users(messages, user_from, user_to):
     pass
 
 
-#get from here
+#get from here/
 
 #######################################################
 def create_information_element(content):
@@ -49,6 +49,7 @@ def create_information_streams(content):
     create some list of sequences (sentence) on one big sequence
     """
     return []
+def create_
 class user(object):
     """
 
@@ -78,7 +79,7 @@ class word(object):
     def __init__(self, content):
         self.informational_element = create_information_element(content)
         self.index = get_node_index()
-
+        self.peoples_info_element = people_info_element(p)
 
 class vertex(object):
     def __init__(self):
