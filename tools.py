@@ -47,3 +47,17 @@ def imply_dog(string, with_dog=False):
             return '@' + string
         else:
             return string
+
+def sum_dicts(list_of_dicts):
+    result = {}
+    if isinstance(list_of_dicts,list):
+        rows = list_of_dicts[0]
+        if isinstance(rows,dict):
+            for row in rows:
+              result[row] = sum([d_el[row] for d_el in list_of_dicts])
+    return result
+
+
+
+if __name__ == '__main__':
+    print sum_dicts([{'a':1,'b':2},{'a':2,'b':2}])

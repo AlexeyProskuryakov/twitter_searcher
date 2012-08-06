@@ -50,8 +50,8 @@ relations = function (followers_, _followers, friends_, _friends) {
     db.users.aggregate(
         {$project:{name:1,followers:1,followers_count:1}},
         {$match:
-        {followers_count:{$gt:followers_,$lt:_followers},
-        }},
+        {followers_count:{$gt:followers_,$lt:_followers}}
+        },
         {$unwind:"$followers"},
         {$project:{
             '_id':0,
@@ -114,6 +114,7 @@ init_diff_machine = function(first) {
 
 
 };
+//flushing diffs in users
 
 //init();
 //relations(0, 100, 0, 100);

@@ -1,9 +1,10 @@
 from datetime import datetime
 from model.exceptions import model_exception
-from model.tw_model import m_user, m_difference, difference_element, m_hash_dict
+from model.tw_model import m_user, m_user_state_difference, difference_element, m_hash_dict
 from properties import props
 
 __author__ = 'Alesha'
+
 def __prep_fields(fields, exclude):
     fields_ = [field for field in fields.items() if not exclude(field[0])]
     fields_ = dict(fields_)
@@ -21,21 +22,22 @@ def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_
     if user_before.name_ != user_now.name_:
         raise model_exception('can not have difference between users with differences names')
 
-    fields_before = __prep_fields(user_before.__dict__,exclude)
-    fields_now = __prep_fields(user_now.__dict__,exclude)
+    fields_before = __prep_fields(user_before.__dict__, exclude)
+    fields_now = __prep_fields(user_now.__dict__, exclude)
 
-    difference = m_difference(user_now.name_)
+    difference = m_user_state_difference(user_now.name_)
     #if some old field was removed:
     for field in fields_before:
         if not fields_now.has_key(field):
-            was_removed = difference_element(state=difference_element.s_rem, content={field, m_hash_dict(fields_before[field])})
-            difference.set_field(field , was_removed)
+            was_removed = difference_element(state=difference_element.s_rem,
+                                             content={field, m_hash_dict(fields_before[field])})
+            difference.set_field(field, was_removed)
 
     #if some new field added:
     for field in fields_now:
         if not fields_before.has_key(field):
-            added = difference_element(state=difference_element.s_add, content={field, fields_now[field]})
-            difference.set_field(field , added)
+            added = difference_element(state=difference_element.s_add, content=m_hash_dict({field, fields_now[field]}))
+            difference.set_field(field, added)
 
     #for elements in now in before - ignoring
     for self_element in fields_now.items():
@@ -55,7 +57,8 @@ def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_
 
             #for another parameters...
             elif o_value != value:
-                diff_element = difference_element(difference_element.s_changed, {'old': o_value, 'new': value})
+                diff_element = difference_element(difference_element.s_changed,
+                        m_hash_dict({difference_element.s_a_old: o_value, difference_element.s_a_new: value}))
             else:
                 continue
 
@@ -64,10 +67,12 @@ def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_
 
     return difference
 
+
 def __validate_dict_of_array(array):
-    if isinstance(array[0],dict) and not isinstance(array[0],m_hash_dict):
+    if isinstance(array[0], dict) and not isinstance(array[0], m_hash_dict):
         return [m_hash_dict(el) for el in array]
     return array
+
 
 def diff_arrays(one_arr, two_arr):
     """

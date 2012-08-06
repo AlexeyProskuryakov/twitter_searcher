@@ -7,9 +7,21 @@ __author__ = 'Alesha'
 log = loggers.logger
 
 #todo realise all passes
+#todo realise good users and message model and write what you want from this ttr model
 #todo 2.2. Метод частотно-контекстной классификации тематики текста
 #todo test on the twitter load
 #todo retrieve from this package
+
+#Ничто нас так не характеризует, как наш язык. Наш словарный запас это отражение нашей эрудиции,
+#потому насколько изощрены наши языковые обороты, можно сказать, насколько изощрены наши мозги.
+#Наша лексика показывает нашу культурную (субкультурную, поколенческую, региональную) принадлежность,
+# потому насколько часто мы употребляем те или иные слова, можно сказать, какими темами
+# Вы в большей степени интересуетесь, специфические слова выдают специфические интересы.
+# На этом можно и замутить алгоритм подбора френдов. На основе близости словаря,
+#определять близость интересов и культурного графа, если хотите.
+#По используемым оборотам, сложности построения фразы, интеллектуальный уровень пользователя.
+#Человек может даже ничего не постить, достаточно будет его комментариев, чтоб подобрать ему собеседника.
+
 
 #+peoples to this model
 #any user is user from cluster of this parameters and cluster of this theme, where we have synonym of hashtag
@@ -86,7 +98,7 @@ class text(object):
         #todo create fucking
         create some functionality for sifting words, and excluding some or and not but a is are etc
         """
-        return [word for word in words]
+        return [word.decode('utf-8',errors='ignore') for word in words]
 
     @staticmethod
     def calculate_min_and_max_words_count(words):
@@ -105,8 +117,9 @@ class text(object):
 
     @staticmethod
     def create_words(sequence):
+
         if isinstance(sequence, unicode) or isinstance(sequence, str):
-            words = tokenizers.extract_words(sequence)
+            words = tokenizers.extract_tokens(sequence)
             words = text.sift_words(words)
             return words
 

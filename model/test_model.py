@@ -56,7 +56,7 @@ def test_diffs():
     diff1_2 = create_difference(user1,user2)
     diff1_3 = create_difference(user1,user3)
     print_model_serializable(diff1_2)
-    assert isinstance(diff1_2,m_difference)
+    assert isinstance(diff1_2,m_user_state_difference)
     assert isinstance(diff1_3,serializable)
 
     assert not diff1_3.is_field('real_name')

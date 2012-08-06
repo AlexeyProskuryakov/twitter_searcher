@@ -69,19 +69,51 @@ def get_mention_weight(obj):
     for calculating weights of mentions
     return weight = freq in this type / freq in all
     """
-    return float(obj['freq_hash_tag'])/float(obj['freq_all'])
+    return float(obj['freq_hash_tag']) / float(obj['freq_all'])
 
 
 def create_statistic_of_tweets(m_user):
-    timeline = tools.flush(m_user.timeline,lambda x:x['text'])
+    timeline = tools.flush(m_user.timeline, lambda x:x['text'])
     result = __get_statistic_of_tweets(timeline)
     return result
 
+#:{)
+
+smile_regexp = re.compile("[)({}\]\[\*\?@!$%><0O]{0,1}[-=~_]{0,1}[:;o]{0,1}[-=~_]{0,1}[)({}\]\[\*\?@!$%><D0O]{0,1}")
+smile_bad = re.compile('(.*[\[\(\{]$)|(^[\)\]\}].*)')
+smile_good = re.compile('(.*[\]\)\}D]$)|(^[\(\[\{].*)')
+
+def get_count_smiles(input, regexp=smile_regexp):
+    count = 0
+    count_good = 0
+    count_bad = 0
+    count_neutral = 0
+    smiles = [el for el in regexp.findall(input) if el and len(el.strip())>1]
+
+    for smile in smiles:
+        print smile
+        if smile_bad.match(smile):
+            count_bad += 1
+        elif smile_good.match(smile):
+            count_good += 1
+        else:
+            count_neutral += 1
+
+    return {'good': count_good, 'bad': count_bad, 'neutral': count_neutral}
+
+
+def extracts_text_elements(text):
+    if isinstance(text,str) or isinstance(text,unicode):
+        words = text.split()
+        return words
 
 
 if __name__ == '__main__':
-    result = get_statistic_of_tweets(['Just posted a photo http://instagr.am/p/MlV8CDDw3M/',
-                               '@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод.'])
-
-    for e in result:
-        print e
+#    pass
+#    result = __get_statistic_of_tweets(['Just posted a photo http://instagr.am/p/MlV8CDDw3M/',
+#                                      '@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод.'])
+#    print get_count_smiles('(-: :-)))))')
+#
+#    for e in result:
+#        print e
+    print extracts_text_elements('@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод. http://instagr.am/p/MlV8CDDw3M/')

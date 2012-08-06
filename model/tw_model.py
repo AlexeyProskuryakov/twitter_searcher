@@ -67,7 +67,7 @@ class m_user(serializable):
     def serialise_from_db(self,dict):
         self.__dict__ = dict
 
-class m_difference(serializable):
+class m_user_state_difference(serializable):
 
     """
     Containing fields initialised in diff_machine packet. This fields like in user but with '_diff' suffix.
