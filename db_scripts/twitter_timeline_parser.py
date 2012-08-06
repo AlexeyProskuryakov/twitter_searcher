@@ -79,4 +79,5 @@ if __name__ == '__main__':
     result = extract_messages("d:/temp/tweets2009-12.txt")
     result = extract_messages("d:/temp/tweets2009-11.txt")
     result = extract_messages("d:/temp/tweets2009-10.txt")
+    #and here - OVER 10 GB OF DATA!!!!!!!! :))))))))))))))))))))
 
