@@ -8,7 +8,7 @@ class serializable(object):
     object which serialize into db and deserialize
     """
     def serialise(self):
-        return self.__dict__
+        return m_hash_dict(self.__dict__)
 
 
 class m_user_status(serializable):
@@ -23,13 +23,6 @@ class m_user_status(serializable):
     def __init__(self,status,last_diff = None):
         self.status = status
         self.last_diff = last_diff
-
-
-
-
-
-
-
 
 class m_user(serializable):
     """
@@ -54,6 +47,11 @@ class m_user(serializable):
 
         self.favorites = None
 
+    def set_hash_tags(self,hash_tags):
+        """
+        initialize and settings up all hash tags which user was said
+        """
+        self.hash_tags = hash_tags
 
     def set_relations(self,dict_of_relations):
         """
@@ -67,7 +65,11 @@ class m_user(serializable):
     def serialise_from_db(self,dict):
         self.__dict__ = dict
 
-class m_user_state_difference(serializable):
+class m_difference(serializable):
+    def __init__(self,diff_id):
+        self.diff_id = diff_id
+
+class m_user_state_difference(m_difference):
 
     """
     Containing fields initialised in diff_machine packet. This fields like in user but with '_diff' suffix.
@@ -78,9 +80,10 @@ class m_user_state_difference(serializable):
     """
     p_diff = '_diff'
 
-    def __init__(self,user_name):
-        self.user_name = user_name
+    def __init__(self, diff_id, user_name=None):
+        m_difference.__init__(self, diff_id)
         self.date_touch = datetime.now()
+        self.user_name = user_name
 
     def set_field(self,name,content):
         self.__setattr__(name+self.p_diff,content)

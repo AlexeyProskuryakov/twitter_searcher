@@ -10,22 +10,25 @@ def __prep_fields(fields, exclude):
     fields_ = dict(fields_)
     return fields_
 
-
-def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_') or str(x).startswith('_')):
+#todo refactor - create difference factory.
+def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_') or str(x).startswith('_'),use_hash_as_name=False):
     """
     creating difference between two objects of user
     use it with m_users with similar names
     return m_difference object
+    params: users, exclude - excluded fields as default it is: _fields_name and fields_name_
+    use hashs as name - difference id is unique id of this difference will evaluate on the hashs of users
     """
-    if type(user_before) != type(user_now) != type(m_user('')):
-        raise model_exception('can not have difference with not user')
-    if user_before.name_ != user_now.name_:
-        raise model_exception('can not have difference between users with differences names')
+    diff_id = None
+    if use_hash_as_name:
+        diff_id = {'left':hash(user_before),'right':hash(user_now)}
+
+    difference = m_user_state_difference(diff_id,user_now.name_)
 
     fields_before = __prep_fields(user_before.__dict__, exclude)
     fields_now = __prep_fields(user_now.__dict__, exclude)
 
-    difference = m_user_state_difference(user_now.name_)
+
     #if some old field was removed:
     for field in fields_before:
         if not fields_now.has_key(field):
@@ -77,7 +80,7 @@ def __validate_dict_of_array(array):
 def diff_arrays(one_arr, two_arr):
     """
     for array elements s_a_ states
-    for di
+
     """
     so = set(__validate_dict_of_array(one_arr))
     st = set(__validate_dict_of_array(two_arr))

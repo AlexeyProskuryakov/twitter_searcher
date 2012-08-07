@@ -25,12 +25,11 @@ def _is_message_element(str):
     return False
 
 
-def extract_messages(file, to_what=db_handler(messages_truncate=True)):
+def extract_messages(file, to_what=db_handler(messages_truncate=True), limit=0):
     log.info("reading file: %s" % file)
 
     f = open(file)
     lines = f.xreadlines()
-    #lines = f.readlines(1000)
     result = []
     buff = []
 
@@ -54,6 +53,7 @@ def extract_messages(file, to_what=db_handler(messages_truncate=True)):
                     words = None
 
                 count_all += 1
+
                 if isinstance(to_what, db_handler):
                     db = to_what
                     db.save_message({'time': time,
@@ -62,6 +62,9 @@ def extract_messages(file, to_what=db_handler(messages_truncate=True)):
                     smile_buff.append(functions.get_count_smiles(text_el))
 
                 buff = []
+
+        if  limit != 0 and count_all >= limit:
+            break
 
     count_smiles = tools.sum_dicts(smile_buff)
     if isinstance(to_what, db_handler):
@@ -76,7 +79,7 @@ def extract_messages(file, to_what=db_handler(messages_truncate=True)):
 
 
 if __name__ == '__main__':
-    result = extract_messages("d:/temp/tweets2009-12.txt")
-    result = extract_messages("d:/temp/tweets2009-11.txt")
-    result = extract_messages("d:/temp/tweets2009-10.txt")
+    result = extract_messages("d:/temp/tweets2009-12.txt",limit=100000)
+#    result = extract_messages("d:/temp/tweets2009-11.txt")
+#    result = extract_messages("d:/temp/tweets2009-10.txt")
 

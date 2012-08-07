@@ -9,13 +9,24 @@ __author__ = '4ikist'
 
 log = loggers.logger
 
+
+#################
+#collections names
+#################
 users_coll_name = 'users'
+
 relations_coll_name = 'relations'
 entities_coll_name = 'entities'
 not_searched_name = 'not_searched'
+
+users_for_update_name = 'm_users'
+
 diffs_name = 'c_diffs'
+diffs_fields = ['diff_id','user_name','date']
+
 messages_name = 'messages'
 messages_info_name = 'messages_info'
+
 
 
 class db_handler():
@@ -37,6 +48,7 @@ class db_handler():
             self.diffs = self.db[diffs_name]
             self.messages = self.db[messages_name]
             self.messages_info = self.db[messages_info_name]
+            self.users_for_update = self.db[users_for_update_name]
 
             if not self.__is_index_presented(self.users):
                 self.users.create_index('name_', ASCENDING, unique=True)
@@ -99,6 +111,7 @@ class db_handler():
         saving diffs between one user in difference time
         in two collections - diffs (user_name, date_touch)
         and update users (add to set of diffs_)
+
         """
         log.debug('saving diffs' % ser_diffs)
         #user for updating
@@ -107,8 +120,7 @@ class db_handler():
         log.debug(son)
         if user:
             self.users.update({'_id': user['_id']}, {"$addToSet": {'diffs_': son}})
-            #todo here if you want to compare two another user_names, name_two is good name date is delete/
-            self.diffs.save({'name': ser_diffs['user_name'], 'date': son['date_touch']})
+            self.diffs.save(son)
 
     def get_users_for_diff(self, timedelta=props.timedelta):
         """
@@ -136,16 +148,18 @@ class db_handler():
             return m_user_status(m_user_status.s_saved)
         return m_user_status(m_user_status.s_none)
 
-
-
     def save_message(self, message):
         self.messages.save(message)
 
     def save_message_info(self, messages_info):
         self.messages_info.save(messages_info)
 
+    def get_users_for_update(self):
+        return [user for user in self.users_for_update.find()]
+
 if __name__ == '__main__':
     pass
+
 #    db_handler = db_handler(truncate=True)
 #
 #    db_handler.diffs.save({'name': 'name_1', 'date': datetime.datetime.strptime('2009.12.12_12:12', props.time_format)})

@@ -6,11 +6,8 @@ import tools
 __author__ = 'Alesha'
 log = loggers.logger
 
-#todo realise all passes
-#todo realise good users and message model and write what you want from this ttr model
 #todo 2.2. Метод частотно-контекстной классификации тематики текста
 #todo test on the twitter load
-#todo retrieve from this package
 
 #Ничто нас так не характеризует, как наш язык. Наш словарный запас это отражение нашей эрудиции,
 #потому насколько изощрены наши языковые обороты, можно сказать, насколько изощрены наши мозги.
@@ -27,59 +24,56 @@ log = loggers.logger
 #any user is user from cluster of this parameters and cluster of this theme, where we have synonym of hashtag
 def get_relation_ttr_users(messages, user_from, user_to):
     """
-    returning path with weights in vertices
+    returning path with weights in vertices.
     """
-    #get all fields from user_from and user_to
-    #get difference between them
-    #the difference field must be elements of this formula (i think...)
-    #any relations count must be r_c_diff
-    #formula in 2012book
     pass
 
 
-#get from here/
 
 #######################################################
 def create_information_element(content):
+    """
+    it is some piece of information stream. may be it is word content
+    """
     return informational_element
 
 
 def create_information_streams(content):
     """
     create some list of sequences (sentence) on one big sequence
+    may be create graph model from article
     """
     return []
-def create_
-class user(object):
+
+def create_people_info_element(content):
+    """
+    getting peoples by this content/
+    or some piece of graph
     """
 
-    """
-
-class peoples(object):
-    """
-    some info about peoples which was save
-    """
-    pass
 class informational_element(object):
     """
     some information of word about text information stream in which this laying
     """
     def __init__(self,information_stream_info):
         """
-        it is may be will: {stream_id, position in stream, and another attributes in stream of word (timelines :))))}
+        it is may be will: {stream_id, position in stream,
+        and another attributes in stream of word (timelines, retweets or another :))))}
         """
         pass
+
 class people_info_element(object):
     def __init__(self,people_class_info):
         """
         some info about peoples {or class of people}
         """
 
+
 class word(object):
     def __init__(self, content):
         self.informational_element = create_information_element(content)
         self.index = get_node_index()
-        self.peoples_info_element = people_info_element(p)
+        self.peoples_info_element = create_people_info_element(content)
 
 class vertex(object):
     def __init__(self):
@@ -99,7 +93,11 @@ class text(object):
         #todo create fucking
         create some functionality for sifting words, and excluding some or and not but a is are etc
         """
-        return [word.decode('utf-8',errors='ignore') for word in words]
+        return words
+
+    @staticmethod
+    def process_words(words):
+        return words
 
     @staticmethod
     def calculate_min_and_max_words_count(words):
@@ -118,8 +116,8 @@ class text(object):
 
     @staticmethod
     def create_words(sequence):
-
         if isinstance(sequence, unicode) or isinstance(sequence, str):
+            sequence.decode('utf-8',errors='ignore')
             words = tokenizers.extract_tokens(sequence)
             words = text.sift_words(words)
             return words
@@ -249,7 +247,7 @@ class text(object):
 class information_stream(text):
     def __init__(self, content):
         text.__init__(self, content)
-        self.min_path = 0
+
 
 
 class multi_graph(text):
@@ -258,6 +256,7 @@ class multi_graph(text):
         text.__init__(self, content)
         try:
             self.information_streams = create_information_streams(content)
+
         except Exception as e:
             log.exception(e)
             log.error("why it is not set?")
