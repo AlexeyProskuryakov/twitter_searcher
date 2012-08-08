@@ -30,8 +30,8 @@ get_users_from_text = function(skip, limit, add_or_set) {
             {$group:{_id:'$user'}}
         );
     }
-
     if (!result['ok']) {
+        print('some error');
         printjson(result);
         return null;
     }

@@ -183,8 +183,10 @@ class text(object):
         """
         returning sets of elements around on r of this element and
          on any position of this element
+         exclude is exclude this element node
+
          a, r= 1, exclude = true
-               | ' |    |  ' |
+         ' |   | ' |   | ' |
          a b c d a b c d a b d c
         """
         log.debug('getting path around element "%s" with radius "%s"' % (node, r))
@@ -286,13 +288,17 @@ class multi_graph(text):
             pass
 
 
-def tematic_classification_method(text_content, min_word_count, radius ):
+def thematic_classification_method(text_content, min_word_count, radius ):
     """
+    algorithm frequency-context classification/
+    
     create multigraph and fill it
     get all words in range by d(word) (word's count in text in it multigraph)
     get max words in this range
-    get detail set on max_words range set (where detail is )
+    get detail set on max_words range set (where detail is nearest words at
+        multigraph of max words at previous step)
 
+    
     lapse is n(I)/n(F) is more unicum and less all than lower accurancy of model
     """
     #create multigraph and fill it
@@ -305,3 +311,41 @@ def tematic_classification_method(text_content, min_word_count, radius ):
     detail_words = [text.get_paths_around(word[0],radius,exclude=True) for word in words]
     detail_words = set(detail_words)
 
+
+def thematic_range_between_text(text_content,text_founded,radius):
+    """
+    n - all key elements in s or sf
+    s - [] of key elements of text, like k1i,k2i,k3i
+    sf - [] of key elements of text_founded
+    sum(kn) = 1 if not normal by 1. (sum(ki/n) = 1)
+
+    sigmi = kimin/kimax*ki
+    if :
+    kimin = ki, kimax = kfi <=> ki < kfi
+    kimin = kfi, kimax = ki <=> ki > kfi
+
+    also context:
+    f - informational stream of text s
+    ff - is of text sf
+
+    get_informational_streams_near_i near belong to r
+    i = get_informational_elements from this
+    if = also for sf
+
+    fuck off to counts of elements in text we see only occurrence in text
+
+         n# = (if intersect i)*2 / i+if => 0 - less, 1 - more
+
+    sigm  = sum(sigmi)*n#
+
+    """
+
+def searching_values_of_informational_criterion_thematic_of_text(text):
+    """
+    F: T - > S
+        F - function, T - text, S - thematic words
+    S = F(T,param1,param2)
+    param1 - threshold of getting S elements
+    peram2 - radius of analysing informational streams
+    
+    """
