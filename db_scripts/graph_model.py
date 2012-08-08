@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+
 import loggers
 from pymorphy.contrib import tokenizers
 import tools
+import re
+
 
 __author__ = 'Alesha'
 log = loggers.logger
+
+end_of_sentence = re.compile('\w+[\.] ')
+big_char = re.compile(u'[A-ZА-Я]+\w+')
 
 #todo 2.2. Метод частотно-контекстной классификации тематики текста
 #todo test on the twitter load
@@ -19,6 +25,10 @@ log = loggers.logger
 #По используемым оборотам, сложности построения фразы, интеллектуальный уровень пользователя.
 #Человек может даже ничего не постить, достаточно будет его комментариев, чтоб подобрать ему собеседника.
 
+#todo do not forget about lapse and approximation
+####
+#**#
+####
 
 #+peoples to this model
 #any user is user from cluster of this parameters and cluster of this theme, where we have synonym of hashtag
@@ -29,7 +39,6 @@ def get_relation_ttr_users(messages, user_from, user_to):
     pass
 
 
-
 #######################################################
 def create_information_element(content):
     """
@@ -38,32 +47,29 @@ def create_information_element(content):
     return informational_element
 
 
-def create_information_streams(content):
-    """
-    create some list of sequences (sentence) on one big sequence
-    may be create graph model from article
-    """
-    return []
-
 def create_people_info_element(content):
     """
     getting peoples by this content/
     or some piece of graph
     """
+    return people_info_element
+
 
 class informational_element(object):
     """
     some information of word about text information stream in which this laying
     """
-    def __init__(self,information_stream_info):
+
+    def __init__(self, information_stream_info):
         """
         it is may be will: {stream_id, position in stream,
         and another attributes in stream of word (timelines, retweets or another :))))}
         """
         pass
 
+
 class people_info_element(object):
-    def __init__(self,people_class_info):
+    def __init__(self, people_class_info):
         """
         some info about peoples {or class of people}
         """
@@ -72,15 +78,20 @@ class people_info_element(object):
 class word(object):
     def __init__(self, content):
         self.informational_element = create_information_element(content)
-        self.index = get_node_index()
+        self.word = content
         self.peoples_info_element = create_people_info_element(content)
 
-class vertex(object):
-    def __init__(self):
-        self.index = gt_vertex_index()
+    def set_information_element(self, informational_element):
+        self.informational_element = informational_element
+
+    def set_peoples_info_element(self, people_info_element):
+        self.peoples_info_element = people_info_element
 
 
 class text(object):
+    def get_path_(self, name):
+        return self.__dict__[name]
+
     def __init__(self, text_content):
         self.content = text_content
         self.min_path = None
@@ -88,7 +99,8 @@ class text(object):
         self.min, self.max, self.words_range = text.calculate_min_and_max_words_count(self.words)
 
     @staticmethod
-    def sift_words(words):
+    def sift_words(words, sift_patterns=None):
+        #todo some wanteds
         """
         #todo create fucking
         create some functionality for sifting words, and excluding some or and not but a is are etc
@@ -97,6 +109,8 @@ class text(object):
 
     @staticmethod
     def process_words(words):
+        #todo some wanteds
+        text.sift_words(words)
         return words
 
     @staticmethod
@@ -117,9 +131,9 @@ class text(object):
     @staticmethod
     def create_words(sequence):
         if isinstance(sequence, unicode) or isinstance(sequence, str):
-            sequence.decode('utf-8',errors='ignore')
+            sequence.decode('utf-8', errors='ignore')
             words = tokenizers.extract_tokens(sequence)
-            words = text.sift_words(words)
+            words = text.process_words(words)
             return words
 
     def get_count_element_unique(self):
@@ -173,7 +187,7 @@ class text(object):
         """
         el_position = self.get_count_element(element)
         if not el_position['count']:
-            log.info("for element '%s' not any positions in this text" % element)
+            #log.info("for element '%s' not any positions in this text" % element)
             return None
         start = position - pos_left
         stop = position + pos_right
@@ -243,22 +257,65 @@ class text(object):
         else:
             log.info(
                 'for elements "%s" and "%s" we can not have some positions in this text' % (node_start, node_stop))
+            return None
         return paths
 
 
 class information_stream(text):
-    def __init__(self, content):
-        text.__init__(self, content)
+    def __init__(self, text_content, name=None, peoples_info_element=None):
+        """
+        some realisation of text
+        """
+        text.__init__(self, text_content)
+        self.name = name
+        for word in self.words:
+            word.set_peoples_info_element(peoples_info_element)
+            word.set_information_element(informational_element)
 
+
+def create_information_streams(content, split_function=None):
+    """
+    create some list of sequences (sentence) on one big sequence
+    may be create graph model from article
+    input - list or string of words and some splitter function if it string
+    output - list of information stream
+    """
+    result = []
+    #at first - split to sequences by splitter
+    if split_function:
+        content = split_function(content)
+    if isinstance(content, unicode):
+    #split on our functionality
+        content = content.split(' ')
+        buf = []
+        result_seq = []
+        for i in range(0, len(content) - 1):
+            buf.append(content[i])
+            if end_of_sentence.match(content[i]) and  big_char.match(content[i + 1]):
+                result_seq.append(' '.join(buf))
+                buf = []
+        content = result_seq
+        #it may be string see up or mae be list if list:
+    if isinstance(content, list):
+        for c_element in content:
+            informational_stream = information_stream(c_element)
+            result.append(informational_stream)
+        return result
+        #may be some error - #todo i think about it
+    return None
 
 
 class multi_graph(text):
-    #todo what difference between multigraph and text?
+    """
+    it is some wrapper around text and have instances of text
+    #todo refactor it is bad practice (no normal form text laying in graph and in informational streams)
+    it may be some graph in 
+    """
+
     def __init__(self, content):
         text.__init__(self, content)
         try:
             self.information_streams = create_information_streams(content)
-
         except Exception as e:
             log.exception(e)
             log.error("why it is not set?")
@@ -267,39 +324,45 @@ class multi_graph(text):
     def get_words_count(self):
         return self.words_range
 
-    def get_paths_between(self, element, position, pos_left, pos_right):
+    def get_min_max_count_element_in_text(self):
+        if self.max and self.min:
+            return self.min, self.max
+
+    def get_path_between(self, element, position, pos_left, pos_right):
         """
         returning all paths between element with position and round of left and right
         """
         result = []
         for information_stream in self.information_streams:
-            counts = information_stream.get_count_element(element)
-            if position == 0 and counts['count'] > 0:
-                for i in counts['positions']:
-                    result.append(information_stream.get_path_between(element, i, pos_left, pos_right))
-            elif counts['count'] > 0 and position in counts['positions']:
-                result.append(information_stream.get_path_between(element, position, pos_left, pos_right))
+            positions = information_stream.get_path_between(element,position,pos_left,pos_right)
+            if positions:
+                result.append(positions)
+        return {'text': text.get_path_between(self, element, position, pos_left, pos_right), 'graph': result}
 
 
-    def get_min_max_count_element_in_text(self):
-        if self.max and self.min:
-            return self.min, self.max
-        else:
-            pass
-
+    #todo realize on graph structure all methods for paths searching
+    def get_path(self, node_start, node_stop, reverse=False):
+        result = []
+        for information_stream in self.information_streams:
+            path = information_stream.get_path(node_start,node_stop,reverse)
+            if path:
+                result.append(path)
+        return {'text':text.get_path(node_start,node_stop,reverse),'graph':result}
 
 def thematic_classification_method(text_content, min_word_count, radius ):
     """
+
     algorithm frequency-context classification/
-    
+
     create multigraph and fill it
     get all words in range by d(word) (word's count in text in it multigraph)
     get max words in this range
     get detail set on max_words range set (where detail is nearest words at
         multigraph of max words at previous step)
 
-    
+
     lapse is n(I)/n(F) is more unicum and less all than lower accurancy of model
+
     """
     #create multigraph and fill it
     text = multi_graph(text_content)
@@ -308,11 +371,11 @@ def thematic_classification_method(text_content, min_word_count, radius ):
     #get max words in this range
     words = [word for word in words if word[1] >= min_word_count]
     #get detail set on max_words range set (where detail is what around of words in prev step)
-    detail_words = [text.get_paths_around(word[0],radius,exclude=True) for word in words]
+    detail_words = [text.get_paths_around(word[0], radius, exclude=True) for word in words]
     detail_words = set(detail_words)
 
 
-def thematic_range_between_text(text_content,text_founded,radius):
+def thematic_range_between_text(text_content, text_founded, radius):
     """
     n - all key elements in s or sf
     s - [] of key elements of text, like k1i,k2i,k3i
@@ -340,12 +403,23 @@ def thematic_range_between_text(text_content,text_founded,radius):
 
     """
 
+
 def searching_values_of_informational_criterion_thematic_of_text(text):
     """
     F: T - > S
-        F - function, T - text, S - thematic words
+        F - function which process T - text to S - thematic words
     S = F(T,param1,param2)
     param1 - threshold of getting S elements
-    peram2 - radius of analysing informational streams
-    
+    param2 - radius of analysing informational streams
+    params is configurationed and analysing by next function:
+
+    L - T -> int
+     L - thematic difference between T1 T2 or S1 and S2
+
+    lapse is:  |Ke - Kc|/Ke
+    where ke - L(T1,T2) and kc - L(S1,S2)
+
+    optimal parameters is diff -> 0 where diff is |ke2/ke1 - kc2/kc1|. ke2 is L(T1,T2.2) kc2 is L(T1,T2.2)
+
+    scale = (ke1/kc1 + ke2/kc2)*1/2 ~ ke1/kc2 * how much peoples said about this theme.
     """
