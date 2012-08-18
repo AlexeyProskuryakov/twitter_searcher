@@ -1,18 +1,15 @@
 #-*- coding: utf-8 -*-
 import re
+from model.tw_model import m_hash_dict
 import tools
 
 __author__ = '4ikist'
 
-_word_ = 'word'
-_hash_tag_ = 'hash_tag'
-_url_ = 'url'
-_data_ = '_data'
+word = 'word'
+hash_tag = 'hash_tag'
+mention = 'mention'
+url = 'url'
 
-objects = [{'key': 'url', 'value': 0},
-        {'key': 'hash_tag', 'value': 1},
-        {'key': 'word', 'value': 2},
-        {'key':'mention','value':3}] #[url,hash_tag,word,mention]
 
 url_pattern = re.compile('http://[\d\w\.\/]+')
 mention_tag_pattern = re.compile('[\@][\d\w]+')
@@ -21,17 +18,20 @@ hash_tag_pattern = re.compile('[\#][\d\w]+')
 #statistic..............................................................................................................
 
 
-def __imply_string_obj(input):
+def __imply_string_obj(input, types):
     """
     implying string object see objects at up
     """
     if url_pattern.match(input):
-        return objects[0]
+        types[url].append(input)
+        return
     if hash_tag_pattern.match(input):
-        return objects[1]
+        types[hash_tag].append(input)
+        return
     if mention_tag_pattern.match(input):
-        return objects[3]
-    return objects[2]
+        types[mention].append(input)
+        return
+    types[word].append(input)
 
 
 def __get_freq(data, element):
@@ -41,46 +41,38 @@ def __get_freq(data, element):
             return {'freq_' + key: float(data[key + _data_].count(element)) / data[key], 'entity': element, 'type': key}
 
 
-#todo rewrite this piece of shit! Stop drink! I not believe that it not contains any bugs!
 def __get_statistic_of_tweets(data):
     """
     input some [] with strings
-    which return [] of {freq_word :<frequency_of_this_word_in_all_words_which_have_this_type>, type:<type_name>,
-                        freq_all: <frequency_of_this_word_in_words>, entity:<word>}
+    which return [] of {freq :<frequency_of_this_element_in_all_elements_in_input>, type:<type_name>, entity:<word>}
     //also in db - will can create collection entities, which include some interests
     """
     all_data = ' '.join(data)
     all_data = all_data.split()
+    types = {mention: [], word: [], hash_tag: [], url: []}
 
-    counts = {}
-    for object_element in objects:
-        key = object_element['key']
-        counts[key + _data_] = [elem for elem in all_data  if __imply_string_obj(elem)['key'] == key]
-        counts[key] = len(counts[key + _data_])
+    #separate and implying string types
+    for element in all_data:
+        __imply_string_obj(element, types)
 
-    count_all = len(all_data)
-
-    data_set = set(
-        [(elem, float(all_data.count(elem)) / count_all) for elem in all_data])
-
-    data_set_model = [__get_freq(counts, element[0]) for element in data_set]
-    data_set = map(lambda x:{'entity': x[0], 'freq_all': x[1]}, data_set)
-    return [dict(data_set[i].items() + data_set_model[i].items()) for i in range(len(data_set))]
+    #calculate all frequencies:
+    result = []
+    for type, arr in types.items():
+        for el in arr:
+            result.append(m_hash_dict({'entity': el,
+                                       'freq': float(1) / float(all_data.count(el)),
+                                       'type': type}))
+    return {'statistic': list(set(result)),
+            hash_tag: list(set(types[hash_tag])),
+            mention: list(set(types[mention]))}
 
 
 def get_hash_tags(text):
     return [tag for tag in hash_tag_pattern.findall(text)]
 
-def get_mention_weight(obj):
-    """
-    for calculating weights of mentions
-    return weight = freq in this type / freq in all
-    """
-    return float(obj['freq_hash_tag']) / float(obj['freq_all'])
 
-
-def create_statistic_of_tweets(m_user):
-    timeline = tools.flush(m_user.timeline, lambda x:x['text'])
+def create_statistic_of_tweets(timeline):
+    timeline = tools.flush(timeline, lambda x:x['text'])
     result = __get_statistic_of_tweets(timeline)
     return result
 
@@ -95,7 +87,7 @@ def get_count_smiles(input, regexp=smile_regexp):
     count_good = 0
     count_bad = 0
     count_neutral = 0
-    smiles = [el for el in regexp.findall(input) if el and len(el.strip())>1]
+    smiles = [el for el in regexp.findall(input) if el and len(el.strip()) > 1]
 
     for smile in smiles:
         print smile
@@ -110,17 +102,10 @@ def get_count_smiles(input, regexp=smile_regexp):
 
 
 def extracts_text_elements(text):
-    if isinstance(text,str) or isinstance(text,unicode):
+    if isinstance(text, str) or isinstance(text, unicode):
         words = text.split()
         return words
 
 
 if __name__ == '__main__':
-#    pass
-#    result = __get_statistic_of_tweets(['Just posted a photo http://instagr.am/p/MlV8CDDw3M/',
-#                                      '@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод.'])
-#    print get_count_smiles('(-: :-)))))')
-#
-#    for e in result:
-#        print e
-    print get_hash_tags('@govnokod Че за хрень. Сколько ждать, когда я выра сту блиать. Отстой ваш говнокод. http://instagr.am/p/MlV8CDDw3M/')
+    pass

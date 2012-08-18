@@ -11,6 +11,7 @@ class log(object):
     _instance = None
     def __new__(cls):
         if not cls._instance:
+
             fname = os.path.dirname(__file__)+filename
 
             __log_obj=logging.getLogger('main')
@@ -20,8 +21,12 @@ class log(object):
             __handler=logging.StreamHandler(sys.stdout)
             __handler.setFormatter(__formatter)
             __log_obj.addHandler(__handler)
+            try:
+                __handler=logging.FileHandler(fname, 'w+')
+            except Exception:
+                os.mkdir(os.path.dirname(__file__)+'\\logs\\')
+                __handler=logging.FileHandler(fname, 'w+')
 
-            __handler=logging.FileHandler(fname, 'w+')
             __handler.setFormatter(__formatter)
             __handler.setLevel(level_fname)
             __log_obj.addHandler(__handler)

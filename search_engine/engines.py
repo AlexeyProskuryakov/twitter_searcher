@@ -3,10 +3,11 @@ import webbrowser
 import time
 import  tweepy
 import loggers
+from model import functions
 from model.diff_machine import create_difference
 
 from model.db import db_handler
-from model.functions import get_mention_weight, _hash_tag_, create_statistic_of_tweets, get_hash_tags, get_count_smiles
+from model.functions import *
 from model.tw_model import *
 from properties import props
 from properties.props import CONSUMER_SECRET, CONSUMER_KEY
@@ -15,13 +16,6 @@ import tools
 __author__ = 'Alesha'
 
 log = loggers.logger
-
-
-
-
-
-#todo   create heirarhy of this class engine and web driver engine, maybe use some SOA?
-#todo   searcher - filler|separator|manager - database
 
 class engine(object):
     def init_engine(self):
@@ -61,9 +55,6 @@ class tweepy_engine(engine):
         self._count_requests = int(1)
         log.debug("auth +1")
         self.db = db_handler
-
-    def _get_hash_tags_read(self, user):
-        t_user = self._get_user_by_name(user)
 
     def _prepare_user_t_object(self, start_user):
         """
@@ -109,45 +100,33 @@ class tweepy_engine(engine):
 
 
     def _get_user_relations(self, t_user, statistic_of_text):
+        """
+        returning two objects:
+        object : only names
+        additional : objects in tweepy model
+        """
         followers = t_user.followers()
         friends = t_user.friends()
         self._count_requests += 2
         log.debug("get followers and friends +2")
-        mentions = [m_hash_dict({'entity': obj['entity'], 'weight': get_mention_weight(obj)}) for obj in
-                    statistic_of_text if obj['type'] == _hash_tag_  and obj['entity'][0] == '@']
-        return {'object': {'followers': tools.flush(followers), 'friends': tools.flush(friends), 'mentions': mentions},
-                'additional': {'followers': followers, 'friends': friends, 'mentions': mentions}}
-
-    def _get_related(self, additional):
-        """
-        get all t_users which have any relation
-        """
-        followers = additional['followers']
-        friends = additional['friends']
-        mentions = additional['mentions']
-
-        mentions_names = tools.flush(mentions, lambda x:x['entity'])
-        mentions_users = []
-        users = followers
-        users.extend(friends)
+        mentions_names = statistic_of_text[functions.mention]
+        mentions = []
 
         for mention_name in mentions_names:
-            #find in followers and friends user with name from mentions
-            t_user_related = tools.get_by_name(users, mention_name)
-            if t_user_related:
-                #if founded
-                mentions_users.append(t_user_related)
-            #else, retrieving this user by mention_name
-            else:
+            if tools.imply_dog(mention_name) != tools.imply_dog(t_user.screen_name):
                 try:
-                    t_user = self._get_user_by_name(mention_name)
-                    if t_user:
-                        mentions_users.append(t_user)
+                    mentions.append(self._get_user_by_name(mention_name))
+                    self._count_requests += 1
                 except Exception:
-                    log.warn('exception in load user %s' % mention_name)
-                    continue
+                    log.warn('can not load mention user object, continue')
 
-        return {'followers': followers, 'friends': friends, 'mentions': mentions_users}
+        log.debug("get mentions +%s" % len(mentions))
+
+        return {
+            'object': {'followers': tools.flush(followers), 'friends': tools.flush(friends), 'mentions': mentions_names}
+            ,
+            'additional': {'followers': followers, 'friends': friends, 'mentions': mentions}}
+
 
     def _get_time_line(self, t_user):
         t_timeline = t_user.timeline()
@@ -178,22 +157,10 @@ class tweepy_engine(engine):
             log.debug('user %s is protected... skip him' % t_user.screen_name)
             return None
         result.timeline = self._get_time_line(t_user)
-        result.set_hash_tags(self._get_hash_tags_read())
         result.timeline_count = t_user.statuses_count
         result.inited_ = t_user.created_at.strftime(props.time_format)
-
         return result
 
-
-    def get_hash_tags(self, time_line, friends_time_line):
-        """
-        interested some data like write tags and read tags (all tags which saying his friends)
-        """
-        write_tags = get_hash_tags(' '.join([el['text'] for el in time_line]))
-        read_tags = []
-        for friend_time_line in friends_time_line:
-            read_tags.extend(get_hash_tags(' '.join([el['text'] for el in friend_time_line])))
-        return {'write_tags': write_tags, 'read_tags': read_tags}
 
     def get_user_info(self, start_user, with_relations=True):
         """
@@ -206,22 +173,25 @@ class tweepy_engine(engine):
         try:
             start_user_obj = self._prepare_user_t_object(start_user)
             if not start_user_obj:
-                return
+                return None
             t_user = start_user_obj
-            log.debug('getting user info for user: %s' % '@' + t_user.screen_name)
+            log.info('getting user info for user: %s' % '@' + t_user.screen_name)
             #forming user data
             user = self._get_data(t_user)
-            #forming statistic of tweets
             if not user:
                 return None
-            user.tweets_stat = create_statistic_of_tweets(user) #creating statistic of user perls
-            #retrieving relations, on statistic too
-            relation_object = self._get_user_relations(t_user, user.tweets_stat)
+
+            #creating statistic of user perls and hash_tags
+            statistic = create_statistic_of_tweets(user.timeline)
+            user.tweets_stat = statistic['statistic']
+            user.set_hash_tags(statistic[functions.hash_tag])
+
+            #retrieving relations (mentions,friends,followers)
+            relation_object = self._get_user_relations(t_user, statistic)
             user.set_relations(relation_object['object'])
-            user.set_hash_tags(self.get_hash_tags(user.timeline,
-                [self._get_time_line(t_user) for t_user in relation_object['additional']['friends']]))
+
             if with_relations:
-                relations = self._get_related(relation_object['additional'])
+                relations = relation_object['additional']
                 return {'object': user, 'relations': relations}
             else:
                 return user
@@ -230,7 +200,6 @@ class tweepy_engine(engine):
             log.info("counts of request is: %s" % self._count_requests)
             if not t_user:
                 t_user = {'name': start_user, 'some bad': 'yes'}
-
             log.warn('error in info for user...\n%s' % '\n' + str(t_user.__dict__))
             if 'Rate limit exceeded' in str(e):
                 log.info('oook wil be sleep...')
@@ -249,19 +218,21 @@ class tweepy_engine(engine):
         input: start_user - is tweepy user obj or simple name
         by_what - is parameter of create_user func. [followers,friends]
         """
-        log.info("start scrap user: %s" % start_user)
+        log.info("\n>\nstart scrap user: %s" % start_user)
         try:
-            user_info = self.get_user_info(start_user)
+            user_info = self.get_user_info(start_user, with_relations=True)
             if not user_info:
                 return
             user_to_save = user_info['object'].serialise()
-            log.debug('scrapping user: %s\nat neigh: %s in level: %s' % (user_to_save, neighbourhood, level))
+
+            log.info('scrapping user: %s\nat neigh: %s in level: %s\n--------------------' %
+                     (user_to_save, neighbourhood, level))
             #saving interested user
             self.db.save_user(user_to_save)
 
             relations_in_t_model = user_info['relations']
             related_users = []
-            if neighbourhood >= level:
+            if neighbourhood > level:
                 neighbourhood_users = []
                 neighbourhood_users.extend(relations_in_t_model['followers'])
                 neighbourhood_users.extend(relations_in_t_model['friends'])
@@ -297,14 +268,15 @@ class tweepy_engine(engine):
                 log.warn('some exception in e: %s' % e)
                 log.exception(e)
                 if 'Rate limit exceeded' in str(e):
-                    log.info('oook wil be sleep...')
+                    log.info('ok, will be sleep...')
                     time.sleep(3600)
 
 
 if __name__ == '__main__':
-    engine_ = tweepy_engine()
-    engine_.diff_process()
-    
+    pass
+
+
+
 
 
 
