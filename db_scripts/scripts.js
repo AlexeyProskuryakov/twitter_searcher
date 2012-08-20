@@ -99,25 +99,23 @@ create_not_searched = function() {
 
 //initialise differences machine
 
-init_diff_machine = function(first) {
+init_diff_machine = function(first, date_start,date_stop) {
+    print(date_start);
+    print(date_stop);
     print('init differences');
     users = null;
     if (first) {
         users = db.users.find();
     } else {
-        users = db.users.find({'date_touch_':{'$lte':new Date()} });
+        users = db.users.find({$and:[{date_touch_:{$gte:date_start}},{date_touch_:{$lte:date_stop}}]});
     }
-    printjson(users);
+
     users.forEach(function(x){
-        db.c_diffs.insert({'name':x['name_'],'date':new Date()})
+        printjson(x);
+        db.diffs_users_input.insert({'user_name':x['name_'],'date_touch_':x['date_touch_']});
     })
-
-
 };
-//flushing diffs in users
 
-//init();
-//relations(0, 100, 0, 100);
-//entities(0, 100);
-//create_not_searched();
-init_diff_machine(true);
+db.system.js.save({_id:'init_diff_machine',value:init_diff_machine});
+
+init_diff_machine(false,new Date('Mon Aug 20 01:37:24 2012'),new Date('2012-08-20T01:37:24.386000'));

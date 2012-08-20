@@ -57,18 +57,16 @@ def __get_statistic_of_tweets(data):
 
     #calculate all frequencies:
     result = []
+    all_len = float(len(all_data))
     for type, arr in types.items():
         for el in arr:
             result.append(m_hash_dict({'entity': el,
-                                       'freq': float(1) / float(all_data.count(el)),
+                                       'freq':  float(all_data.count(el))/all_len,
                                        'type': type}))
+
     return {'statistic': list(set(result)),
             hash_tag: list(set(types[hash_tag])),
             mention: list(set(types[mention]))}
-
-
-def get_hash_tags(text):
-    return [tag for tag in hash_tag_pattern.findall(text)]
 
 
 def create_statistic_of_tweets(timeline):
@@ -101,10 +99,6 @@ def get_count_smiles(input, regexp=smile_regexp):
     return {'good': count_good, 'bad': count_bad, 'neutral': count_neutral}
 
 
-def extracts_text_elements(text):
-    if isinstance(text, str) or isinstance(text, unicode):
-        words = text.split()
-        return words
 
 
 if __name__ == '__main__':

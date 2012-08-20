@@ -2,9 +2,10 @@
 import webbrowser
 import time
 import  tweepy
+from differences.diff_machine import difference_factory
 import loggers
 from model import functions
-from model.diff_machine import create_difference
+
 
 from model.db import db_handler
 from model.functions import *
@@ -61,28 +62,22 @@ class tweepy_engine(engine):
         preparing user info for scrapping
         return object of user in tweepy model
         """
+
         if type(start_user) in (type(str()), type(unicode())):
-            if self.db.verify_user(start_user).status == m_user_status.s_none:
+            status = self.db.verify_user(start_user)
+            if status.status == m_user_status.s_none or status.status == m_user_status.s_update_needed:
                 return self._get_user_by_name(start_user)
-            else:
-                log.warn('this user is saved')
+            elif status.status == m_user_status.s_updated:
+                log.warn('this user is saved and or updated')
+                return None
 
         if isinstance(start_user, tweepy.User):
-            if self.db.verify_user('@' + start_user.screen_name).status == m_user_status.s_none:
+            status = self.db.verify_user(tools.imply_dog(start_user.screen_name,with_dog=True))
+            if status.status == m_user_status.s_none or status.status == m_user_status.s_update_needed:
                 return start_user
             else:
-                log.warn('this user is saved')
-
-        #if start user is None - getting from db
-        if not start_user:
-            log.debug('start user is null, loading from db not searched')
-            start_user = self.db.get_not_searched_name()
-            if start_user:
-                start_user = self._get_user_by_name(start_user)
-            else:
+                log.warn('this user is saved and or updated')
                 return None
-            return start_user
-
 
     def _get_user_by_name(self, user_name):
         """
@@ -195,6 +190,7 @@ class tweepy_engine(engine):
                 return {'object': user, 'relations': relations}
             else:
                 return user
+
         except Exception as e:
             log.exception(e)
             log.info("counts of request is: %s" % self._count_requests)
@@ -204,6 +200,8 @@ class tweepy_engine(engine):
             if 'Rate limit exceeded' in str(e):
                 log.info('oook wil be sleep...')
                 time.sleep(3600)
+                self.get_user_info(start_user,with_relations)
+
             if 'Invalid / expired Token' in str(e):
                 log.exception("!!!!!!!! CHANGE ACCESS TOKEN !!!!!!!!")
                 raise e
@@ -253,15 +251,23 @@ class tweepy_engine(engine):
             log.warn('in scrapping exception as %s' % e)
 
     def diff_process(self):
+        """
+        at first you can have some users
+        next - init_diff_machine - prepare users for difference analysing
+        next start this method
+        """
         diff_users = self.db.get_users_for_diff()
-        for user in diff_users:
+        log.info('will load differences ')
+        for i in range(len(diff_users)):
             try:
-                log.info('processing diffs for: %s' % user)
-                t_user = self._get_user_by_name(user)
+                user = diff_users[i]
+                log.info('processing diffs for: %s' % user.name_)
+                t_user = self._get_user_by_name(user.name_)
                 m_user_now = self.get_user_info(t_user, with_relations=False)
-                m_user_prev = self.db.get_user({'name_': m_user_now.name_})
 
-                diff = create_difference(user_before=m_user_prev, user_now=m_user_now)
+
+                diff_factory = difference_factory()
+                diff = diff_factory.create_user_difference(user_before=user, user_now=m_user_now)
                 self.db.save_diffs(diff.serialise())
 
             except Exception as e:
@@ -273,7 +279,9 @@ class tweepy_engine(engine):
 
 
 if __name__ == '__main__':
-    pass
+    engine = tweepy_engine()
+
+    engine.diff_process()
 
 
 

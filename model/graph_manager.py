@@ -1,9 +1,10 @@
 from model.db import db_handler
+from properties import props
 
 __author__ = 'Alesha'
 class db_graph(db_handler):
     def __init__(self):
-        self.handler = db_handler.__init__()
+        self.handler = db_handler.__init__(props.host,props.port)
 
     def form_nodes(self, f_name, parameter_f=lambda x: x['tweets_count']):
         file = open(f_name, 'w+')

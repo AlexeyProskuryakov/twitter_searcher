@@ -3,6 +3,7 @@ from pymongo import  *
 from pymongo.database import Database
 import loggers
 from model.tw_model import *
+from properties import props
 from properties.props import *
 
 __author__ = '4ikist'
@@ -21,8 +22,11 @@ not_searched_name = 'not_searched'
 
 users_for_update_name = 'm_users'
 
-diffs_name = 'c_diffs'
-diffs_fields = ['diff_id','user_name','date']
+diffs_output_name = 'diffs_users_output'
+
+#fields are initted in diff machine
+diffs_input_name = 'diffs_users_input'
+diffs_input_fields = ['name_','date_touch_']
 
 messages_name = 'messages'
 messages_info_name = 'messages_info'
@@ -44,19 +48,24 @@ class db_handler():
             self.users = self.db[users_coll_name]
             self.entities = self.db[entities_coll_name]
             self.relations = self.db[relations_coll_name]
-            self.not_searched = self.db[not_searched_name]
-            self.diffs = self.db[diffs_name]
+
+            self.diffs_input = self.db[diffs_input_name]
+            self.diffs_output = self.db[diffs_output_name]
+
             self.messages = self.db[messages_name]
             self.messages_info = self.db[messages_info_name]
-            self.users_for_update = self.db[users_for_update_name]
 
             if not self.__is_index_presented(self.users):
                 self.users.create_index('name_', ASCENDING, unique=True)
-            if not self.__is_index_presented(self.diffs):
-                self.diffs.create_index('date', ASCENDING, unique=False)
+            if not self.__is_index_presented(self.diffs_input):
+                self.diffs_input.create_index('date_touch_', ASCENDING, unique=False)
+                self.diffs_input.create_index('user_name', ASCENDING, unique=True)
+            if not self.__is_index_presented(self.diffs_output):
+                self.diffs_output.create_index('date_touch_',ASCENDING,unique=False)
             if not self.__is_index_presented(self.messages):
                 self.messages.create_index([('time', ASCENDING), ('user', ASCENDING),('message',ASCENDING)], unique=True)
 
+            self.db.eval(code='db.loadServerScripts();')
 
         except Exception as e:
             log.exception(e)
@@ -96,15 +105,11 @@ class db_handler():
 
     def get_user_by_name(self, user_name):
         user = self.users.find_one({'name_':user_name})
-        r_user = m_user(user['name_'])
-        r_user.serialise_from_db(user)
-        return r_user
+        return m_user.create(user)
 
     def get_user(self, req):
         user = self.users.find_one(req)
-        r_user = m_user(user['name_'])
-        r_user.serialise_from_db(user)
-        return r_user
+        return m_user.create(user)
 
     def save_diffs(self, ser_diffs):
         """
@@ -116,36 +121,52 @@ class db_handler():
         log.debug('saving diffs' % ser_diffs)
         #user for updating
         user = self.users.find_one({'name_': ser_diffs['user_name']})
-        son = SON(ser_diffs)
-        log.debug(son)
         if user:
-            self.users.update({'_id': user['_id']}, {"$addToSet": {'diffs_': son}})
-            self.diffs.save(son)
+            son = SON(ser_diffs)
+            log.debug(son)
+            self.users.update({'_id': user['_id']}, {"$addToSet": {'diffs_': {'id':ser_diffs['diff_id'],'datetime':datetime.datetime.now()}}})
+            self.users.update({'_id':user['_id']},{"$set":{'date_touch_':datetime.datetime.now()}})
+            self.diffs_output.save(son)
+        else:
+            log.warn('user for this diff not found...')
 
-    def get_users_for_diff(self, timedelta=props.timedelta):
+    def get_users_for_diff(self,use_input_diff_collection = False,limit = 10):
         """
-        timedelta it is time between now and 'date' of first difference
+        if use_input_diff_collection - getting from collection diff_users_input user names with limit
+        else get from collection users users names which date_touch_ between:
+            now - props.timdelta and now
+            or
+            props.time_start and props.time_stop
         """
-        users = self.diffs.find({'date': {'$lte': datetime.datetime.now() - timedelta}})
-        users = set([user['name'] for user in users])
-        self.diffs.remove({'name': {'$in': users}})
-        return users
+        users = []
+        if use_input_diff_collection:
+            diffs = self.diffs_input.find(limit=limit)
+            for diff in diffs:
+                self.diffs_input.remove(diff)
+                user = m_user.create(self.users.find_one({'name_':diff['name_']}))
+                users.append(user)
+            return users
+        else:
+            user_objects = []
+            if props.timedelta:
+                user_objects = self.users.find(
+                        {'date_touch_':{'$lt':datetime.datetime.now() - props.timedelta}},
+                                                                                        limit= limit)
+            elif props.time_start and props.time_stop:
+                user_objects = self.users.find({'$and':[
+                        {'date_touch_':{'$gte':props.time_start}},
+                        {'date_touch_':{'$lte':props.time_stop}}
+                ]},limit = limit)
 
-    def get_not_searched_name(self):
-       #may be it is not good solve #-,
-       not_searched = self.not_searched.find_one()
-       if not_searched:
-           self.not_searched.remove({'name': not_searched['name']})
-           log.debug("loading not searched name: %s" % not_searched['name'])
-           return not_searched['name']
-       else:
-           log.warn('no more users for search :( update collection in db, using scripts.js/create_not_searched()')
-           return None
+            users = [m_user.create(user) for user in user_objects]
+            return users
 
     def verify_user(self, name):
         user = self.users.find_one({'name_': name})
         if user:
-            return m_user_status(m_user_status.s_saved)
+            if user['date_touch_']+props.min_timedelta > datetime.datetime.now():
+                return m_user_status(m_user_status.s_updated)
+            return m_user_status(m_user_status.s_update_needed)
         return m_user_status(m_user_status.s_none)
 
     def save_message(self, message):
@@ -153,9 +174,6 @@ class db_handler():
 
     def save_message_info(self, messages_info):
         self.messages_info.save(messages_info)
-
-    def get_users_for_update(self):
-        return [user for user in self.users_for_update.find()]
 
 if __name__ == '__main__':
     pass
