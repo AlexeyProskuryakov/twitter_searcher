@@ -1,6 +1,7 @@
 from datetime import datetime
+from differences.diff_model import m_user_state_difference, difference_element, m_hash_dict
 from model.exceptions import model_exception
-from model.tw_model import m_user, m_user_state_difference, difference_element, m_hash_dict
+from model.tw_model import m_user
 from properties import props
 
 __author__ = 'Alesha'
@@ -10,20 +11,23 @@ def __prep_fields(fields, exclude):
     fields_ = dict(fields_)
     return fields_
 
-#todo refactor - create difference factory.
-def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_') or str(x).startswith('_'),use_hash_as_name=False):
+
+def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_') or str(x).startswith('_'),
+                      use_hash_as_name=False):
     """
     creating difference between two objects of user
     use it with m_users with similar names
     return m_difference object
     params: users, exclude - excluded fields as default it is: _fields_name and fields_name_
-    use hashs as name - difference id is unique id of this difference will evaluate on the hashs of users
+    use hashs as id - difference id is unique id of this difference will evaluate on the hashs of users
+    /and in data base it will be good...
+
     """
     diff_id = None
     if use_hash_as_name:
-        diff_id = {'left':hash(user_before),'right':hash(user_now)}
+        diff_id = {'left': hash(user_before), 'right': hash(user_now)}
 
-    difference = m_user_state_difference(diff_id,user_now.name_)
+    difference = m_user_state_difference(diff_id, user_now.name_)
 
     fields_before = __prep_fields(user_before.__dict__, exclude)
     fields_now = __prep_fields(user_now.__dict__, exclude)
@@ -51,17 +55,16 @@ def create_difference(user_before, user_now, exclude=lambda x:str(x).endswith('_
             o_value = fields_before[key]
 
             #if type of field is array
-            if type(o_value) == type(value) == type(list()) == type(value):
-                diff_element = diff_arrays(o_value, value)
+            if isinstance(o_value,list) and isinstance(value,list) :
+                diff_element = _diff_arrays(o_value, value)
 
             #if type is integer
-            elif type(o_value) == type(value) == type(int(0)):
-                diff_element = diff_int(o_value, value)
+            elif isinstance(o_value,int) and isinstance(value,int):
+                diff_element = _diff_int(o_value, value)
 
             #for another parameters...
             elif o_value != value:
-                diff_element = difference_element(difference_element.s_changed,
-                        m_hash_dict({difference_element.s_a_old: o_value, difference_element.s_a_new: value}))
+                diff_element = _diff_hz(o_value, value)
             else:
                 continue
 
@@ -77,10 +80,14 @@ def __validate_dict_of_array(array):
     return array
 
 
-def diff_arrays(one_arr, two_arr):
+def _diff_hz(element1, element2):
+    difference_element(difference_element.s_changed,
+                       m_hash_dict({difference_element.s_a_old: element1, difference_element.s_a_new: element2}))
+
+
+def _diff_arrays(one_arr, two_arr):
     """
     for array elements s_a_ states
-
     """
     so = set(__validate_dict_of_array(one_arr))
     st = set(__validate_dict_of_array(two_arr))
@@ -109,7 +116,7 @@ def diff_arrays(one_arr, two_arr):
         return de
 
 
-def diff_int( one_int, two_int):
+def _diff_int( one_int, two_int):
     one_int = int(one_int)
     two_int = int(two_int)
     if one_int == two_int:
