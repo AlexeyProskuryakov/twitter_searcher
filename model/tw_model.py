@@ -1,5 +1,10 @@
 from datetime import datetime
+<<<<<<< HEAD
 from differences.d_model import m_hash_dict
+=======
+from differences.diff_model import difference_element, m_hash_dict
+from properties import props
+>>>>>>> ec059c5dc6053cc3b66b865533c4d3e926995199
 __author__ = '4ikist'
 
 
@@ -66,6 +71,7 @@ class m_user(serializable):
         self.friends_relations = dict_of_relations['friends']
         self.mention_relations = dict_of_relations['mentions']
 
+<<<<<<< HEAD
     def __hash__(self):
         return self.followers_count+\
                self.friends_count+\
@@ -74,6 +80,10 @@ class m_user(serializable):
                 hash(self.real_name)+\
                 hash(self.date_touch_)
 
+=======
+    def serialise_from_db(self,dict):
+        self.__dict__ = dict
+>>>>>>> ec059c5dc6053cc3b66b865533c4d3e926995199
 
 
     def serialise_from_db(self,dict):

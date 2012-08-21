@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 import re
-from model.tw_model import m_hash_dict
+from differences.diff_model import m_hash_dict
 import tools
 
 __author__ = '4ikist'
