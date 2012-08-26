@@ -10,8 +10,16 @@ def __get_count(input, x):
 
 
 def create_set_with_counts(input):
-    return set(zip(input, [__get_count(input, x) for x in input]))
+    """
+    creating set of array input with counts of any element in input
+    """
+    return [list(el) for el in set(zip(input, [__get_count(input, x) for x in input]))]
 
+def create_set_of_tuples_elements(input):
+    result = set()
+    for x in input:
+        result.add(tuple(x))
+    return result
 
 def flush(data, by_what=lambda x:x.screen_name):
     """
@@ -37,6 +45,8 @@ def print_model_serializable(m_user):
 
 
 def imply_dog(string, with_dog=False):
+    if not len(string):
+        return None
     if string[0] == '@':
         if with_dog:
             return string

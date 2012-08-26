@@ -26,12 +26,10 @@ diffs_output_name = 'diffs_users_output'
 
 #fields are initted in diff machine
 diffs_input_name = 'diffs_users_input'
-diffs_input_fields = ['name_','date_touch_']
+diffs_input_fields = ['name_', 'date_touch_']
 
 messages_name = 'messages'
 messages_info_name = 'messages_info'
-
-
 
 class db_handler():
     def __is_index_presented(self, collection):
@@ -56,14 +54,19 @@ class db_handler():
             self.messages_info = self.db[messages_info_name]
 
             if not self.__is_index_presented(self.users):
+                log.info("creating index for users")
                 self.users.create_index('name_', ASCENDING, unique=True)
             if not self.__is_index_presented(self.diffs_input):
+                log.info("creating index for diffs_input")
                 self.diffs_input.create_index('date_touch_', ASCENDING, unique=False)
                 self.diffs_input.create_index('user_name', ASCENDING, unique=True)
             if not self.__is_index_presented(self.diffs_output):
-                self.diffs_output.create_index('date_touch_',ASCENDING,unique=False)
+                log.info("creating index for diffs_output")
+                self.diffs_output.create_index('date_touch_', ASCENDING, unique=False)
             if not self.__is_index_presented(self.messages):
-                self.messages.create_index([('time', ASCENDING), ('user', ASCENDING),('message',ASCENDING)], unique=True)
+                log.info("creating index for messages")
+                self.messages.create_index([('time', ASCENDING), ('user', ASCENDING), ('message', ASCENDING)],
+                                                                                                             unique=True)
 
             self.db.eval(code='db.loadServerScripts();')
 
@@ -93,19 +96,25 @@ class db_handler():
                 raise e
 
 
-
-
     def save_user(self, ser_user):
         """
         is serialised user from our model user
         """
-        log.debug('saving user: %s:%s:%s' % (ser_user['name_'], ser_user['real_name'], ser_user['timeline_count']))
+        log.debug('saving user: un: %s; rn %s; tlc %s;' % (
+        ser_user['name_'], ser_user['real_name'], ser_user['timeline_count']))
         son = SON(ser_user)
+        saved_user = self.users.find_one({'name_': ser_user['name_']})
+
+        if saved_user:
+            son['_id'] = saved_user['_id']
+
         self.users.save(son)
 
     def get_user_by_name(self, user_name):
-        user = self.users.find_one({'name_':user_name})
-        return m_user.create(user)
+        user = self.users.find_one({'name_': user_name})
+        if user:
+            return m_user.create(user)
+        return None
 
     def get_user(self, req):
         user = self.users.find_one(req)
@@ -120,17 +129,33 @@ class db_handler():
         """
         log.debug('saving diffs' % ser_diffs)
         #user for updating
-        user = self.users.find_one({'name_': ser_diffs['user_name']})
+        #see algorithm of it generation #difference_machine
+        #and methods
+        #   form_id(), get_diff_id()
+        #and in #m_user
+        #   get_diff_part_id()
+        diff_id = ser_diffs['diff_id_']
+        left_name = diff_id['left']['name_']
+        right_name= diff_id['right']['name_']
+        if right_name != left_name:
+            log.warn('i do not know what name is right %s --> %s '%(left_name,right_name))
+            return
+
+        user = self.users.find_one({'name_': left_name})
         if user:
+
+
+            self.users.update({'_id': user['_id']},
+                    {"$addToSet": {'diffs_': {'id': ser_diffs['diff_id_'], 'datetime': datetime.datetime.now()}}})
+            self.users.update({'_id': user['_id']}, {"$set": {'date_touch_': datetime.datetime.now()}})
+
             son = SON(ser_diffs)
             log.debug(son)
-            self.users.update({'_id': user['_id']}, {"$addToSet": {'diffs_': {'id':ser_diffs['diff_id'],'datetime':datetime.datetime.now()}}})
-            self.users.update({'_id':user['_id']},{"$set":{'date_touch_':datetime.datetime.now()}})
             self.diffs_output.save(son)
         else:
             log.warn('user for this diff not found...')
 
-    def get_users_for_diff(self,use_input_diff_collection = False,limit = 10):
+    def get_users_for_diff(self, use_input_diff_collection=props.prepared_collection, limit=10):
         """
         if use_input_diff_collection - getting from collection diff_users_input user names with limit
         else get from collection users users names which date_touch_ between:
@@ -143,31 +168,32 @@ class db_handler():
             diffs = self.diffs_input.find(limit=limit)
             for diff in diffs:
                 self.diffs_input.remove(diff)
-                user = m_user.create(self.users.find_one({'name_':diff['name_']}))
+                user = m_user.create(self.users.find_one({'name_': diff['name_']}))
                 users.append(user)
             return users
         else:
             user_objects = []
             if props.timedelta:
-                user_objects = self.users.find(
-                        {'date_touch_':{'$lt':datetime.datetime.now() - props.timedelta}},
-                                                                                        limit= limit)
-            elif props.time_start and props.time_stop:
-                user_objects = self.users.find({'$and':[
-                        {'date_touch_':{'$gte':props.time_start}},
-                        {'date_touch_':{'$lte':props.time_stop}}
-                ]},limit = limit)
+                more_than_it = datetime.datetime.now() - props.timedelta
+                user_objects.extend(self.users.find({'date_touch_': {'$gte': more_than_it}}, limit=limit))
 
-            users = [m_user.create(user) for user in user_objects]
-            return users
+            if props.time_start and props.time_stop:
+                user_objects.extend(self.users.find({'$and': [
+                        {'date_touch_': {'$gte': props.time_start}},
+                        {'date_touch_': {'$lte': props.time_stop}}
+                ]}, limit=limit))
+
+            users.extend([m_user.create(user) for user in user_objects])
+            return list(set(users))
 
     def verify_user(self, name):
         user = self.users.find_one({'name_': name})
         if user:
-            if user['date_touch_']+props.min_timedelta > datetime.datetime.now():
-                return m_user_status(m_user_status.s_updated)
-            return m_user_status(m_user_status.s_update_needed)
-        return m_user_status(m_user_status.s_none)
+            if user['date_touch_'] + props.min_timedelta > datetime.datetime.now():
+                return m_user_status(m_user_status.s_updated, last_diff=user['date_touch_'])
+            return m_user_status(m_user_status.s_update_needed, last_diff=user['date_touch_'])
+        else:
+            return m_user_status(m_user_status.s_none)
 
     def save_message(self, message):
         self.messages.save(message)
@@ -177,8 +203,8 @@ class db_handler():
 
 if __name__ == '__main__':
     pass
-
-#    db_handler = db_handler(truncate=True)
+#    db_handler = db_handler()
+#    db_handler.get_users_for_diff()
 #
 #    db_handler.diffs.save({'name': 'name_1', 'date': datetime.datetime.strptime('2009.12.12_12:12', props.time_format)})
 #    db_handler.diffs.save({'name': 'name_2', 'date': datetime.datetime.strptime('2009.12.12_12:13', props.time_format)})

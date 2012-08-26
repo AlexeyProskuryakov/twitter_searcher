@@ -97,8 +97,7 @@ create_not_searched = function() {
     });
 };
 
-//initialise differences machine
-
+//initialise differences machine as storing into diff_users_input data for differences
 init_diff_machine = function(first, date_start,date_stop) {
     print(date_start);
     print(date_stop);
@@ -112,10 +111,10 @@ init_diff_machine = function(first, date_start,date_stop) {
 
     users.forEach(function(x){
         printjson(x);
-        db.diffs_users_input.insert({'user_name':x['name_'],'date_touch_':x['date_touch_']});
+        db.diffs_users_input.insert({'name_':x['name_'],'date_touch_':x['date_touch_']});
     })
 };
 
 db.system.js.save({_id:'init_diff_machine',value:init_diff_machine});
 
-init_diff_machine(false,new Date('Mon Aug 20 01:37:24 2012'),new Date('2012-08-20T01:37:24.386000'));
+init_diff_machine(false,new Date('Mon Aug 20 01:37:24 2012'),new Date('Mon Aug 26 01:37:24 2012'));

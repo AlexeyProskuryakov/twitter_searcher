@@ -36,7 +36,8 @@ get_users_from_text = function(skip, limit, add_or_set) {
         return null;
     }
     print('result was get processing...');
-    result.forEach(function(x) {
+    printjson(result['result']);
+    result['result'].forEach(function(x) {
         printjson(x);
         if (add_or_set == '$add') {
             var saved_user = db.m_users.findOne({'name':x['_id']});
