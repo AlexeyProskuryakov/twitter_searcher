@@ -68,7 +68,7 @@ class db_handler():
                 self.messages.create_index([('time', ASCENDING), ('user', ASCENDING), ('message', ASCENDING)],
                                                                                                              unique=True)
 
-            self.db.eval(code='db.loadServerScripts();')
+#            self.db.eval(code='db.loadServerScripts();')
 
         except Exception as e:
             log.exception(e)

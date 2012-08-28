@@ -56,14 +56,18 @@ class m_user(serializable):
         self.protected = None
         self.favorites_count = None
 
+        self.followers_relations = []
+        self.friends_relations = []
+        self.mentions_relations = []
+
     def set_lists(self, lists_names, count):
         self.lists_names = lists_names
         self.lists_count = count
 
     def get_relations(self):
-        return {followers: self.followers_relations,
-                friends: self.friends_relations,
-                mentions: self.mentions_relations}
+        return {followers: self.followers_relations if self.__dict__.has_key('followers_relations') else [],
+                friends: self.friends_relations if self.__dict__.has_key('friends_relations') else [],
+                mentions: self.mentions_relations if self.__dict__.has_key('mention_relations') else []}
 
     def set_relations(self, dict_of_relations):
         """
@@ -74,11 +78,12 @@ class m_user(serializable):
         self.friends_relations = dict_of_relations[friends]
 
     def set_timeline_info(self, timeline_info):
-        self.urls = timeline_info[functions.hash_tag]
+        self.urls = timeline_info[functions.url]
         self.hash_tags = timeline_info[functions.hash_tag]
         self.mentions = timeline_info[functions.mention]
         #for mention relations
-        self.mentions_relations = [mention[0] for mention in self.mentions]
+        if self.mentions:
+            self.mentions_relations = [mention[0] for mention in self.mentions]
         self.words = timeline_info[functions.word]
 
     def get_diff_part_id(self):
