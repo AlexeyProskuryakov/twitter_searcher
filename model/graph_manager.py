@@ -16,9 +16,10 @@ class db_graph(db_handler):
         print 'nodes formed'
 
 
-    def form_edges(self, f_name):
+    def form_edges(self, f_name, directed = False):
         file = open(f_name, 'w+')
-        file.write("Source;Target;Id;\n")
+        file.write("Source;Target;Id;Directed\n")
+
         relations = set()
         for user in self.handler.users.find():
             for out_ in user['friends']:
@@ -27,6 +28,7 @@ class db_graph(db_handler):
             for in_ in user['followers']:
                 term = (in_, user['name'])
                 relations.add(term)
+
         for relation in relations:
             file.write(relation[0] + ";" + relation[1] + ";;\n")
         print 'edges formed'

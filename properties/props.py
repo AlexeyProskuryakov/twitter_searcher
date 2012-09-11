@@ -13,8 +13,8 @@ access_token_secret = "kxm2cuq9xNaSUBKPxIlUNJI3wKJ57VHmT0h1w1PuLWE"
 
 #####   db properties
 port = 27017
-host = '178.49.120.77'
-#host = 'localhost'
+#host = '178.49.120.77'
+host = 'localhost'
 db_name = 'ttr'
 
 #####   application properties

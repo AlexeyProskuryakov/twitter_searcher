@@ -16,10 +16,14 @@ all_node_names = list()
 
 
 def send(data):
-    jdata = json.dumps(data)
-    log.debug(jdata)
-    c = urllib2.urlopen(props.v_host, jdata)
-    log.info(c.read())
+    try:
+        jdata = json.dumps(data)
+        log.debug(jdata)
+        c = urllib2.urlopen(props.v_host, jdata)
+        log.info(c.read())
+    except Exception as e:
+        log.error('sending error')
+        log.exception(e)
 
 
 def add_nodes(nodes):

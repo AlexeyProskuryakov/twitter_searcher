@@ -2,16 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60ba1b21-42d6-41a5-a3ba-a2d185a44d10" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/visualise/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/visualise/vis_machine.py" />
-      <change type="DELETED" beforePath="D:\develop\twitter_searcher\properties\ff_profile\sessionstore.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/properties/ff_profile/places.sqlite" afterPath="$PROJECT_DIR$/properties/ff_profile/places.sqlite" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/analysing_data/markov_chain_machine.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/visualise/data_streaming.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/db.py" afterPath="$PROJECT_DIR$/model/db.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/tw_model.py" afterPath="$PROJECT_DIR$/model/tw_model.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main_diff.py" afterPath="$PROJECT_DIR$/main_diff.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/graph_manager.py" afterPath="$PROJECT_DIR$/model/graph_manager.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/properties/props.py" afterPath="$PROJECT_DIR$/properties/props.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/search_engine/engines.py" afterPath="$PROJECT_DIR$/search_engine/engines.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/visualise/vis_machine.py" afterPath="$PROJECT_DIR$/visualise/vis_machine.py" />
     </list>
     <ignored path="twitter_searcher.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,82 +33,82 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="scripts.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/db_scripts/scripts.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="101" column="22" selection-start="3496" selection-end="3496" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vis_machine.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/visualise/vis_machine.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="data_streaming.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/visualise/data_streaming.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="4" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="graph_model.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/db_scripts/graph_model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="253" column="0" selection-start="8277" selection-end="8277" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="markov_chain_machine.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="68" column="11" selection-start="2344" selection-end="2344" vertical-scroll-proportion="0.0508982">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__builtin__.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.PyCharm10/system/python_stubs/-1563028385/__builtin__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3200" column="8" selection-start="108940" selection-end="108940" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="graph_manager.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/model/graph_manager.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="0" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main_diff.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main_diff.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="26" selection-start="98" selection-end="98" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="engines.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/search_engine/engines.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="279" column="0" selection-start="10995" selection-end="10995" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="diff_machine.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/differences/diff_machine.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="252" column="0" selection-start="9383" selection-end="9383" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="d_model.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/differences/d_model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="8" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="t_exp.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/db_scripts/t_exp.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="34" selection-start="748" selection-end="748" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tw_model.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/model/tw_model.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="27" selection-start="909" selection-end="909" vertical-scroll-proportion="-6.8">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="0" selection-start="357" selection-end="357" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="props.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/properties/props.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="9" selection-start="633" selection-end="633" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="vis_machine.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/visualise/vis_machine.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="53" selection-start="1022" selection-end="1022" vertical-scroll-proportion="0.1271028">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="urllib2.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://C:/Python27/Lib/urllib2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="120" column="14" selection-start="4125" selection-end="4125" vertical-scroll-proportion="0.0">
+            <state line="323" column="29" selection-start="13042" selection-end="13042" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -138,7 +137,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/differences/test_difference.py" />
         <option value="$PROJECT_DIR$/model/functions.py" />
         <option value="$PROJECT_DIR$/tools.py" />
         <option value="$PROJECT_DIR$/db_scripts/t_exp.js" />
@@ -146,11 +144,15 @@
         <option value="$PROJECT_DIR$/differences/d_model.py" />
         <option value="$PROJECT_DIR$/differences/diff_machine.py" />
         <option value="$PROJECT_DIR$/model/db.py" />
-        <option value="$PROJECT_DIR$/search_engine/engines.py" />
         <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/properties/props.py" />
         <option value="$PROJECT_DIR$/model/tw_model.py" />
         <option value="$PROJECT_DIR$/visualise/vis_machine.py" />
+        <option value="$PROJECT_DIR$/model/graph_manager.py" />
+        <option value="$PROJECT_DIR$/main_diff.py" />
+        <option value="$PROJECT_DIR$/properties/props.py" />
+        <option value="$PROJECT_DIR$/search_engine/engines.py" />
+        <option value="$PROJECT_DIR$/visualise/data_streaming.py" />
+        <option value="$PROJECT_DIR$/analysing_data/markov_chain_machine.py" />
       </list>
     </option>
   </component>
@@ -180,8 +182,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Favorites" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -270,33 +270,45 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="twitter_searcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="twitter_searcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="articles" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="twitter_searcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="twitter_searcher" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="analysing_data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Favorites" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
   </component>
-  <component name="RunManager" selected="Python.vis_machine">
-    <configuration default="false" name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <module name="twitter_searcher" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PyDebugRunner" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PyDebugRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.markov_chain_machine">
     <configuration default="false" name="engines" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -369,6 +381,24 @@
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
+    <configuration default="false" name="markov_chain_machine" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/analysing_data" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <module name="twitter_searcher" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/analysing_data/markov_chain_machine.py" />
+      <option name="PARAMETERS" value="" />
+      <RunnerSettings RunnerId="PyDebugRunner" />
+      <RunnerSettings RunnerId="PythonRunner" />
+      <ConfigurationWrapper RunnerId="PyDebugRunner" />
+      <ConfigurationWrapper RunnerId="PythonRunner" />
+      <method />
+    </configuration>
     <configuration default="true" type="PythonUnitTestConfigurationType" factoryName="Python's unittest">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -417,11 +447,11 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.main" />
-      <item index="1" class="java.lang.String" itemvalue="Python.engines" />
-      <item index="2" class="java.lang.String" itemvalue="Python.db" />
-      <item index="3" class="java.lang.String" itemvalue="Python.diff_machine" />
-      <item index="4" class="java.lang.String" itemvalue="Python.vis_machine" />
+      <item index="0" class="java.lang.String" itemvalue="Python.engines" />
+      <item index="1" class="java.lang.String" itemvalue="Python.db" />
+      <item index="2" class="java.lang.String" itemvalue="Python.diff_machine" />
+      <item index="3" class="java.lang.String" itemvalue="Python.vis_machine" />
+      <item index="4" class="java.lang.String" itemvalue="Python.markov_chain_machine" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -452,17 +482,17 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1862" height="1096" extended-state="6" />
+    <frame x="-8" y="-8" width="1320" height="784" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.327818" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32671756" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22642544" sideWeight="0.5811789" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6039297" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4188211" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3299532" sideWeight="0.5984733" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.40152672" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41679388" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -528,7 +558,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/visualise/vis_machine.py</url>
-          <line>69</line>
+          <line>73</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/search_engine/engines.py</url>
@@ -536,49 +566,31 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/visualise/vis_machine.py</url>
-          <line>31</line>
+          <line>35</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/visualise/vis_machine.py</url>
-          <line>26</line>
+          <line>30</line>
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py</url>
+          <line>83</line>
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py</url>
+          <line>35</line>
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py</url>
+          <line>52</line>
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/differences/test_difference.py">
+    <entry file="file://$PROJECT_DIR$/differences/diff_machine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="39" selection-start="302" selection-end="302" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="48" selection-start="326" selection-end="326" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1199" column="0" selection-start="49803" selection-end="49803" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_scripts/graph_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="411" column="11" selection-start="13706" selection-end="13706" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="0" selection-start="368" selection-end="496" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_scripts/scripts.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="119" column="13" selection-start="3980" selection-end="3980" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_scripts/t_exp.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="34" selection-start="748" selection-end="748" vertical-scroll-proportion="0.0">
+        <state line="252" column="0" selection-start="9383" selection-end="9383" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -588,58 +600,84 @@
         <state line="21" column="8" selection-start="779" selection-end="779" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/model/db.py">
+    <entry file="file://$PROJECT_DIR$/db_scripts/t_exp.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="1" selection-start="2423" selection-end="2423" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/differences/diff_machine.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="252" column="0" selection-start="9383" selection-end="9383" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="0" selection-start="357" selection-end="357" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/search_engine/engines.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="279" column="0" selection-start="10995" selection-end="10995" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/properties/props.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="9" selection-start="633" selection-end="633" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python27/Lib/urllib2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="120" column="14" selection-start="4125" selection-end="4125" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="23" column="34" selection-start="748" selection-end="748" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/model/tw_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="27" selection-start="909" selection-end="909" vertical-scroll-proportion="-6.8">
-          <folding />
-        </state>
+        <state line="45" column="27" selection-start="909" selection-end="909" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="357" selection-end="357" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/properties/props.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="0" selection-start="1008" selection-end="1008" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_scripts/scripts.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="101" column="22" selection-start="3496" selection-end="3496" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/visualise/vis_machine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="53" selection-start="1022" selection-end="1022" vertical-scroll-proportion="0.1271028">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/visualise/data_streaming.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="4" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/graph_manager.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main_diff.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="26" selection-start="98" selection-end="98" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/search_engine/engines.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="323" column="29" selection-start="13042" selection-end="13042" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/db.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="1" selection-start="2423" selection-end="2423" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_scripts/graph_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="253" column="0" selection-start="8277" selection-end="8277" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm10/system/python_stubs/-1563028385/__builtin__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3200" column="8" selection-start="108940" selection-end="108940" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="11" selection-start="2344" selection-end="2344" vertical-scroll-proportion="0.0508982">
           <folding />
         </state>
       </provider>

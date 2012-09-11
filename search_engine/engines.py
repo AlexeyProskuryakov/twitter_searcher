@@ -302,7 +302,7 @@ class tweepy_engine(object):
         """
         at first you can have some users
         next - init_diff_machine - prepare users for difference analysing
-        next start this method
+        next start this method and get differences from db.diff_output (or at differences_users_output)
         """
         diff_users = self.db.get_users_for_diff()
         log.info('will load differences ')
@@ -327,9 +327,6 @@ class tweepy_engine(object):
                     time.sleep(3600)
 
 
-if __name__ == '__main__':
-    engine = tweepy_engine()
-    engine.diff_process()
 
 
 
