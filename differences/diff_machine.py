@@ -13,6 +13,7 @@ class difference_factory():
     hash_f - hash_function which form diff_id_
     process_ifunctions - functions which process values and instances which flags functions do their work
 
+
     if you want to create difference process function create it with some instance
     for example:
     {instance:int,function:some_int_function}
@@ -21,7 +22,7 @@ class difference_factory():
     some_int_function must input values and return difference element (see d_model.py)
     for integrate your some_int_function use add_process_i_function
 
-    note: any object must have unique elements in similar fields
+    note: any object must have similar by type elements in similar fields
 
     see: create differences
     """
@@ -33,9 +34,9 @@ class difference_factory():
             self.form_id = lambda x:{'left': x[0], 'right': x[1]}
         if not process_ifunctions:
             self.process_ifunctions = [
-                    {'instance': int, 'function': difference_factory._diff_int},
-                    {'instance': str, 'function': difference_factory._diff_hz},
-                    {'instance': list, 'function': difference_factory._diff_arrays},
+                    {'instance': int, 'function': difference_factory.diff_int},
+                    {'instance': str, 'function': difference_factory.diff_str},
+                    {'instance': list, 'function': difference_factory.diff_arrays},
             ]
 
     def add_process_i_function(self, instance, function):
@@ -55,11 +56,41 @@ class difference_factory():
 
         return diff_id_
 
-    def _hash_fields(self, ul, ur):
-        for i in ul.__dict__.iteritems():
-            key = i[0]
-            value = i[1]
+    def _field_intersection_difference(self,difference,fields_now,fields_before):
+        intersection = set(fields_now).intersection(set(fields_before))
+        for field_element_key in intersection:
+                #prepearing old and new values
+            value_now = fields_now[field_element_key]
+            value_before = fields_before[field_element_key]
 
+            if difference_factory._equals(value_now, value_before):
+                continue
+                        #for functions and their instances in process functions
+            for if_function in self.process_ifunctions:
+                if isinstance(value_now, if_function['instance']) and isinstance(value_before, if_function['instance']):
+                    diff_element = if_function['function'](o_value, value)
+                    if diff_element and diff_element[difference_element.d_content]:
+                            diff_element.field_type = if_function['instance']
+                            diff_element.field_diff_function = if_function['function']
+                            difference.set_field(field_element_key, diff_element)
+        return difference
+
+    def _field_symmetric_difference(self,difference,fields_now,fields_before):
+
+        keys_of_fields_before = set(fields_before.keys())
+        keys_of_fields_now = set(fields_now.keys())
+
+        symmetric_difference = keys_of_fields_before.symmetric_difference(keys_of_fields_now)
+        union = keys_of_fields_before.union(keys_of_fields_now)
+
+        for field in symmetric_difference:
+                diff_state = 'can_not_diff_by_this'
+                difference_element = difference_element(state=diff_state,content=None)
+                added.field_type = type(fields_before[field])
+                added.field_diff_function = self._field_symmetric_difference()
+                difference.set_field(field, added)
+
+        return difference
 
     def create_difference(self, user_before, user_now):
         """
@@ -77,46 +108,17 @@ class difference_factory():
             return None
         diff_id_ = self._get_diff_id_(user_before, user_now)
         difference = m_difference(diff_id_)
-
+        #forming fields like m_hash_dicts, like a dict but can be hashable and have set of k:v
         fields_before = difference_factory._prep_fields(user_before.__dict__, self.exclude)
         fields_now = difference_factory._prep_fields(user_now.__dict__, self.exclude)
 
+        #process fields for their symmetric difference
+        difference = self._field_symmetric_difference(difference,fields_now,fields_before)
 
-        #if some old field was removed:
-        for field in fields_before:
-            if not fields_now.has_key(field):
-                was_removed = difference_element(state=difference_element.s_rem,
-                                                 content={field, m_hash_dict(fields_before[field])})
-                was_removed.field_type = field
-                difference.set_field(field, was_removed)
+        #process fields by their intersection
+        difference = self._field_symmetric_difference(difference,fields_now,fields_before)
 
-        #if some new field added:
-        for field in fields_now:
-            if not fields_before.has_key(field):
-                added = difference_element(state=difference_element.s_add,
-                                           content=m_hash_dict({field, fields_now[field]}))
-                added.field_type = field
-                difference.set_field(field, added)
-
-        #for elements in now in before - ignoring
-        for self_element in fields_now.items():
-            key = self_element[0]
-            value = self_element[1]
-            if key in fields_before.keys() and key in fields_now.keys():
-                #prepearing old and new values
-                o_value = fields_before[key]
-
-                if difference_factory._equals(value, o_value):
-                    continue
-
-                    #for functions and their instances in process functions
-                for if_function in self.process_ifunctions:
-                    if isinstance(value, if_function['instance']) and isinstance(o_value, if_function['instance']):
-                        diff_element = if_function['function'](o_value, value)
-                        if diff_element and diff_element[difference_element.d_content]:
-                            diff_element.field_type = key
-                            difference.set_field(key, diff_element)
-        #if difference has diff_fields exclude admin difference fields
+        #if difference has not diff_fields exclude admin difference fields
         if not difference.has_diff_fields():
             log.info("no difference fields in difference")
             return None
@@ -149,7 +151,7 @@ class difference_factory():
     @staticmethod
     def _prep_fields(fields, exclude):
         fields_ = [field for field in fields.items() if not exclude(field[0])]
-        fields_ = dict(fields_)
+        fields_ = m_hash_dict(dict(fields_))
         return fields_
 
     @staticmethod
@@ -158,16 +160,11 @@ class difference_factory():
             return [m_hash_dict(el) for el in array]
         return array
 
-    @staticmethod
-    def _diff_hz(element1, element2):
-        difference_element(difference_element.s_changed,
-                           m_hash_dict({difference_element.s_a_old: element1, difference_element.s_a_new: element2}))
 
 
     @staticmethod
     def __create_h_set(array):
         result = h_set()
-
         for el in array:
             if isinstance(el, list):
                 result.add(difference_factory.__create_h_set(el))
@@ -186,7 +183,7 @@ class difference_factory():
         return result
 
     @staticmethod
-    def _diff_arrays(one_arr, two_arr):
+    def diff_arrays(one_arr, two_arr):
         """
         for array elements s_a_ states
         """
@@ -209,32 +206,39 @@ class difference_factory():
 
         de = None
         if lwas_in_old:
-            de = difference_element(difference_element.s_rem, [])
+            de = difference_element(difference_element.s_rem, [],None,difference_factory.diff_int)
         if ladded_in_new:
-            de = difference_element(difference_element.s_add, [])
+            de = difference_element(difference_element.s_add, [],None,difference_factory.diff_int)
+
         if len(added_in_new):
             de.add_arr_element(difference_element.s_a_new, difference_factory.__destruct_h_set(added_in_new))
         if len(was_in_old):
             de.add_arr_element(difference_element.s_a_old, difference_factory.__destruct_h_set(was_in_old))
         if len(int):
             de.add_arr_element(difference_element.s_a_intersect, difference_factory.__destruct_h_set(int))
+
         return de
 
 
     @staticmethod
-    def _diff_int( one_int, two_int):
+    def diff_int( one_int, two_int):
         one_int = int(one_int)
         two_int = int(two_int)
         if one_int == two_int:
-            return difference_element(difference_element.s_no_grow, None)
+            return difference_element(difference_element.s_no_grow, None,difference_factory.diff_int)
         elif max(one_int, two_int) == one_int:
-            return difference_element(difference_element.s_stag, one_int - two_int)
+            return difference_element(difference_element.s_stag, one_int - two_int,difference_factory.diff_int)
         else:
-            return difference_element(difference_element.s_grow, two_int - one_int)
+            return difference_element(difference_element.s_grow, two_int - one_int,difference_factory.diff_int)
+
+    @staticmethod
+    def diff_str(element1, element2):
+        difference_element(difference_element.s_changed,
+                           m_hash_dict({difference_element.s_a_old: element1, difference_element.s_a_new: element2}))
 
 
     @staticmethod
-    def print_difference(m_difference):
+    def __print_difference(m_difference):
         if not m_difference:
             print None
             return
@@ -251,5 +255,6 @@ class h_set(set):
         return sum(hashes)
 
 if __name__ == '__main__':
-    diff = difference_factory._diff_arrays([[1, 1], 1, 1, 1, [1, 1]], [2, [2, 2], 2, [2, 2]])
-    print diff
+    print set(m_hash_dict({1:1,2:2,3:4}))
+#    diff = difference_factory.diff_arrays([[1, 1], 1, 1, 1, [1, 1]], [2, [2, 2], 2, [2, 2]])
+#    print diff

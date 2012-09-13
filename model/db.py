@@ -32,7 +32,7 @@ messages_name = 'messages'
 messages_info_name = 'messages_info'
 
 class db_handler():
-    def __is_index_presented(self, collection):
+    def _is_index_presented(self, collection):
         if len(collection.index_information()):
             return True
         return False
@@ -53,17 +53,17 @@ class db_handler():
             self.messages = self.db[messages_name]
             self.messages_info = self.db[messages_info_name]
 
-            if not self.__is_index_presented(self.users):
+            if not self._is_index_presented(self.users):
                 log.info("creating index for users")
                 self.users.create_index('name_', ASCENDING, unique=True)
-            if not self.__is_index_presented(self.diffs_input):
+            if not self._is_index_presented(self.diffs_input):
                 log.info("creating index for diffs_input")
                 self.diffs_input.create_index('date_touch_', ASCENDING, unique=False)
                 self.diffs_input.create_index('user_name', ASCENDING, unique=True)
-            if not self.__is_index_presented(self.diffs_output):
+            if not self._is_index_presented(self.diffs_output):
                 log.info("creating index for diffs_output")
                 self.diffs_output.create_index('date_touch_', ASCENDING, unique=False)
-            if not self.__is_index_presented(self.messages):
+            if not self._is_index_presented(self.messages):
                 log.info("creating index for messages")
                 self.messages.create_index([('time', ASCENDING), ('user', ASCENDING), ('message', ASCENDING)],
                                                                                                              unique=True)

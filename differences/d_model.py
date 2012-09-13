@@ -16,17 +16,17 @@ class m_difference(object):
 
     """
     #for difference fields names and in there have types @see difference_element
-    fp_diff = '_diff'
+    __fp_diff = '_diff'
 
     def __init__(self,diff_id_):
         #contains fields of
         self.diff_id_ = diff_id_
 
     def set_field(self,name,content):
-        self.__setattr__(name+self.fp_diff,content)
+        self.__setattr__(name+self.__fp_diff,content)
 
     def get_field(self,name):
-        return self.__getattribute__(name+self.fp_diff)
+        return self.__getattribute__(name+self.__fp_diff)
 
     def is_field(self,name):
         return self.__dict__.has_key(name)
@@ -42,9 +42,8 @@ class m_difference(object):
         keys = self.__dict__.keys()
         for key in keys:
             s_key = str(key)
-            if s_key.endswith(m_difference.fp_diff):
+            if s_key.endswith(m_difference.__fp_diff):
                 return True
-
         return False
 
 
@@ -90,11 +89,13 @@ class difference_element(m_hash_dict):
     d_content = 'content'
 
 
-    def __init__(self, state, content, seq=[], field_type = None, **kwargs):
+    def __init__(self, state, content, seq=[], field_type = None,field_diff_function = None, **kwargs):
         dict.__init__(self, seq, **kwargs)
         self.add_element(state, content)
         if not field_type:
             self.field_type = difference_element
+        self.field_diff_function = field_diff_function
+
 
     def add_element(self, state, content):
         self[difference_element.d_state] = state
