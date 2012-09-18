@@ -9,7 +9,7 @@ class db_booster(db_handler):
 
     mc_model_name = 'mc_model'
 
-    def __init__(self, truncate, messages_truncate):
+    def __init__(self, truncate = None, messages_truncate = None):
         db_handler.__init__(self, truncate, messages_truncate)
         self.mc_elements = self.db.create_collection(db_booster.mc_element_f_content_name)
         if not self._is_index_presented(self.mc_elements):
@@ -33,7 +33,7 @@ class db_booster(db_handler):
 
         result = []
         for el in elements:
-            element.create(el)
+            el = element.create(el)
             result.append(el)
         return result
 

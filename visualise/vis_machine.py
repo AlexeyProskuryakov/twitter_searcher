@@ -2,8 +2,11 @@
 visualisation of users graph
 
 """
+from datetime import datetime
 import json
+from time import sleep
 import urllib2
+import time
 import loggers
 from model import tw_model
 from model.db import db_handler
@@ -82,6 +85,11 @@ def process():
         add_edges(edges)
 
 if __name__ == '__main__':
-    process()
+    for i in range(365):
+        time_start = datetime.now()
+        process()
+        time_stop = datetime.now()
+        timedelta = time_stop.hour - time_start.hour
+        sleep(1*60*60*24 - timedelta*60*60)
 
     
