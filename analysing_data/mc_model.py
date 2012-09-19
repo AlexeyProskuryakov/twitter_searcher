@@ -6,6 +6,16 @@ class element(object):
 
     states = {'start': 0, 'stop': 1, 'node': 2}
 
+    @staticmethod
+    def get_start_stop(add_object,model_id_):
+        start = element(('start',), 1, type=element.w_type, model_id_=model_id_, additional_obj=add_object,
+                                  state=element.states['start'])
+        stop = element(('stop',), 1, type=element.w_type, model_id_=model_id_, additional_obj=add_object,
+                                state=element.states['stop'])
+        start.mc_id = 0
+        stop.mc_id = 1
+        return start,stop
+
     def __init__(self, content, weight, type, additional_obj=None, model_id_=None, mc_id=None, state=states['node']):
         """
         element which contain some content: if it node - n_gram of words, if it edge - from ind to ind
@@ -28,18 +38,16 @@ class element(object):
         self.type = type
         self.state = state
         #information for database
-        self.__id = None
+        self._id = None
 
     def generate_mongo_id(self):
-        self.__id = hash(content) + hash(weight) + hash(additional_obj) + hash(
-            self.model_id_) if self.model_id_ else 31 + hash(mc_id) if self.mc_id else 42 + hash(self.type)
-
+        self._id = hash(self.content) + hash(self.weight) + hash(self.additional_obj) + hash(self.model_id_) if self.model_id_ else 31 + hash(self.mc_id) if self.mc_id else 42 + hash(self.type)
 
     def _get_id(self):
-        return self.__id
+        return self._id
 
     def _set_id(self, id):
-        self.__id = id
+        self._id = id
 
     def __hash__(self):
         return hash(self.content)
@@ -58,8 +66,12 @@ class element(object):
     def increment(self, value):
         self.weight += value
 
+    def set_fields(self,fields):
+        for field in fields.items():
+            self.__dict__[field[0]] = field[1]
+
     def _serialise(self):
-        if self.__id:
+        if not self._id:
             self.generate_mongo_id()
         return self.__dict__
 
@@ -68,10 +80,10 @@ class element(object):
         el = element(dict['content'], dict['weight'],
                      additional_obj=dict['additional_obj'],
                      model_id_=dict['model_id_'],
-                     mc_id=dict['mc_id_'],
+                     mc_id=dict['mc_id'],
                      state=dict['state'],
                      type=dict['type'])
-        el.__id = dict['__id']
+        el._id = dict['_id']
 
         return el
 

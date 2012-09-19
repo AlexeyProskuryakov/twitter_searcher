@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from differences.d_model import difference_element, m_hash_dict
 import loggers
 from markov_chain_machine import markov_chain, element
@@ -52,8 +54,7 @@ defence tolerante:
 
 В будущем:
 model_weight = model'_weight/model_nodes_count*
-
-* по сути уникальных слов
+* или что-то типа
 
 1) Коэффициент EL между двумя одинаковыми по значению узлами. Используется лишь для толерантности
 EL(node,node') = (node.weight+node'.weight)*(model_weight / model'_weight)
@@ -148,11 +149,12 @@ def get_paths_in(markov_chain, difference_set, start_id=0, relations=None, depth
     if not relations: relations = []
 
     start_edge_out_relations = markov_chain._get_relations_by_id(start_id)
-    all_from = len(start_edge_out_relations)
+    all_from = 0
 
     depth_relations = []
     from_node = markov_chain.words[start_id]
     for relation in start_edge_out_relations:
+        all_from += relation.weight
         to_node = markov_chain.words[relation.content[1]]
         if to_node in difference_set:
             relation.additional_object = {'node_weight_in': to_node.weight}
@@ -178,28 +180,18 @@ def EL(node, node2, size):
     """
     now it use content. in owerriding it maybe more another
     """
-    pass
-
-
-def KrL(rel_1, rel_2, mc_1, mc_2):
-    pass
-
-
-def KnL(node1, node2, mc_1, mc_2, KrL=KrL):
-    pass
+    return float(node.weight + node2.weight) / size
 
 
 def mc_size(mc1, mc2):
-    #unique and non unique
-    pass
+    return float(mc1.words_count_ + mc2.words_count_) / abs(float(mc1.words_count_ - mc2.words_count_))
 
 
 def sum_of_tolerance(tolerance_old, tolerance_new):
     return tolerance_new + tolerance_old
 
 
-def diff_markov_chains(_markov_chain_left, _markov_chain_right, EL=EL, KnL=KnL, Krl=Krl, size=mc_size,
-                       sum_of_tolerance_f=sum_of_tolerance,adj_index = adj_index):
+def diff_markov_chains(_markov_chain_left, _markov_chain_right, EL=EL, size=mc_size):
     """
     for using into difference machine processing like
     difference_factory.add_i_function(diff_markov_chains)
@@ -221,25 +213,63 @@ def diff_markov_chains(_markov_chain_left, _markov_chain_right, EL=EL, KnL=KnL, 
     l_difference = nodes_left.difference(nodes_right)
     r_difference = nodes_right.difference(nodes_left)
 
-    #tolerance
-
     tolerance = 0
-
-    for int_id in range(len(l_intersection_nodes)):
-        r_int_node = r_intersection_nodes[int_id]
-        l_int_node = l_intersection_nodes[int_id]
-        el_node = EL(r_int_node, l_int_node, size)
-
-        knl_node = KnL(r_int_node, l_int_node, _markov_chain_left, _markov_chain_right, Krl)
-        tolerance_el = el_node * knl_node
-        tolerance = sum_of_tolerance_f(tolerance, tolerance_el)
-
     defence = 0
-    for l_diff_el in l_difference:
-        defence +=l_diff_el.weight
-        adj_elements = _markov_chain_left._get_adjacent_elements(l_diff_el, adj_ind=adj_index)
-        true_defence = sum([el.weight for el in adj_elements.difference(l_intersection_nodes)])
-        false_defence = adj_elements.intersection(r_intersection_nodes)
+    size = size(_markov_chain_left, _markov_chain_right)
+    for i in range(len(l_intersection_nodes)):
+        tolerance_el = EL(l_intersection_nodes[i], r_intersection_nodes[i], size)
+        tolerance += tolerance_el
+
+    def sum_diff(elements, size_nodes, size_rel):
+        sum = 0
+        for el in elements:
+            sum += float(el['node'].weight) / size_nodes + float(el['relation']) / size_rel
+        return sum
+
+    def defence_F(_diff_elements, mc):
+        defence_ = 0
+        tolerance_ = 0
+        for l_diff_el in _diff_elements:
+            defence_ += float(l_diff_el.weight) / float(mc.words_count_)
+            relations = mc.get_boosted_relations(l_diff_el.mc_id)
+            false_defence = []
+            true_defence = []
+            rel_weight = 0
+            for relation in relations:
+                id = 0
+                if relation.content[0] == l_diff_el.mc_id:
+                    id = 1
+                elif relation.content[1] == l_diff_el.mc_id:
+                    id = 0
+                rel_weight += relation.weight
+
+                node_corr = mc.words[relation.content[id]]
+                if node_corr in l_intersection_nodes:
+                    false_defence.append({'node': node_corr, 'relation': relation})
+                elif node_corr in l_difference:
+                    true_defence.append({'node': node_corr, 'relation': relation})
+
+            sum_false = sum_diff(false_defence, mc.words_count_, rel_weight)
+            sum_true = sum_diff(true_defence, mc.words_count_, rel_weight)
+
+            if sum_false > sum_true:
+                defence_ += sum_true
+            else:
+                tolerance_ += sum_false
+        return defence_, tolerance_
+
+    ld, lt = defence_F(l_difference, _markov_chain_left)
+    rd, rt = defence_F(r_difference, _markov_chain_right)
+
+    tolerance += lt + rt
+    defence += ld + rd
+
+    return tolerance, defence
+
+
+
+
+
 
         
 
