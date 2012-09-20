@@ -2,12 +2,11 @@
 visualisation of users graph
 
 """
-from datetime import datetime
+
 import json
-from time import sleep
 import urllib2
-import time
 import loggers
+
 from model import tw_model
 from model.db import db_handler
 from model.tw_model import m_user
@@ -23,6 +22,8 @@ def send(data):
         jdata = json.dumps(data)
         log.debug(jdata)
         c = urllib2.urlopen(props.v_host, jdata)
+        #{"ae": {"directed": true, "source": "a2", "target": "b1", "weight": 10}}
+        #{"ae":{"AB":{"source":"A","target":"B","directed":false,"weight":2}}}
         log.info(c.read())
     except Exception as e:
         log.error('sending error')
@@ -73,6 +74,18 @@ def form_graph(m_user, db):
 
     return edges, nodes
 
+def put_mc_node(node):
+    id = node._id
+    label = node.content
+    node= {id:{'label':label,'size':node.weight*10}}
+    add_nodes(node)
+
+def put_mc_edge(relation):
+    id = relation._id
+    source = relation.content[0]
+    target = relation.content[1]
+    edge = {id:{'source':source,'target':target,'weight':relation.weight*10,'directed':True}}
+    add_edges(edge)
 
 def process():
     db = db_handler()
@@ -85,11 +98,5 @@ def process():
         add_edges(edges)
 
 if __name__ == '__main__':
-    for i in range(365):
-        time_start = datetime.now()
-        process()
-        time_stop = datetime.now()
-        timedelta = time_stop.hour - time_start.hour
-        sleep(1*60*60*24 - timedelta*60*60)
-
+    put_node()
     

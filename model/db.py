@@ -5,6 +5,7 @@ import loggers
 from model.tw_model import *
 from properties import props
 from properties.props import *
+import tools
 
 __author__ = '4ikist'
 
@@ -65,10 +66,9 @@ class db_handler():
                 self.diffs_output.create_index('date_touch_', ASCENDING, unique=False)
             if not self._is_index_presented(self.messages):
                 log.info("creating index for messages")
-                self.messages.create_index([('time', ASCENDING), ('user', ASCENDING), ('message', ASCENDING)],
-                                                                                                             unique=True)
+                self.messages.create_index([('time', ASCENDING), ('user', ASCENDING)], unique=True)
 
-#            self.db.eval(code='db.loadServerScripts();')
+            #            self.db.eval(code='db.loadServerScripts();')
 
         except Exception as e:
             log.exception(e)
@@ -101,7 +101,7 @@ class db_handler():
         is serialised user from our model user
         """
         log.debug('saving user: un: %s; rn %s; tlc %s;' % (
-        ser_user['name_'], ser_user['real_name'], ser_user['timeline_count']))
+            ser_user['name_'], ser_user['real_name'], ser_user['timeline_count']))
         son = SON(ser_user)
         saved_user = self.users.find_one({'name_': ser_user['name_']})
 
@@ -136,15 +136,13 @@ class db_handler():
         #   get_diff_part_id()
         diff_id = ser_diffs['diff_id_']
         left_name = diff_id['left']['name_']
-        right_name= diff_id['right']['name_']
+        right_name = diff_id['right']['name_']
         if right_name != left_name:
-            log.warn('i do not know what name is right %s --> %s '%(left_name,right_name))
+            log.warn('i do not know what name is right %s --> %s ' % (left_name, right_name))
             return
 
         user = self.users.find_one({'name_': left_name})
         if user:
-
-
             self.users.update({'_id': user['_id']},
                     {"$addToSet": {'diffs_': {'id': ser_diffs['diff_id_'], 'datetime': datetime.datetime.now()}}})
             self.users.update({'_id': user['_id']}, {"$set": {'date_touch_': datetime.datetime.now()}})
@@ -200,6 +198,10 @@ class db_handler():
 
     def save_message_info(self, messages_info):
         self.messages_info.save(messages_info)
+
+    def get_messages_by_user(self, user):
+        #http://twitter.com/mrletemkno
+        return [message for message in self.messages.find({'user': 'http://twitter.com/' + tools.imply_dog(str(user))})]
 
 if __name__ == '__main__':
     pass

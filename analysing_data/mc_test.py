@@ -1,6 +1,7 @@
 from analysing_data.booster import db_booster
 from analysing_data.markov_chain_machine import *
 from analysing_data.mc_difference_logic import diff_markov_chains
+from db_scripts import twitter_timeline_parser
 from loggers import logger
 
 __author__ = '4ikist'
@@ -17,54 +18,49 @@ For some user. For some theme.
 
 log = logger
 
-def test_mc(messages):
-    mc = markov_chain(model_id_='test', )
-    for message in messages:
-        mc.append(message)
+def test_difference_logic(markov_chain_l, markov_chain_r):
+    difference_element = diff_markov_chains(markov_chain_l, markov_chain_r)
+    log.info('difference element is: %s' % difference_element)
+
+
+def test_generate_model():
+    messages = twitter_timeline_parser.extract_messages("c:/temp/tweets2009-12.txt", limit=100)
+    log.info('\n'.join([message['words'] for message in messages]))
+    log.info(len(messages))
+
+    mc_l = markov_chain('test')
+    for i  in range(len(messages)):
+        message = messages[i]
+        mc_l.add_message(split_to_words(message['words']))
+        log.info('appending %s words: %s relations: %s' % (i, mc_l.words_count_, mc_l.relations_count_))
+
+    log.info('................................')
+
+
+def test_sum_of_models(mc1, mc2):
     booster = db_booster()
-    mc.boost_and_save(booster)
-    return mc
+    booster.sum_models(mc1, mc2)
 
 
-def test_logic(markov_chain):
-    pass
-
-
-def main():
-    pass
-
+def split_to_words(message):
+    return str(message).split()
 
 if __name__ == '__main__':
     booster = db_booster(truncate=True)
 
-    mc_l = markov_chain(['a1', 'b1', 'c1'], model_id_='left', db_booster=db_booster())
-    mc_l.append(['a2', 'b1', 'c1'])
-    mc_l.append(['a2', 'c1', 'a2', 'd1'])
-    mc_l.append(['a2', 'd1'])
+    mc1 = markov_chain('left_test',booster)
+    mc2 = markov_chain('right_test',booster)
 
-    mc_r = markov_chain(['a1', 'b1', 'c1'], model_id_='right', db_booster=db_booster())
-    mc_r.append(['a3', 'b1', 'c1'])
-    mc_r.append(['a3'])
-    mc_r.append(['a3', 'b4', 'c3', 'd2'])
-    mc_r.append(['a3', 'b4', 'c2', 'd2'])
-    mc_r.append(['a3', 'b4', 'c3', 'a3'])
+    mc1.add_message(['a', 'b', 'c', 'd'])
+    mc1.add_message(['a1', 'b1', 'c1', 'd1'])
+    mc2.add_message(['a', 'b', 'c', 'd'])
+    mc2.add_message(['a2', 'b2', 'c2', 'd2'])
 
+    mc1.save()
+    mc2.save()
 
+    booster.sum_models('left_test','right_test')
 
-    markov_chain._print(mc_l, log.info)
-    markov_chain._print(mc_r, log.info)
 
     
-
-    mc_l.boost_and_save(db_booster())
-    mc_r.boost_and_save(db_booster())
-
-    log.info('................................')
-
-    markov_chain._print(mc_l, log.info)
-    markov_chain._print(mc_r, log.info)
-
-    print diff_markov_chains(mc_l,mc_r)
-
-
 

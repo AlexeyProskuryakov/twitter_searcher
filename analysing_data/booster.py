@@ -1,75 +1,160 @@
 from pymongo import ASCENDING
 from analysing_data.mc_model import element
+import loggers
 from model.db import db_handler
+
+log = loggers.logger
 
 __author__ = 'Alesha'
 class db_booster(db_handler):
-    mc_element_name = 'mc_element'
-    mc_element_f_content_name = 'content'
-
-    mc_model_name = 'mc_model'
-
-    def __init__(self, truncate=None, messages_truncate=None):
+    def __init__(self, truncate=False, messages_truncate=False):
         db_handler.__init__(self, truncate, messages_truncate)
-        self.mc_elements = self.db[db_booster.mc_element_name]
-        if not self._is_index_presented(self.mc_elements):
-            self.mc_elements.create_index(db_booster.mc_element_f_content_name, ASCENDING, unique=False)
-            self.mc_elements.create_index([(db_booster.mc_element_f_content_name, ASCENDING),
-                ('weight', ASCENDING),
-                ('additional_obj', ASCENDING)],
-                                              unque=True)
+        self.nodes = self.db['mc_nodes']
+        self.relations = self.db['mc_relations']
 
-        self.mc_models = self.db[db_booster.mc_model_name]
+        if not self._is_index_presented(self.nodes):
+            log.info('create nodes index')
+            self.nodes.create_index('content', ASCENDING, unique=False)
+            self.nodes.create_index([('content', ASCENDING), ('weight', ASCENDING), ('model_id_', ASCENDING)],
+                                                                                                             unique=True)
 
+        if not self._is_index_presented(self.relations):
+            log.info('create relations index')
+            self.relations.create_index('content', ASCENDING, unique=False)
+            self.relations.create_index([('from', ASCENDING), ('to', ASCENDING), ('model_id_', ASCENDING)],
+                                                                                                          unique=True)
 
-    def get_mc_elements(self, by_content, model_id_=None, by_list_in_content=True):
-        if by_list_in_content:
-            elements = self.mc_elements.find({self.mc_element_f_content_name: list(by_content), 'model_id_': model_id_})
+        self.model_parameters = self.db['mc_parameters']
+
+    def add_node_or_increment(self, node_element, weight=None):
+        if not weight:
+            weight = node_element.weight
+
+        saved_el = self.nodes.find_one({'content': node_element.content, 'model_id_': node_element.model_id_})
+        if saved_el:
+            saved_el['weight'] += weight
+            return self.nodes.save(saved_el)
         else:
-            query = by_content
-            query['model_id_'] = model_id_
-            elements = self.mc_elements.find(query)
+            return self.nodes.save(node_element._serialise())
 
-        result = []
-        for el in elements:
-            el = element.create(el)
-            result.append(el)
-        return result
+    def add_relation_or_increment(self, relation_element, weight=None):
+        if not weight:
+            weight = relation_element.weight
 
-    def get_words_by_relations(self, relations, id_exclude, model_id_):
-        words = []
-        for relation in relations:
-            if relation.content[0] == id_exclude:
-                elements = [element.create(el) for el in
-                            self.mc_elements.find(
-                                    {'mc_id': relation.content[1], 'model_id_': model_id_, 'type': element.w_type})]
-                words.extend(elements)
-            elif relation.content[1] == id_exclude:
-                elements = [element.create(el) for el in
-                            self.mc_elements.find({'mc_id': relation.content[0], 'model_id_': model_id_,'type': element.w_type})]
-                words.extend(elements)
-        return words
-
-    def get_relations_by_id(self, id_, is_from, model_id_):
-        if is_from == 'all':
-            result = self.mc_elements.find(
-                    {self.mc_element_f_content_name: {'$all': [id_]}, 'model_id_': model_id_, 'type': element.r_type})
-            return [element.create(el) for el in result]
+        saved = self.relations.find_one({'from': relation_element.content[0],
+                                         'to': relation_element.content[1],
+                                         'model_id_': relation_element.model_id_})
+        if saved:
+            saved['weight'] += weight
+            return self.relations.save(saved)
         else:
-            raise Exception('i not do it now... :(')
+            dict = relation_element._serialise()
+            dict['from'] = relation_element.content[0]
+            dict['to'] = relation_element.content[1]
+            return self.relations.save(dict)
 
+    def get_model_parameters(self, model_id):
+        return self.model_parameters.find_one({'model_id_': model_id})
 
-    def add_mc_element(self, element):
-        if isinstance(element, list):
-            for el in element:
-                self.mc_elements.save(el._serialise())
+    def get_nodes(self, model_id):
+        return [element.create(el) for el in self.nodes.find({'model_id_': model_id})]
+
+    def get_node_by_content(self, content, model_id):
+        return element.create(self.nodes.find_one({'content': content, 'model_id_': model_id}))
+
+    def get_relations(self, model_id):
+        return [element.create(el) for el in self.relations.find({'model_id_': model_id})]
+
+    def get_relation(self, from_, to_, model_id):
+        return element.create(self.relations.find_one({'from': from_, 'to': to_, 'model_id_': model_id}))
+
+    def get_relations_from(self, from_id, model_id):
+        rels = self.relations.find({'from': from_id, 'model_id_': model_id})
+        return [element.create(el) for el in rels]
+
+    def get_relations_to(self, to_id, model_id):
+        rels = self.relations.find({'to': to_id, 'model_id_': model_id})
+        return [element.create(el) for el in rels]
+
+    def add_model(self, model_dict):
+        self.model_parameters.save(model_dict)
+
+    def get_model_weight(self, model_id):
+        d = self.get_model_parameters(model_id)
+        if d:
+            weight = d['words_count_'] + d['relations_count_']
+            return weight
         else:
-            dict = element._serialise()
-            self.mc_elements.save(dict)
+            raise Exception('no any models with that id %s' % model_id)
 
-    def get_mc_parameters(self, model_id_):
-        return self.mc_models.find_one({'model_id_': model_id_})
+        #    def _process_updating_nodes(self,new_model_id):
+        #        for node in self.nodes.find({'new_model_id':new_model_id}):
+        #
 
-    def add_mc_parameters(self, markov_chain):
-        dict = markov_chain._serialise()
-        self.mc_models.save(dict)
+    def _update_node_in_models(self, model_id_more, model_id_less, id):
+        """
+        adding node (with summing of weight) to model which more
+        and removing from model less
+        returning id of node in model_id_more
+        """
+
+        node_in_model_less = self.nodes.find_one({'_id': id})
+        node_in_model_more = self.nodes.find_one({'content': node_in_model_less['content'], 'model_id_': model_id_more})
+
+        if node_in_model_more:
+            if node_in_model_less.has_key('old_model_id_'):
+                return node_in_model_more['_id']
+
+            node_in_model_more['weight'] += node_in_model_less['weight']
+            result_id = self.nodes.save(node_in_model_more)
+            self.nodes.update({'_id': node_in_model_less['_id']}, {'$set': {'old_model_id_': model_id_less}})
+        else:
+            self.nodes.update({'_id': node_in_model_less['_id']},
+                    {'$set': {'model_id_': model_id_more, 'old_model_id_': model_id_less}})
+            result_id = node_in_model_less['_id']
+
+        return result_id
+
+    def sum_models(self, model_id_left, model_id_right):
+        """
+        note input ids must be
+        create sum of model when model with more elements is devour model with less elements
+        after this all elements which was in absorbed model have old_model_id_ field which identify belonging that
+        element to old model/
+
+        returning model id of model with more elements with new stateless
+        """
+        try:
+            left_weight = self.get_model_weight(model_id_left)
+            right_weight = self.get_model_weight(model_id_right)
+        except Exception as e:
+            log.exception(e)
+            log.error("may be you must save models previosly or error in their model_id_?")
+            return None
+
+        if left_weight >= right_weight:
+            more_model_id = model_id_left
+            less_model_id = model_id_right
+        else:
+            more_model_id = model_id_right
+            less_model_id = model_id_left
+
+        #update nodes to new model_id_
+        #for any relation in less model:
+        for relation in  self.relations.find({'model_id_': less_model_id}):
+            #flushing nodes and updating
+            from_ = relation['from']
+            new_from_id = self._update_node_in_models(more_model_id, less_model_id, from_)
+            to_ = relation['to']
+            new_to_id = self._update_node_in_models(more_model_id, less_model_id, to_)
+            #process relation
+            new_old_relation = element((new_from_id, new_to_id), relation['weight'], model_id_=more_model_id)
+            if relation.has_key('additional_obj'):
+                new_old_relation.additional_obj = relation['additional_obj']
+
+            self.add_relation_or_increment(new_old_relation)
+            self.relations.update({'_id': relation['_id']}, {'$set': {'old_model_id_': relation['model_id_']}})
+
+        self.model_parameters.update({'model_id_': more_model_id}, {'$push': {'include': less_model_id}})
+        return more_model_id
+
