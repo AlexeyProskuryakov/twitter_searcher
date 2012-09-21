@@ -17,6 +17,11 @@ port = 27017
 host = 'localhost'
 db_name = 'ttr'
 
+#for another instance of db. for experiments. Connect must be very very fast/
+local_host = 'localhost'
+local_port = 27017
+local_db_name = 'ttr_local'
+
 #####   application properties
 time_format = '%Y.%m.%d_%H:%M'
 ttr_time_format = '%Y-%m-%d %H:%M:%S'

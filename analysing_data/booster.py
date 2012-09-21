@@ -1,16 +1,17 @@
 from pymongo import ASCENDING
 from analysing_data.mc_model import element
 import loggers
-from model.db import db_handler
+from model.db import  database
+from properties.props import *
 
 log = loggers.logger
 
 __author__ = 'Alesha'
-class db_booster(db_handler):
-    def __init__(self, truncate=False, messages_truncate=False):
-        db_handler.__init__(self, truncate, messages_truncate)
+class db_booster(database):
+    def _schema_init(self):
         self.nodes = self.db['mc_nodes']
         self.relations = self.db['mc_relations']
+        self.model_parameters = self.db['mc_parameters']
 
         if not self._is_index_presented(self.nodes):
             log.info('create nodes index')
@@ -24,7 +25,16 @@ class db_booster(db_handler):
             self.relations.create_index([('from', ASCENDING), ('to', ASCENDING), ('model_id_', ASCENDING)],
                                                                                                           unique=True)
 
-        self.model_parameters = self.db['mc_parameters']
+
+    def __init__(self, truncate=False):
+        database.__init__(self, host_=host, port_=port, db_name_=db_name)
+        self._schema_init()
+        if truncate:
+            self.db.drop_collection(self.nodes)
+            self.db.drop_collection(self.relations)
+            self.db.drop_collection(self.model_parameters)
+            self._schema_init()
+
 
     def add_node_or_increment(self, node_element, weight=None):
         if not weight:
@@ -63,23 +73,28 @@ class db_booster(db_handler):
         return element.create(self.nodes.find_one({'content': content, 'model_id_': model_id}))
 
     def get_relations(self, model_id):
-        return [element.create(el) for el in self.relations.find({'model_id_': model_id})]
+        return [element.create(el, relation_create=True) for el in self.relations.find({'model_id_': model_id})]
 
     def get_relation(self, from_, to_, model_id):
-        return element.create(self.relations.find_one({'from': from_, 'to': to_, 'model_id_': model_id}))
+        return element.create(self.relations.find_one({'from': from_, 'to': to_, 'model_id_': model_id}),
+                              relation_create=True)
 
     def get_relations_from(self, from_id, model_id):
         rels = self.relations.find({'from': from_id, 'model_id_': model_id})
-        return [element.create(el) for el in rels]
+        return [element.create(el, relation_create=True) for el in rels]
 
     def get_relations_to(self, to_id, model_id):
         rels = self.relations.find({'to': to_id, 'model_id_': model_id})
-        return [element.create(el) for el in rels]
+        return [element.create(el, relation_create=True) for el in rels]
+
+    def get_model_unique_weight(self, model_id):
+        return self.nodes.find({'model_id': model_id}).count(), self.relations.find({'model_id': model_id}).count()
 
     def add_model(self, model_dict):
         self.model_parameters.save(model_dict)
 
-    def get_model_weight(self, model_id):
+
+    def __get_model_weight(self, model_id):
         d = self.get_model_parameters(model_id)
         if d:
             weight = d['words_count_'] + d['relations_count_']
@@ -87,11 +102,8 @@ class db_booster(db_handler):
         else:
             raise Exception('no any models with that id %s' % model_id)
 
-        #    def _process_updating_nodes(self,new_model_id):
-        #        for node in self.nodes.find({'new_model_id':new_model_id}):
-        #
 
-    def _update_node_in_models(self, model_id_more, model_id_less, id):
+    def __update_node_in_models(self, model_id_more, model_id_less, id):
         """
         adding node (with summing of weight) to model which more
         and removing from model less
@@ -125,8 +137,8 @@ class db_booster(db_handler):
         returning model id of model with more elements with new stateless
         """
         try:
-            left_weight = self.get_model_weight(model_id_left)
-            right_weight = self.get_model_weight(model_id_right)
+            left_weight = self.__get_model_weight(model_id_left)
+            right_weight = self.__get_model_weight(model_id_right)
         except Exception as e:
             log.exception(e)
             log.error("may be you must save models previosly or error in their model_id_?")
@@ -144,9 +156,9 @@ class db_booster(db_handler):
         for relation in  self.relations.find({'model_id_': less_model_id}):
             #flushing nodes and updating
             from_ = relation['from']
-            new_from_id = self._update_node_in_models(more_model_id, less_model_id, from_)
+            new_from_id = self.__update_node_in_models(more_model_id, less_model_id, from_)
             to_ = relation['to']
-            new_to_id = self._update_node_in_models(more_model_id, less_model_id, to_)
+            new_to_id = self.__update_node_in_models(more_model_id, less_model_id, to_)
             #process relation
             new_old_relation = element((new_from_id, new_to_id), relation['weight'], model_id_=more_model_id)
             if relation.has_key('additional_obj'):

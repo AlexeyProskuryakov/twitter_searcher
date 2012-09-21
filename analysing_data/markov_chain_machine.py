@@ -1,5 +1,5 @@
 from analysing_data.booster import db_booster
-from analysing_data.mc_model import element
+from analysing_data.mc_model import element, relation
 import loggers
 
 __author__ = 'Alesha'
@@ -11,7 +11,7 @@ class markov_chain(object):
 
     @staticmethod
     def create(model_id_, db_booster):
-        mc = markov_chain(model_id_,db_booster)
+        mc = markov_chain(model_id_, db_booster)
         mc.__load()
         return mc
 
@@ -66,20 +66,21 @@ class markov_chain(object):
         start_node, stop_node = element.get_start_stop(self.model_id_, additional_object)
         prev_id = self.db.add_node_or_increment(start_node)
         last_id = self.db.add_node_or_increment(stop_node)
-
+        #processing message
         message_len = len(message)
         for i in range(message_len):
             el = message[i]
             elem = element(el, 1, additional_object, self.model_id_)
             element_id = self.db.add_node_or_increment(elem)
-
-            relation = element((prev_id, element_id), 1, additional_object, self.model_id_)
-            self.db.add_relation_or_increment(relation)
+            #creating relation between previous and now element (for start -> one -> two)
+            relation_now = relation((prev_id, element_id), 1, additional_object, self.model_id_)
+            self.db.add_relation_or_increment(relation_now)
             prev_id = element_id
 
+            #if end - creating relation between now (prev) and last_id  (for n_element -> stop)
             if i + 1 == message_len:
-                relation = element((prev_id, last_id), 1, additional_object, self.model_id_)
-                self.db.add_relation_or_increment(relation)
+                relation_end = relation((prev_id, last_id), 1, additional_object, self.model_id_)
+                self.db.add_relation_or_increment(relation_end)
 
         self.words_count_ += len(message)
         self.relations_count_ = self.words_count_ - 1
@@ -102,6 +103,9 @@ class markov_chain(object):
             relations.extend(self.db.get_relations_to(id, model_id=self.model_id_))
         return relations
 
+    def get_unique_nodes_edges(self):
+        return self.db.get_model_unique_weight(self.model_id_)
+
     def print_me(self):
         log.info('nodes: %s' % self.words_count_)
         nodes = self.get_nodes()
@@ -113,7 +117,7 @@ class markov_chain(object):
             log.info('%s ---> %s ---> %s' % (
                 self.get_node_by_id(edge.content[0]), edge.weight, self.get_node_by_id(edge.content[1])))
 
-    def visualise(self,vis_processor):
+    def visualise(self, vis_processor):
         nodes = self.get_nodes()
         relations = self.get_relations()
         for node in nodes:

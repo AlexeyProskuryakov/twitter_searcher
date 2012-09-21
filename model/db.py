@@ -31,67 +31,76 @@ diffs_input_fields = ['name_', 'date_touch_']
 
 messages_name = 'messages'
 messages_info_name = 'messages_info'
+class database():
+    def __init__(self, host_, port_, db_name_):
+        try:
+            self.conn = Connection(host_, port_)
+            self.db = Database(self.conn, db_name_)
+        except Exception as e:
+            log.exception(e)
+            log.error('error in initialisation of data base connection')
+            exit(-1)
 
-class db_handler():
     def _is_index_presented(self, collection):
         if len(collection.index_information()):
             return True
         return False
 
 
-    def _db_ignition(self):
-        try:
-            self.conn = Connection(host, port)
-            self.db = Database(self.conn, db_name)
+class db_handler(database):
+    def _main_schema_ignition(self):
+        self.users = self.db[users_coll_name]
+        self.entities = self.db[entities_coll_name]
+        self.relations = self.db[relations_coll_name]
 
-            self.users = self.db[users_coll_name]
-            self.entities = self.db[entities_coll_name]
-            self.relations = self.db[relations_coll_name]
+        self.diffs_input = self.db[diffs_input_name]
+        self.diffs_output = self.db[diffs_output_name]
 
-            self.diffs_input = self.db[diffs_input_name]
-            self.diffs_output = self.db[diffs_output_name]
+        self.messages = self.db[messages_name]
+        self.messages_info = self.db[messages_info_name]
 
-            self.messages = self.db[messages_name]
-            self.messages_info = self.db[messages_info_name]
-
-            if not self._is_index_presented(self.users):
-                log.info("creating index for users")
-                self.users.create_index('name_', ASCENDING, unique=True)
-            if not self._is_index_presented(self.diffs_input):
-                log.info("creating index for diffs_input")
-                self.diffs_input.create_index('date_touch_', ASCENDING, unique=False)
-                self.diffs_input.create_index('user_name', ASCENDING, unique=True)
-            if not self._is_index_presented(self.diffs_output):
-                log.info("creating index for diffs_output")
-                self.diffs_output.create_index('date_touch_', ASCENDING, unique=False)
-            if not self._is_index_presented(self.messages):
-                log.info("creating index for messages")
-                self.messages.create_index([('time', ASCENDING), ('user', ASCENDING)], unique=True)
-
-            #            self.db.eval(code='db.loadServerScripts();')
-
-        except Exception as e:
-            log.exception(e)
-            log.error('error in initialisation of data base connection')
-            exit(-1)
+        if not self._is_index_presented(self.users):
+            log.info("creating index for users")
+            self.users.create_index('name_', ASCENDING, unique=True)
+        if not self._is_index_presented(self.diffs_input):
+            log.info("creating index for diffs_input")
+            self.diffs_input.create_index('date_touch_', ASCENDING, unique=False)
+            self.diffs_input.create_index('user_name', ASCENDING, unique=True)
+        if not self._is_index_presented(self.diffs_output):
+            log.info("creating index for diffs_output")
+            self.diffs_output.create_index('date_touch_', ASCENDING, unique=False)
+        if not self._is_index_presented(self.messages):
+            log.info("creating index for messages")
+            self.messages.create_index([('time', ASCENDING), ('user', ASCENDING)], unique=True)
 
 
-    def __init__(self, truncate=False, messages_truncate=False):
+    def __init__(self, truncate=False, messages_truncate=False, host_=None, port_=None, db_name_=None):
+        if not host_ or not port_ or not db_name_:
+            host_ = host
+            port_ = port
+            db_name_ = db_name
+
+        database.__init__(self, host_, port_, db_name_)
+
         log.info("init db_handler at host: %s, port: %s, db: %s" % (host, port, db_name))
-        self._db_ignition()
+        self._main_schema_ignition()
         if truncate:
             try:
-                self.conn.drop_database(db_name)
-                self._db_ignition()
+                self.conn.drop_database(db_name_)
+                #self._db_ignition(host_,port_,db_name_)
+                self._main_schema_ignition()
             except Exception as e:
                 log.exception(e)
+                log.error('may be db_ignition must be?')
                 raise e
         if messages_truncate:
             try:
                 self.db.drop_collection(messages_info_name)
                 self.db.drop_collection(messages_name)
-                self._db_ignition()
+                #self._db_ignition(host_,port_,db_name_)
+                self._main_schema_ignition()
             except Exception as e:
+                log.error('may be db_ignition must be?')
                 log.exception(e)
                 raise e
 

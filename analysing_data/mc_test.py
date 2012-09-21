@@ -48,8 +48,8 @@ def split_to_words(message):
 if __name__ == '__main__':
     booster = db_booster(truncate=True)
 
-    mc1 = markov_chain('left_test',booster)
-    mc2 = markov_chain('right_test',booster)
+    mc1 = markov_chain('left_test', booster)
+    mc2 = markov_chain('right_test', booster)
 
     mc1.add_message(['a', 'b', 'c', 'd'])
     mc1.add_message(['a1', 'b1', 'c1', 'd1'])
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     mc1.save()
     mc2.save()
 
-    booster.sum_models('left_test','right_test')
+    test_difference_logic(mc1, mc2)
 
 
     
