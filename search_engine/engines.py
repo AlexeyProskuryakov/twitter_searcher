@@ -2,6 +2,7 @@
 import webbrowser
 import time
 import  tweepy
+from tweepy.error import TweepError
 from differences.diff_machine import difference_factory
 import loggers
 from model.db import db_handler
@@ -207,7 +208,7 @@ class tweepy_engine(object):
             log.info("counts of request is: %s" % self._count_requests)
             log.warn('error in info for user...\n%s' % '\n' + '\n'.join(t_user.__dict__.items()))
 
-            if 'Rate limit exceeded' in str(e):
+            if isinstance(e, TweepError) and 'Rate limit exceeded' in e.message:
                 log.info('oook wil be sleep...')
                 time.sleep(3600)
                 return self.get_user_info(start_user)
@@ -224,7 +225,7 @@ class tweepy_engine(object):
                 if user_obj:
                     res.append(user_obj)
             except Exception as e:
-                log.warn('problems with user %s '%user)
+                log.warn('problems with user %s ' % user)
         return res
 
     def _form_relations(self, user_name, relation_types, relations_names):
@@ -314,7 +315,7 @@ class tweepy_engine(object):
                 log.info('processing diffs for: %s' % user.name_)
                 t_user = self._get_user_by_name(user.name_)
                 m_user_now = self.get_user_info(t_user)
-                if not m_user_now:log.warn('user now for diff is not load it is very bad.'); continue
+                if not m_user_now: log.warn('user now for diff is not load it is very bad.'); continue
                 diff_factory = difference_factory()
                 diff = diff_factory.create_difference(user_before=user, user_now=m_user_now)
                 self.db.save_diffs(diff.serialise())

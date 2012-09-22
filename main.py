@@ -11,12 +11,12 @@ from visualise import vis_machine
 
 __author__ = '4ikist'
 
-db_handler = db_handler(truncate=True)
+db_handler = db_handler(truncate=False)
 api_engine = tweepy_engine(db_handler=db_handler)
 
 db = api_engine.db
 
-booster = db_booster(truncate=True)
+booster = db_booster(truncate=False)
 vis_processor = vis_machine
 
 log = loggers.logger
