@@ -31,6 +31,7 @@ diffs_input_fields = ['name_', 'date_touch_']
 
 messages_name = 'messages'
 messages_info_name = 'messages_info'
+
 class database():
     def __init__(self, host_, port_, db_name_):
         try:

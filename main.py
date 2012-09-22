@@ -5,15 +5,19 @@ import loggers
 from model.db import db_handler
 from properties import props
 from search_engine.engines import tweepy_engine
+import tools
 from visualise import vis_machine
 
 
 __author__ = '4ikist'
 
-api_engine = tweepy_engine()
+db_handler = db_handler(truncate=True)
+api_engine = tweepy_engine(db_handler=db_handler)
+
 db = api_engine.db
-booster = db_booster()
-vis_processor= vis_machine
+
+booster = db_booster(truncate=True)
+vis_processor = vis_machine
 
 log = loggers.logger
 
@@ -24,7 +28,9 @@ def process_names(file_name, class_name):
     """
     names = open(file_name).readlines()
     for name in names:
-        api_engine.scrap(name)
+        log.info("start processing name %s" % name)
+
+        api_engine.scrap(tools.imply_dog(name))
         db.set_class(name, class_name)
         user = db.get_user({'name_': name})
         mc = markov_chain(user, booster)
@@ -51,18 +57,18 @@ def process_models(models):
     log.info(sum([el['content'] for el in result]))
     return result
 
+
 def create_one_big_model(models):
     n = len(models)
-    prev_model_id_ = booster.sum_models(models[0].model_id_,models[1].model_id_)
-    for i in range(2,n):
-        prev_model_id_ = booster.sum_models(prev_model_id_,models[i].model_id_)
-    return markov_chain.create(prev_model_id_,booster)
-
+    prev_model_id_ = booster.sum_models(models[0].model_id_, models[1].model_id_)
+    for i in range(2, n):
+        prev_model_id_ = booster.sum_models(prev_model_id_, models[i].model_id_)
+    return markov_chain.create(prev_model_id_, booster)
 
 
 if __name__ == '__main__':
-  names = process_names('input_names','spam')
-  models = get_models(names)
-  big_model = create_one_big_model(models)
-  log.info("big model: %s"%big_model.model_id_)
-  big_model.visualise()
+    names = process_names('input_names', 'spam')
+    models = get_models(names)
+    big_model = create_one_big_model(models)
+    log.info("big model: %s" % big_model.model_id_)
+    big_model.visualise()
