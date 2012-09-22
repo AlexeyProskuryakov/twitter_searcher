@@ -22,13 +22,15 @@ def test_difference_logic(markov_chain_l, markov_chain_r):
     difference_element = diff_markov_chains(markov_chain_l, markov_chain_r)
     log.info('difference element is: %s' % difference_element)
 
+def split_to_words(message):
+    return str(message).split()
 
 def test_generate_model():
     messages = twitter_timeline_parser.extract_messages("c:/temp/tweets2009-12.txt", limit=100)
     log.info('\n'.join([message['words'] for message in messages]))
     log.info(len(messages))
-
-    mc_l = markov_chain('test')
+    booster = db_booster()
+    mc_l = markov_chain('test',booster)
     for i  in range(len(messages)):
         message = messages[i]
         mc_l.add_message(split_to_words(message['words']))
@@ -37,16 +39,9 @@ def test_generate_model():
     log.info('................................')
 
 
-def test_sum_of_models(mc1, mc2):
+
+def test_model_():
     booster = db_booster()
-    booster.sum_models(mc1, mc2)
-
-
-def split_to_words(message):
-    return str(message).split()
-
-if __name__ == '__main__':
-    booster = db_booster(truncate=True)
 
     mc1 = markov_chain('left_test',booster)
     mc2 = markov_chain('right_test',booster)
@@ -60,6 +55,9 @@ if __name__ == '__main__':
     mc2.save()
 
     booster.sum_models('left_test','right_test')
+
+if __name__ == '__main__':
+    pass
 
 
     

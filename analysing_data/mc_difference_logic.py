@@ -207,6 +207,7 @@ def diff_markov_chains(_markov_chain_left, _markov_chain_right, EL=EL, size=mc_s
                 defence_ += sum_true
             else:
                 tolerance_ += sum_false
+
         return defence_, tolerance_
 
     ld, lt = defence_F(l_difference, _markov_chain_left)
@@ -216,3 +217,5 @@ def diff_markov_chains(_markov_chain_left, _markov_chain_right, EL=EL, size=mc_s
     defence += ld + rd
     diff_element = difference_element('mc_diff', {'tolerance': tolerance, 'defence': defence})
     return diff_element
+
+
