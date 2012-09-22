@@ -61,10 +61,14 @@ class element(object):
         return self.__dict__
 
     @staticmethod
-    def create(dict):
-        el = element(dict['content'], dict['weight'],
-                     model_id_=dict['model_id_'],
-                     )
+    def create(dict, relation_create=False):
+        if relation_create:
+            el = relation(dict['content'], dict['weight'],
+                          model_id_=dict['model_id_'])
+        else:
+            el = element(dict['content'], dict['weight'],
+                         model_id_=dict['model_id_'])
+
         el._id = dict['_id']
         if dict.has_key('additional_object'):
             el.additional_obj = dict['additional_object']
@@ -76,3 +80,15 @@ class element(object):
             return True
         return False
 
+
+class relation(element):
+    def __init__(self, content, weight, additional_obj, model_id_):
+        element.__init__(self, content, weight, additional_obj, model_id_)
+        self.from_ = content[0]
+        self.to_ = content[1]
+
+    def _get_adjacent(self, id):
+        if self.content[0] == id:
+            return {'id': self.content[1], 'state': 'to_this'}
+        elif self.content[1] == id:
+            return {'id': self.content[0], 'state': 'from_this'}

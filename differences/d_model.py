@@ -106,5 +106,5 @@ class difference_element(m_hash_dict):
         return self
 
     def __str__(self):
-        return '\n'.join([str(el[0])+str(el[1]) for el in self.items()])
+        return ''.join(['\n'+str(el[0])+' : '+str(el[1]) for el in self.items()])
 

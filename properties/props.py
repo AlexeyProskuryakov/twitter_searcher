@@ -12,10 +12,15 @@ access_token = "612776846-ZC55TSeiCvufmggMVz9ZKpbQFXodTXuA9JSq9Vee"
 access_token_secret = "kxm2cuq9xNaSUBKPxIlUNJI3wKJ57VHmT0h1w1PuLWE"
 
 #####   db properties
-port = 27017
 #host = '178.49.120.77'
+port = 27017
 host = 'localhost'
 db_name = 'ttr'
+
+#for another instance of db. for experiments. Connect must be very very fast/
+local_host = 'localhost'
+local_port = 27027
+local_db_name = 'ttr_local'
 
 #####   application properties
 time_format = '%Y.%m.%d_%H:%M'
