@@ -212,23 +212,7 @@ class db_handler(database):
         #http://twitter.com/mrletemkno
         return [message for message in self.messages.find({'user': 'http://twitter.com/' + tools.imply_dog(str(user))})]
 
-if __name__ == '__main__':
-    pass
-#    db_handler = db_handler()
-#    db_handler.get_users_for_diff()
-#
-#    db_handler.diffs.save({'name': 'name_1', 'date': datetime.datetime.strptime('2009.12.12_12:12', props.time_format)})
-#    db_handler.diffs.save({'name': 'name_2', 'date': datetime.datetime.strptime('2009.12.12_12:13', props.time_format)})
-#    db_handler.diffs.save({'name': 'name_3', 'date': datetime.datetime.strptime('2009.12.12_12:14', props.time_format)})
-#    db_handler.diffs.save({'name': 'name_4', 'date': datetime.datetime.strptime('2009.12.12_12:15', props.time_format)})
-#    db_handler.diffs.save({'name': 'name_5', 'date': datetime.datetime.strptime('2009.12.12_12:16', props.time_format)})
-#
-#    print db_handler.get_users_for_diff()
-#    user = m_user("name")
-#    user.real_name = 'test'
-#    user.timeline_count = 1000
-#
-#    db_handler.save_user(user.serialise())
-#    time.sleep(5)
-#    user = db_handler.get_user({'date_touch':{'$lt':datetime.now()}})
-#    print user
+    def set_class(self,user,class_name):
+        save_user = self.users.find_one({'name_':user})
+        if save_user:
+            self.users.update({'_id':save_user['_id']},{'$set':{'class_name':class_name}})

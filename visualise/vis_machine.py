@@ -17,6 +17,7 @@ log = loggers.logger
 all_node_names = list()
 
 
+
 def send(data):
     try:
         jdata = json.dumps(data)
@@ -74,18 +75,22 @@ def form_graph(m_user, db):
 
     return edges, nodes
 
-def put_mc_node(node):
-    id = node._id
-    label = node.content
-    node= {id:{'label':label,'size':node.weight*10}}
-    add_nodes(node)
+class mc_vis():
+    @staticmethod
+    def put_mc_node(node):
+        id = node._id
+        label = node.content
+        node= {id:{'label':label,'size':node.weight*10}}
+        add_nodes(node)
 
-def put_mc_edge(relation):
-    id = relation._id
-    source = relation.content[0]
-    target = relation.content[1]
-    edge = {id:{'source':source,'target':target,'weight':relation.weight*10,'directed':True}}
-    add_edges(edge)
+    @staticmethod
+    def put_mc_edge(relation):
+        id = relation._id
+        source = relation.content[0]
+        target = relation.content[1]
+        edge = {id:{'source':source,'target':target,'weight':relation.weight*10,'directed':True}}
+        add_edges(edge)
+
 
 def process():
     db = db_handler()
