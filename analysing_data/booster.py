@@ -27,7 +27,7 @@ class db_booster(database):
 
 
     def __init__(self, truncate=False):
-        database.__init__(self, host_=host, port_=port, db_name_=db_name)
+        database.__init__(self, host_=local_host, port_=local_port, db_name_=local_db_name)
         self._schema_init()
         if truncate:
             self.db.drop_collection(self.nodes)

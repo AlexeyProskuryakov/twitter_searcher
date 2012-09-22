@@ -1,6 +1,7 @@
 from analysing_data.booster import db_booster
 from analysing_data.mc_model import element, relation
 import loggers
+from visualise.vis_machine import mc_vis
 
 __author__ = 'Alesha'
 
@@ -117,10 +118,10 @@ class markov_chain(object):
             log.info('%s ---> %s ---> %s' % (
                 self.get_node_by_id(edge.content[0]), edge.weight, self.get_node_by_id(edge.content[1])))
 
-    def visualise(self, vis_processor):
+    def visualise(self):
         nodes = self.get_nodes()
         relations = self.get_relations()
         for node in nodes:
-            vis_processor.put_mc_node(node)
+            mc_vis.put_mc_node(node)
         for rel in relations:
-            vis_processor.put_mc_edge(rel)
+            mc_vis.put_mc_edge(rel)
