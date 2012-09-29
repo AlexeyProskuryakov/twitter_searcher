@@ -82,7 +82,7 @@ class element(object):
 
 
 class relation(element):
-    def __init__(self, content, weight, additional_obj, model_id_):
+    def __init__(self, content, weight, additional_obj=None, model_id_=None):
         element.__init__(self, content, weight, additional_obj, model_id_)
         self.from_ = content[0]
         self.to_ = content[1]

@@ -43,6 +43,7 @@ class markov_chain(object):
             self.relations_count_ = 0
 
         self.state = markov_chain.state[1]
+        self.include = []
 
     def save(self):
         self.state = markov_chain.state[0]
@@ -50,8 +51,11 @@ class markov_chain(object):
                            'model_id_': self.model_id_, 'n_of_gramm': self.n_of_gram_, 'include': self.include})
 
     def __load(self):
+        log.debug('load by model_id_ = %s' % self.model_id_)
         parameters = self.db.get_model_parameters(self.model_id_)
         new_dict = self.__dict__
+        if not parameters:
+            raise Exception('no any parameters for this model. May be it not saved?')
         for params in parameters.items():
             new_dict[params[0]] = params[1]
         self.__dict__ = new_dict
@@ -85,7 +89,7 @@ class markov_chain(object):
 
         self.words_count_ += len(message)
         self.relations_count_ = self.words_count_ - 1
-        self.include = []
+
 
     def get_node_by_id(self, id):
         return element.create(self.db.nodes.find_one({'_id': id}))
@@ -118,10 +122,22 @@ class markov_chain(object):
             log.info('%s ---> %s ---> %s' % (
                 self.get_node_by_id(edge.content[0]), edge.weight, self.get_node_by_id(edge.content[1])))
 
-    def visualise(self):
+    def visualise(self, buff_size):
         nodes = self.get_nodes()
         relations = self.get_relations()
-        for node in nodes:
-            mc_vis.put_mc_node(node)
-        for rel in relations:
-            mc_vis.put_mc_edge(rel)
+        len_nodes = len(nodes)
+        len_relations = len(relations)
+        for i in range(0, len_nodes, buff_size):
+            log.info('add nodes...%s -> %s all (%s)' % (i, i + buff_size, len_nodes))
+            if i + buff_size < len_nodes:
+                mc_vis.put_mc_nodes(nodes[i:i + buff_size])
+            else:
+                mc_vis.put_mc_nodes(nodes[i:])
+
+        for i in range(0, len_relations, buff_size):
+            log.info('add relations...%s -> %s all (%s)' % (i, i + buff_size, len_relations))
+            if i + buff_size < len_relations:
+                mc_vis.put_mc_relations(relations[i:i + buff_size])
+            else:
+                mc_vis.put_mc_relations(relations[i:])
+

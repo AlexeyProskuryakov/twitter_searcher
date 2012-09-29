@@ -52,6 +52,7 @@ class m_user(serializable):
         self.followers_count = None
         self.friends_count = None
         self.timeline = None
+        #timeline is list of dicts {text: some text, retweets: some retweets, initted: time where was initted }
         self.timeline_count = None
         self.protected = None
         self.favorites_count = None
@@ -84,7 +85,7 @@ class m_user(serializable):
         #for mention relations
         if self.mentions:
             self.mentions_relations = [mention[0] for mention in self.mentions]
-        self.words = timeline_info[functions.word]
+ #       self.words = timeline_info[functions.word]
 
     def get_diff_part_id(self):
         return {'name_': self.name_, 'inited_': self.inited_}

@@ -88,7 +88,7 @@ class db_booster(database):
         return [element.create(el, relation_create=True) for el in rels]
 
     def get_model_unique_weight(self, model_id):
-        return self.nodes.find({'model_id': model_id}).count(), self.relations.find({'model_id': model_id}).count()
+        return self.nodes.find({'model_id_': model_id}).count(), self.relations.find({'model_id_': model_id}).count()
 
     def add_model(self, model_dict):
         self.model_parameters.save(model_dict)

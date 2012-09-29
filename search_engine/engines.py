@@ -30,7 +30,7 @@ class tweepy_engine(object):
         log.info("!!! save it into properties at next time or now !!!")
         return auth.access_token.key, auth.access_token.secret
 
-    def __init__(self, inited=props.is_inited(), db_handler=db_handler()):
+    def __init__(self, inited=props.is_inited(), out=db_handler()):
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         if not inited:
             self.access_token, self.access_token_secret = self.init_account()
@@ -41,9 +41,10 @@ class tweepy_engine(object):
         self.api = tweepy.API(self.auth)
         self._count_requests = int(1)
         log.debug("auth +1")
-        self.db = db_handler
+        self.out = out
 
         self.relations_cache = {}
+
 
     def _get_relations_cache(self, user_name):
         if self.relations_cache.has_key(user_name):
@@ -86,7 +87,7 @@ class tweepy_engine(object):
         if isinstance(user, tweepy.User):
             return tools.imply_dog(user.screen_name, with_dog=True)
         else:
-            return user
+            return tools.imply_dog(user, with_dog=True)
 
     def _get_user_relations(self, t_user):
         """
@@ -148,27 +149,33 @@ class tweepy_engine(object):
     def _get_data(self, t_user):
         """
         forming user in our model to save into db
+        returning m_user object
         """
-        result = m_user(tools.imply_dog(t_user.screen_name, with_dog=True))
-        if t_user.protected:
-            log.debug('user %s is protected... skip him' % t_user.screen_name)
-            return None
+        try:
+            result = m_user(tools.imply_dog(t_user.screen_name, with_dog=True))
+            if t_user.protected:
+                log.debug('user %s is protected... skip him' % t_user.screen_name)
+                return None
 
-        result.real_name = t_user.name
-        lists = t_user.lists()
-        self._count_requests += 1
-        log.debug("get lists +1")
-        result.set_lists(tools.flush(lists, lambda x:x.name), len(lists))
+            result.real_name = t_user.name
+            lists = t_user.lists()
+            self._count_requests += 1
+            log.debug("get lists +1")
+            result.set_lists(tools.flush(lists, lambda x:x.name), len(lists))
 
-        result.followers_count = t_user.followers_count
-        result.friends_count = t_user.friends_count
+            result.followers_count = t_user.followers_count
+            result.friends_count = t_user.friends_count
 
-        result.favorites_count = t_user.favourites_count
-        result.timeline = self._get_time_line(t_user)
-        result.timeline_count = t_user.statuses_count
-        result.inited_ = t_user.created_at.strftime(props.time_format)
-        return result
-
+            result.favorites_count = t_user.favourites_count
+            result.timeline = self._get_time_line(t_user)
+            result.timeline_count = t_user.statuses_count
+            result.inited_ = t_user.created_at.strftime(props.time_format)
+            return result
+        except TweepError as e:
+            if 'Rate limit exceeded' in str(e):
+                log.info('oook wil be sleep...')
+                time.sleep(3600)
+                return self._get_data(t_user)
 
     def get_user_info(self, start_user):
         """
@@ -268,9 +275,10 @@ class tweepy_engine(object):
         log.info("\n>\nstart scrap user: %s" % start_user)
         try:
             #verifying user
-            if self.db.verify_user(self._get_name_from_user(start_user)).status == m_user_status.s_updated:
-                log.info("this user: %s is updated... skip him" % start_user)
-                return
+            name_ = self._get_name_from_user(start_user)
+            if self.out.verify_user(name_).status == m_user_status.s_updated:
+                log.info("this user: %s is updated... do not touch him" % start_user)
+                return self.out.get_user({'name_': name_})
                 #get his info and etc
             user_info = self.get_user_info(start_user)
             if not user_info:
@@ -278,7 +286,7 @@ class tweepy_engine(object):
                 return
                 #saving user
             user_to_save = user_info.serialise()
-            self.db.save_user(user_to_save)
+            self.out.save_user(user_to_save)
 
             log.info('\n<scrapped user: %s\n<at neigh: %s in level: %s\n--------------------' %
                      ('\n'.join([str(item) for item in user_to_save.items()]), neighbourhood, level))
@@ -294,6 +302,7 @@ class tweepy_engine(object):
                     for relation_object in relations[r_type]:
                         self.scrap(relation_object, neighbourhood, level=level + 1, relation_types=relation_types)
 
+            return user_info
         except Exception as e:
             log.exception(e)
             log.warn('in scrapping exception as %s' % e)
@@ -305,7 +314,7 @@ class tweepy_engine(object):
         next - init_diff_machine - prepare users for difference analysing
         next start this method and get differences from db.diff_output (or at differences_users_output)
         """
-        diff_users = self.db.get_users_for_diff()
+        diff_users = self.out.get_users_for_diff()
         log.info('will load differences ')
         if not len(diff_users):
             log.info("no more users for differences")
@@ -318,7 +327,7 @@ class tweepy_engine(object):
                 if not m_user_now: log.warn('user now for diff is not load it is very bad.'); continue
                 diff_factory = difference_factory()
                 diff = diff_factory.create_difference(user_before=user, user_now=m_user_now)
-                self.db.save_diffs(diff.serialise())
+                self.out.save_diffs(diff.serialise())
 
             except Exception as e:
                 log.warn('some exception in e: %s' % e)

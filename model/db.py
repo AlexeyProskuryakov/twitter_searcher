@@ -128,7 +128,9 @@ class db_handler(database):
 
     def get_user(self, req):
         user = self.users.find_one(req)
-        return m_user.create(user)
+        if user:
+            return m_user.create(user)
+
 
     def save_diffs(self, ser_diffs):
         """

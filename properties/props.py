@@ -13,8 +13,8 @@ access_token_secret = "kxm2cuq9xNaSUBKPxIlUNJI3wKJ57VHmT0h1w1PuLWE"
 
 #####   db properties
 #host = '178.49.120.77'
-port = 27017
 host = 'localhost'
+port = 27017
 db_name = 'ttr'
 
 #for another instance of db. for experiments. Connect must be very very fast/
@@ -27,7 +27,7 @@ time_format = '%Y.%m.%d_%H:%M'
 ttr_time_format = '%Y-%m-%d %H:%M:%S'
 
 ####    scrapper properties
-def_n = 1   #default neighbourhood
+def_n = 0   #default neighbourhood
 relation_types = ['mentions', 'friends', 'followers']
 
 
@@ -65,3 +65,7 @@ def is_inited():
     if len(access_token)and len(access_token_secret):
         return True
     return False
+
+####dictionaries for pymorphy
+dict_en_path = os.path.join(os.path.dirname(__file__), 'dicts/en/morphs.pickle')
+dict_ru_path = os.path.join(os.path.dirname(__file__), 'dicts/ru/morphs.pickle')

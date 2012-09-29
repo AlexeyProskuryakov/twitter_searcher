@@ -12,14 +12,17 @@ from visualise import vis_machine
 __author__ = '4ikist'
 
 db_handler = db_handler(truncate=False)
-api_engine = tweepy_engine(db_handler=db_handler)
 
-db = api_engine.db
+api_engine = tweepy_engine(out=db_handler)
 
 booster = db_booster(truncate=False)
 vis_processor = vis_machine
 
 log = loggers.logger
+
+def model_splitter(message):
+    message_ = message.split()
+    return message_
 
 
 def process_names(file_name, class_name):
@@ -27,18 +30,24 @@ def process_names(file_name, class_name):
     get from file ser names, scrapping saving and forming markov chains for any user timeline
     """
     names = open(file_name).readlines()
+    result = []
     for name in names:
+        name = tools.imply_dog(name, with_dog=True).strip()
         log.info("start processing name %s" % name)
 
-        api_engine.scrap(tools.imply_dog(name))
-        db.set_class(name, class_name)
-        user = db.get_user({'name_': name})
-        mc = markov_chain(user, booster)
-        messages = [el['text'] for el in user.timeline]
-        for message in messages:
-            mc.add_message(message)
+        user = api_engine.scrap(name)
+        db_handler.set_class(name, class_name)
+        mc = markov_chain(name, booster)
+
+        messages = []
+        for t_el in user.timeline:
+            log.debug('>>>>%s' % t_el)
+            if t_el:
+                mc.add_message(model_splitter(t_el['text']))
+
         mc.save()
-    return names
+        result.append(mc)
+    return result
 
 
 def get_models(model_ids):
@@ -59,16 +68,19 @@ def process_models(models):
 
 
 def create_one_big_model(models):
+    log.info('create big model')
     n = len(models)
     prev_model_id_ = booster.sum_models(models[0].model_id_, models[1].model_id_)
     for i in range(2, n):
+        log.info('difference between: %s  < -- > %s' % (prev_model_id_, models[i].model_id_))
         prev_model_id_ = booster.sum_models(prev_model_id_, models[i].model_id_)
+        log.info('is win! : ' + prev_model_id_)
     return markov_chain.create(prev_model_id_, booster)
 
 
 if __name__ == '__main__':
-    names = process_names('input_names', 'spam')
-    models = get_models(names)
-    big_model = create_one_big_model(models)
-    log.info("big model: %s" % big_model.model_id_)
-    big_model.visualise()
+#    models = process_names('spam_names', 'spam')
+#    big_model = create_one_big_model(models)
+    big_model = markov_chain.create('@alemapimeon',booster)
+#    log.info("big model: %s" % big_model.model_id_)
+    big_model.visualise(100)
