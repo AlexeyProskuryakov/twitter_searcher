@@ -14,6 +14,12 @@ url_pattern = re.compile('http://[\d\w\.\/]+')
 mention_tag_pattern = re.compile('[\@][\d\w]+')
 hash_tag_pattern = re.compile(u'[\#][\d\wА-Яа-я]+')
 
+#:{)
+
+smile_regexp = re.compile("[)({}\]\[\*\?@!$%><0O]{0,1}[-=~_]{0,1}[:;o]{0,1}[-=~_]{0,1}[)({}\]\[\*\?@!$%><D0O]{0,1}")
+smile_bad = re.compile('(.*[\[\(\{]$)|(^[\)\]\}].*)')
+smile_good = re.compile('(.*[\]\)\}D]$)|(^[\(\[\{].*)')
+
 #statistic..............................................................................................................
 
 
@@ -85,11 +91,6 @@ def create_statistic_of_tweets(timeline):
     result = __get_statistic_of_tweets(timeline)
     return result
 
-#:{)
-
-smile_regexp = re.compile("[)({}\]\[\*\?@!$%><0O]{0,1}[-=~_]{0,1}[:;o]{0,1}[-=~_]{0,1}[)({}\]\[\*\?@!$%><D0O]{0,1}")
-smile_bad = re.compile('(.*[\[\(\{]$)|(^[\)\]\}].*)')
-smile_good = re.compile('(.*[\]\)\}D]$)|(^[\(\[\{].*)')
 
 def get_count_smiles(input, regexp=smile_regexp):
     count = 0

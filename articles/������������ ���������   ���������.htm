@@ -1,0 +1,3242 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://habrahabr.ru/post/114947/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru"><head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<title>Фонетические алгоритмы / Хабрахабр</title>
+		<meta name="description" content="Фонетические алгоритмы сопоставляют двум словам со схожим произношением одинаковые коды, что позволяет осуществлять сравнение и индексацию множества таких слов на основе их фонетического...">		
+		<meta name="keywords" content="фонетические алгоритмы, фонетический поиск, soundex, daitch-mokotoff, metaphone, nysiis, caverphone">
+		
+		
+	<meta property="fb:app_id" content="437464306275519"> 
+<meta property="og:type" content="article"> 
+<meta property="og:url" content="http://habrahabr.ru/post/114947/"> 
+<meta property="og:title" content="Фонетические алгоритмы"> 
+
+	<meta property="og:image" content="http://habrastorage.org/storage/habraeffect/31/55/315559f8926d27ae7833a6522ee4832f.png"><meta property="og:image" content="http://habrastorage.org/storage/habraeffect/d0/9c/d09c7c325fa9483e5782d1153071a770.png"><meta property="og:image" content="http://habrastorage.org/storage/habraeffect/fe/52/fe5241180eaaee0d6b3b3ea6b5e9f9f0.png">
+	
+
+<meta property="og:description" content="Фонетические алгоритмы сопоставляют двум словам со схожим произношением одинаковые коды, что позволяет осуществлять сравнение и индексацию множества таких слов..."> 
+
+
+		
+		
+			<link href="http://habrahabr.ru/styles/1348774373/all.css" rel="stylesheet" media="all">
+		
+
+		<link rel="stylesheet" href="http://habrahabr.ru/styles/fontello/css/habr.css?r=1348774373">
+		<!--[if IE 7]><link rel="stylesheet" href="/styles/fontello/css/habr-ie7.css?r=1348774373"><![endif]-->
+    
+		
+  <link href="http://habrahabr.ru/styles/1348774373/_parts/posts.css" rel="stylesheet" media="all">
+  <link href="http://habrahabr.ru/styles/1348774373/_parts/comments.css" rel="stylesheet" media="all">
+  <link href="http://habrahabr.ru/styles/1348774373/forms.css" rel="stylesheet" media="all">
+  <link href="http://habrahabr.ru/styles/1348774373/highlight.css" rel="stylesheet" media="all">
+  <link href="http://habrahabr.ru/styles/1348774373/posts/all.css" rel="stylesheet" media="all">
+  
+
+
+	
+
+		
+		
+			<script src="./Фонетические алгоритмы   Хабрахабр_files/jquery.min.js"></script><script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/all.js"></script>
+		
+		
+		
+		
+		
+
+	
+	
+	
+	
+		
+  <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/jquery.form.js"></script>
+  <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/jquery.cookie.js"></script>
+  <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/wysiwyg.js"></script>
+  <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/highlight.js"></script>
+  <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/posts.js"></script>
+  <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/comments.js"></script>
+  <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/all(1).js"></script>
+
+		
+		<script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/adriver.core.2.js"></script>
+		
+		
+		
+		<link title="Хабрахабр / Комментарии к публикации «Фонетические алгоритмы»" type="application/rss+xml" rel="alternate" href="http://habrahabr.ru/rss/post/114947/">
+				
+		
+			<script type="text/javascript">
+			var _gaq = window._gaq || [];
+			window.onerror = function(msg, url, line) {
+			    //var preventErrorAlert = true;
+			    //_gaq.push(['_trackEvent', 'JS Error', msg, navigator.userAgent + ' -> ' + url + " : " + line]);
+			    //return preventErrorAlert;
+			};
+			
+			jQuery.error = function (message) {
+			    _gaq.push(['_trackEvent', 'jQuery Error', message, navigator.userAgent]);
+			}
+			</script>
+		
+		
+		
+			 
+	<script async="true" src="./Фонетические алгоритмы   Хабрахабр_files/ga.js"></script><script id="facebook-jssdk" async="" src="./Фонетические алгоритмы   Хабрахабр_files/all(2).js"></script><script type="text/javascript" src="chrome-extension://bfbmjmiodbnnpllbbbfblcplfjjepjdn/js/injected.js"></script><style type="text/css">.fb_hidden{position:absolute;top:-10000px;z-index:10001}
+.fb_invisible{display:none}
+.fb_reset{background:none;border-spacing:0;border:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}
+.fb_link img{border:none}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}
+.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px;border-radius:8px}
+.fb_dialog_content{background:#fff;color:#333}
+.fb_dialog_close_icon{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yA/x/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/y6/x/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px;top:8px\9;right:7px\9}
+.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}
+.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}
+.fb_dialog_close_icon:hover{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yA/x/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/y6/x/s816eWC-2sl.gif)}
+.fb_dialog_close_icon:active{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yA/x/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/y6/x/s816eWC-2sl.gif)}
+.fb_dialog_loader{background-color:#f2f2f2;border:1px solid #606060;font-size:24px;padding:20px}
+.fb_dialog_top_left,
+.fb_dialog_top_right,
+.fb_dialog_bottom_left,
+.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}
+.fb_dialog_top_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yR/x/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}
+.fb_dialog_top_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yR/x/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}
+.fb_dialog_bottom_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yR/x/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}
+.fb_dialog_bottom_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yR/x/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}
+.fb_dialog_vert_left,
+.fb_dialog_vert_right,
+.fb_dialog_horiz_top,
+.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}
+.fb_dialog_vert_left,
+.fb_dialog_vert_right{width:10px;height:100%}
+.fb_dialog_vert_left{margin-left:-10px}
+.fb_dialog_vert_right{right:0;margin-right:-10px}
+.fb_dialog_horiz_top,
+.fb_dialog_horiz_bottom{width:100%;height:10px}
+.fb_dialog_horiz_top{margin-top:-10px}
+.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}
+.fb_dialog_iframe{line-height:0}
+.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #3b5998;color:#fff;font-size:14px;font-weight:bold;margin:0}
+.fb_dialog_content .dialog_title > span{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yD/x/Cou7n-nqK52.gif)
+no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}
+body.fb_hidden{-webkit-transform:none;height:100%;margin:0;left:-10000px;overflow:visible;position:absolute;top:-10000px;width:100%
+}
+.fb_dialog.fb_dialog_mobile.loading{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yc/x/3rhSv5V8j3o.gif)
+white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}
+.fb_dialog.fb_dialog_mobile.loading.centered{max-height:590px;min-height:590px;max-width:500px;min-width:500px}
+#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;left:0;top:0;width:100%;min-height:100%;z-index:10000}
+#fb-root #fb_dialog_ipad_overlay.hidden{display:none}
+.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}
+.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0 0, 0 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}
+.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%
+}
+.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px
+}
+.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px
+}
+.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0 0, 0 100%, from(#4966A6),
+color-stop(0.5, #355492), to(#2A4887));border:1px solid #29447e;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset,
+rgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}
+.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}
+.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}
+.fb_dialog_content .dialog_content{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yJ/x/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}
+.fb_dialog_content .dialog_footer{background:#f2f2f2;border:1px solid #555;border-top-color:#ccc;height:40px}
+#fb_dialog_loader_close{float:left}
+.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}
+.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}
+.fb_iframe_widget{position:relative;display:-moz-inline-block;display:inline-block}
+.fb_iframe_widget iframe{position:absolute}
+.fb_iframe_widget_lift{z-index:1}
+.fb_iframe_widget span{position:relative;display:inline-block;vertical-align:text-bottom;text-align:justify}
+.fb_hide_iframes iframe{position:relative;left:-10000px}
+.fb_iframe_widget_loader{position:relative;display:inline-block}
+.fb_iframe_widget_fluid{display:inline}
+.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}
+.fb_iframe_widget_loader .FB_Loader{background:url(http://static.ak.fbcdn.net/rsrc.php/v2/yJ/x/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}
+.fb_button_simple,
+.fb_button_simple_rtl{background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yH/x/eIpbnVKI9lR.png);background-repeat:no-repeat;cursor:pointer;outline:none;text-decoration:none}
+.fb_button_simple_rtl{background-position:right 0}
+.fb_button_simple .fb_button_text{margin:0 0 0 20px;padding-bottom:1px}
+.fb_button_simple_rtl .fb_button_text{margin:0 10px 0 0}
+a.fb_button_simple:hover .fb_button_text,
+a.fb_button_simple_rtl:hover .fb_button_text,
+.fb_button_simple:hover .fb_button_text,
+.fb_button_simple_rtl:hover .fb_button_text{text-decoration:underline}
+.fb_button,
+.fb_button_rtl{background:#29447e url(http://static.ak.fbcdn.net/rsrc.php/v2/yl/x/FGFbc80dUKj.png);background-repeat:no-repeat;cursor:pointer;display:inline-block;padding:0 0 0 1px;text-decoration:none;outline:none}
+.fb_button .fb_button_text,
+.fb_button_rtl .fb_button_text{background:#5f78ab url(http://static.ak.fbcdn.net/rsrc.php/v2/yl/x/FGFbc80dUKj.png);border-top:solid 1px #879ac0;border-bottom:solid 1px #1a356e;color:#fff;display:block;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;font-weight:bold;padding:2px 6px 3px 6px;margin:1px 1px 0 21px;text-shadow:none}
+a.fb_button,
+a.fb_button_rtl,
+.fb_button,
+.fb_button_rtl{text-decoration:none}
+a.fb_button:active .fb_button_text,
+a.fb_button_rtl:active .fb_button_text,
+.fb_button:active .fb_button_text,
+.fb_button_rtl:active .fb_button_text{border-bottom:solid 1px #29447e;border-top:solid 1px #45619d;background:#4f6aa3;text-shadow:none}
+.fb_button_xlarge,
+.fb_button_xlarge_rtl{background-position:left -60px;font-size:24px;line-height:30px}
+.fb_button_xlarge .fb_button_text{padding:3px 8px 3px 12px;margin-left:38px}
+a.fb_button_xlarge:active{background-position:left -99px}
+.fb_button_xlarge_rtl{background-position:right -268px}
+.fb_button_xlarge_rtl .fb_button_text{padding:3px 8px 3px 12px;margin-right:39px}
+a.fb_button_xlarge_rtl:active{background-position:right -307px}
+.fb_button_large,
+.fb_button_large_rtl{background-position:left -138px;font-size:13px;line-height:16px}
+.fb_button_large .fb_button_text{margin-left:24px;padding:2px 6px 4px 6px}
+a.fb_button_large:active{background-position:left -163px}
+.fb_button_large_rtl{background-position:right -346px}
+.fb_button_large_rtl .fb_button_text{margin-right:25px}
+a.fb_button_large_rtl:active{background-position:right -371px}
+.fb_button_medium,
+.fb_button_medium_rtl{background-position:left -188px;font-size:11px;line-height:14px}
+a.fb_button_medium:active{background-position:left -210px}
+.fb_button_medium_rtl{background-position:right -396px}
+.fb_button_text_rtl,
+.fb_button_medium_rtl .fb_button_text{padding:2px 6px 3px 6px;margin-right:22px}
+a.fb_button_medium_rtl:active{background-position:right -418px}
+.fb_button_small,
+.fb_button_small_rtl{background-position:left -232px;font-size:10px;line-height:10px}
+.fb_button_small .fb_button_text{padding:2px 6px 3px;margin-left:17px}
+a.fb_button_small:active,
+.fb_button_small:active{background-position:left -250px}
+.fb_button_small_rtl{background-position:right -440px}
+.fb_button_small_rtl .fb_button_text{padding:2px 6px;margin-right:18px}
+a.fb_button_small_rtl:active{background-position:right -458px}
+.fb_share_count_wrapper{position:relative;float:left}
+.fb_share_count{background:#b0b9ec none repeat scroll 0 0;color:#333;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;text-align:center}
+.fb_share_count_inner{background:#e8ebf2;display:block}
+.fb_share_count_right{margin-left:-1px;display:inline-block}
+.fb_share_count_right .fb_share_count_inner{border-top:solid 1px #e8ebf2;border-bottom:solid 1px #b0b9ec;margin:1px 1px 0 1px;font-size:10px;line-height:10px;padding:2px 6px 3px;font-weight:bold}
+.fb_share_count_top{display:block;letter-spacing:-1px;line-height:34px;margin-bottom:7px;font-size:22px;border:solid 1px #b0b9ec}
+.fb_share_count_nub_top{border:none;display:block;position:absolute;left:7px;top:35px;margin:0;padding:0;width:6px;height:7px;background-repeat:no-repeat;background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yP/x/bSOHtKbCGYI.png)}
+.fb_share_count_nub_right{border:none;display:inline-block;padding:0;width:5px;height:10px;background-repeat:no-repeat;background-image:url(http://static.ak.fbcdn.net/rsrc.php/v2/yL/x/i_oIVTKMYsL.png);vertical-align:top;background-position:right 5px;z-index:10;left:2px;margin:0 2px 0 0;position:relative}
+.fb_share_no_count{display:none}
+.fb_share_size_Small .fb_share_count_right .fb_share_count_inner{font-size:10px}
+.fb_share_size_Medium .fb_share_count_right .fb_share_count_inner{font-size:11px;padding:2px 6px 3px;letter-spacing:-1px;line-height:14px}
+.fb_share_size_Large .fb_share_count_right .fb_share_count_inner{font-size:13px;line-height:16px;padding:2px 6px 4px;font-weight:normal;letter-spacing:-1px}
+.fb_share_count_hidden .fb_share_count_nub_top,
+.fb_share_count_hidden .fb_share_count_top,
+.fb_share_count_hidden .fb_share_count_nub_right,
+.fb_share_count_hidden .fb_share_count_right{visibility:hidden}
+.fb_connect_bar_container div,
+.fb_connect_bar_container span,
+.fb_connect_bar_container a,
+.fb_connect_bar_container img,
+.fb_connect_bar_container strong{background:none;border-spacing:0;border:0;direction:ltr;font-style:normal;font-variant:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal;vertical-align:baseline}
+.fb_connect_bar_container{position:fixed;left:0 !important;right:0 !important;height:42px !important;padding:0 25px !important;margin:0 !important;vertical-align:middle !important;border-bottom:1px solid #333 !important;background:#3b5998 !important;z-index:99999999 !important;overflow:hidden !important}
+.fb_connect_bar_container_ie6{position:absolute;top:expression(document.compatMode=="CSS1Compat"? document.documentElement.scrollTop+"px":body.scrollTop+"px")}
+.fb_connect_bar{position:relative;margin:auto;height:100%;width:100%;padding:6px 0 0 0 !important;background:none;color:#fff !important;font-family:"lucida grande", tahoma, verdana, arial, sans-serif !important;font-size:13px !important;font-style:normal !important;font-variant:normal !important;font-weight:normal !important;letter-spacing:normal !important;line-height:1 !important;text-decoration:none !important;text-indent:0 !important;text-shadow:none !important;text-transform:none !important;white-space:normal !important;word-spacing:normal !important}
+.fb_connect_bar a:hover{color:#fff}
+.fb_connect_bar .fb_profile img{height:30px;width:30px;vertical-align:middle;margin:0 6px 5px 0}
+.fb_connect_bar div a,
+.fb_connect_bar span,
+.fb_connect_bar span a{color:#bac6da;font-size:11px;text-decoration:none}
+.fb_connect_bar .fb_buttons{float:right;margin-top:7px}
+.fb_edge_widget_with_comment{position:relative;*z-index:1000}
+.fb_edge_widget_with_comment span.fb_edge_comment_widget{position:absolute}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget{z-index:1}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget .FB_Loader{left:0;top:1px;margin-top:6px;margin-left:0;background-position:50% 50%;background-color:#fff;height:150px;width:394px;border:1px #666 solid;border-bottom:2px solid #283e6c;z-index:1}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget.dark .FB_Loader{background-color:#000;border-bottom:2px solid #ccc}
+.fb_edge_widget_with_comment span.fb_send_button_form_widget.siderender
+.FB_Loader{margin-top:0}
+.fbpluginrecommendationsbarleft,
+.fbpluginrecommendationsbarright{position:fixed !important;bottom:0;z-index:999}
+/* @noflip */
+.fbpluginrecommendationsbarleft{left:10px}
+/* @noflip */
+.fbpluginrecommendationsbarright{right:10px}
+</style><script src="./Фонетические алгоритмы   Хабрахабр_files/sf_main.jsp" defer=""></script><script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/base_single_icon.js"></script><script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/dojo.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Фонетические алгоритмы   Хабрахабр_files/script.xd.js"></script><script type="text/javascript" charset="utf-8" src="./Фонетические алгоритмы   Хабрахабр_files/window.xd.js"></script><script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/getSupportedSitesJSON.action" id="sufioIoScript1" charset="utf-8"></script><script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/rvwl.action" id="sufioIoScript2" charset="utf-8"></script></head>
+
+	<body><div style="position: fixed; top: 0px; left: 0px; height: 0px; width: 0px; z-index: 9999999; "><div style="position: fixed; top: 100%; height: 0px; "><div style="position: relative; "></div></div></div>
+	  
+
+
+
+
+
+
+	<div id="topline" title=""><div style="position: relative; height: 90px; "><table width="100%" height="90" cellspacing="0" cellpadding="0" border="0" style="line-height: 100%; margin: 0; padding: 0;"><tbody><tr><td style="width: 50%; line-height: 100%; margin: 0; padding: 0;background: url(http://novo1.adriver.ru/images/0002052/0002052274/0/fon.jpg) repeat-x;"><a style="display:block;width:100%;height:90px;" target="_blank" href="http://ad.adriver.ru/cgi-bin/click.cgi?sid=176776&ad=361339&bid=2052274&bt=52&bn=1&pz=0&ref=http:%2f%2fhabrahabr.ru%2fpost%2f114947%2f&custom=1%3Dalgorithms&rleurl="></a></td><td width="1000" style="line-height: 100%; margin: 0; padding: 0;"><a href="http://ad.adriver.ru/cgi-bin/click.cgi?sid=176776&ad=361339&bid=2052274&bt=52&bn=1&pz=0&ref=http:%2f%2fhabrahabr.ru%2fpost%2f114947%2f&custom=1%3Dalgorithms&rleurl=" target="_blank"><img src="./Фонетические алгоритмы   Хабрахабр_files/cp2.jpg" border="0" width="1000" height="90"></a></td><td style="width: 50%; line-height: 100%; margin: 0; padding: 0;background: url(http://novo1.adriver.ru/images/0002052/0002052274/0/fon.jpg) repeat-x;"><a style="display:block;width:100%;height:90px;" target="_blank" href="http://ad.adriver.ru/cgi-bin/click.cgi?sid=176776&ad=361339&bid=2052274&bt=52&bn=1&pz=0&ref=http:%2f%2fhabrahabr.ru%2fpost%2f114947%2f&custom=1%3Dalgorithms&rleurl="></a></td></tr></tbody></table></div></div>
+	<script type="text/javascript">
+	(function(){
+		var custom = {};
+		
+			custom[1]	= 'algorithms';
+		
+		new adriver("topline", {sid:176776, bt:52, bn:1, custom: custom});
+	})();
+	</script>
+
+
+
+
+		<div id="layout">	    
+		  <div id="header">
+  <div class="userpanel silver">
+    
+    
+      <a href="http://habrahabr.ru/login/" class="login">войти</a> <a href="http://habrahabr.ru/register/">зарегистрироваться</a>
+    
+  </div>
+  <a class="logo" href="http://habrahabr.ru/" title="На главную страницу"></a>
+  <div class="search">
+    <form id="search_form" name="search" method="get" action="http://habrahabr.ru/search/">
+      <input type="submit" value="">
+      <input type="text" name="q" x-webkit-speech="" speech="" autocomplete="off">
+    </form>
+  </div>
+
+
+	<div class="main_menu">
+		<a href="http://habrahabr.ru/posts/top/" class="active">посты</a><a href="http://habrahabr.ru/qa/">q&amp;a</a><a href="http://habrahabr.ru/events/coming/">события</a><a href="http://habrahabr.ru/hubs/">хабы</a><a href="http://habrahabr.ru/companies/">компании</a>
+		<div class="banner_special">
+
+	 
+
+	 
+
+	
+	
+		<!--  AdRiver code START. Type:135x35 Site: habrahabr PZ: 0 BN: 0 -->
+		<script language="javascript" type="text/javascript"><!--
+		var RndNum4NoCash = Math.round(Math.random() * 1000000000);
+		var ar_Tail='unknown'; if (document.referrer) ar_Tail = escape(document.referrer);
+		document.write(
+		'<iframe src="http://ad.adriver.ru/cgi-bin/erle.cgi?'
+		+ 'sid=176776&target=top&w=135&h=35&bt=25&pz=0&rnd=' + RndNum4NoCash + '&tail256=' + ar_Tail
+		+ '" frameborder=0 vspace=0 hspace=0 width=135 height=35 marginwidth=0'
+		+ ' marginheight=0 scrolling=no></iframe>');
+		//--></script><iframe src="./Фонетические алгоритмы   Хабрахабр_files/erle(1).htm" frameborder="0" vspace="0" hspace="0" width="135" height="35" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+		<noscript>
+		&lt;a href="http://ad.adriver.ru/cgi-bin/click.cgi?sid=176776&amp;bt=25&amp;pz=0&amp;rnd=795668059" target=_top&gt;
+		&lt;img src="http://ad.adriver.ru/cgi-bin/rle.cgi?sid=176776&amp;bt=25&amp;pz=0&amp;rnd=795668059" alt="-AdRiver-" border=0 width=135 height=35&gt;&lt;/a&gt;
+		</noscript>
+
+		<!--  AdRiver code END  -->
+	
+	
+
+</div>
+		
+	</div>
+
+
+</div>
+
+
+	
+		  
+	  
+		  
+
+
+	
+  <div class="content_left">
+
+	
+
+
+
+
+
+
+
+
+
+
+	
+  <div class="post shortcuts_item" id="post_114947">
+  	<div class="published"> 4 марта 2011 в 20:53</div>  
+    <h1 class="title">
+    
+      
+      
+
+      
+      
+        <span class="post_title">Фонетические алгоритмы</span>
+      
+      
+			
+  		<a href="http://habrahabr.ru/sandbox/" class="flag flag_sandbox" title="Перейти в песочницу"></a>
+			
+			
+  		
+  		
+  	</h1>
+  	
+  	
+<div class="hubs">
+	
+		<a href="http://habrahabr.ru/hub/algorithms/" class="hub " title="Вы не подписаны на этот хаб">Алгоритмы</a><span class="profiled_hub" title="Профильный хаб">*</span>
+	
+</div>
+
+  	
+    <div class="content html_format">
+			Фонетические алгоритмы сопоставляют двум словам со схожим произношением одинаковые коды, что позволяет осуществлять сравнение и индексацию множества таких слов на основе их фонетического сходства.<br>
+<br>
+Часто довольно трудно найти в базе нетипичную фамилию, например:<br>
+<blockquote> — Леха, поищи в нашей базе Адольфа <b>Швардсенеггера</b>,<br>
+— <b>Шворцинегира</b>? Нет такого!</blockquote>В этом случае использование фонетических алгоритмов (особенно в сочетании с алгоритмами нечеткого сопоставления) может значительно упростить задачу.<br>
+<br>
+Такие алгоритмы очень удобно использовать при поиске в базах по спискам людей, в программах проверки орфографии. Зачастую они используются совместно с алгоритмами нечеткого поиска (которые, несомненно, заслуживают отдельной статьи), предоставляя пользователям удобный поиск по именам и фамилиям в различных базах данных, списках сотрудников и так далее.<br>
+<br>
+В этой статье я рассмотрю наиболее известные алгоритмы, такие как <i>Soundex</i>, <i>Daitch-Mokotoff Soundex</i>, <i>NYSIIS</i>, <i>Metaphone</i>, <i>Double Metaphone</i>, <i>русский Metaphone</i>, <i>Caverphone</i>.<br>
+<a name="habracut"></a><br>
+<h4>Soundex</h4><br>
+Одним из первых был алгоритм <i>Soundex</i>, изобретенный еще в 10-x годах прошлого века Робертом Расселом. Этот алгоритм (а точнее, его американская версия) сопоставляет словам численный индекс вида <b>A126</b>. Принцип его работы основан на разбиении согласных букв на группы с порядковыми номерами, из которых затем и составляется результирующее значение. Позднее также был предложен ряд улучшений.<br>
+<br>
+<img src="./Фонетические алгоритмы   Хабрахабр_files/315559f8926d27ae7833a6522ee4832f.png" alt="image"><br>
+<br>
+Первая буква сохраняется, последующие буквы сопоставляются цифрам по таблице. Символы, не представленные в таблице (а это все гласные и некоторые согласные), игнорируются. Смежные символы, или символы, разделенные буквами <b>H</b> или <b>W</b>, входящие в одну и ту же группу, записываются как один. Результат обрезается до 4 символов. Недостающие позиции заполняются нулями. Несложно заметить, что после всех этих процедур остается всего лишь <i>7 тысяч</i> различных вариаций такого кода, что влечет за собой множество совершенно ничем не похожих друг на друга слов, имеющих одинаковый Soundex-код. Таким образом, результат в большинстве случаев включает в себя большое количество «ложноположительных» значений.<br>
+<br>
+<img src="./Фонетические алгоритмы   Хабрахабр_files/d09c7c325fa9483e5782d1153071a770.png" alt="image"><br>
+<br>
+В улучшенной версии, как можно заметить, буквы разбиты на большее количество групп. Помимо этого, никакого особого внимания буквам H и W не уделяется, они просто игнорируются. Кроме того, никаких операций с длиной результата не производится — код не имеет фиксированной длины и не обрезается.<br>
+<br>
+<h5>Примеры</h5><br>
+<b>Оригинальный Soundex:</b><br>
+<b>D341</b> → Дедловский, Дедловских, Дидилев, Дителев, Дудалев, Дудолев, Дутлов, Дыдалев, Дятлов, Дятлович.<br>
+<b>N251</b> → Нагимов, Нагмбетов, Назимов, Насимов, Нассонов, Нежнов, Незнаев, Несмеев, Нижневский, Никонов, Никонович, Нисенблат, Нисенбаум, Ниссенбаум, Ногинов, Ножнов.<br>
+<br>
+<b>Улучшенный Soundex:</b><br>
+<b>N8030802</b> → Насимов, Нассонов, Никонов.<br>
+<b>N80308108</b> → Нисенбаум, Ниссенбаум.<br>
+<b>N8040802</b> → Нагимов, Нагонов, Неганов, Ногинов.<br>
+<b>N804810602</b> → Нагмбетов.<br>
+<b>N8050802</b> → Назимов, Нежнов, Ножнов.<br>
+<br>
+В среднем, на одно значение кода Soundex приходится 21 фамилия. В случае же улучшенной версии Soundex, к одному и тому же коду преобразуются всего 2-3 фамилии.<br>
+<br>
+<h4>NYSIIS</h4><br>
+Разработанный в 1970 году как часть системы «New York State Identification and Intelligence System», этот алгоритм дает несколько лучшие результаты относительно оригинального Soundex, используя более сложные правила преобразования исходного слова в результирующий код. Этот алгоритм разработан для работы именно с американскими фамилиями.<br>
+<br>
+<h5>Алгоритм вычисления кода NYSIIS</h5><ol>
+<li>Преобразовать начало слова по следующим правилам:<br>
+MAC → MCC<br>
+KN → N<br>
+K → C<br>
+PH, PF → FF<br>
+SCH → SSS</li>
+<li>Преобразовать конец слова по следующим правилам:<br>
+EE → Y<br>
+IE → Y<br>
+DT, RT, RD, NT, ND → D</li>
+<li>Затем все буквы, кроме первой, преобразуются по следующим правилам:<br>
+EV → AF<br>
+A, E, I, O, U → A<br>
+Q → G<br>
+Z → S<br>
+M → N<br>
+KN → N<br>
+K → C<br>
+SCH → SSS<br>
+PH → FF<br>
+После гласных: удалить H, преобразовать W → A</li>
+<li>Удалить S на конце</li>
+<li>Преобразуем AY на конце → Y</li>
+<li>Удалить A на конце</li>
+<li>Обрезать до 6 символов (необязательный шаг).</li>
+</ol><br>
+<h5>Примеры</h5><br>
+<b>CASPARAVAS</b> → Каспаравичус, Касперович, Каспирович.<br>
+<b>CATNACAV</b> → Катников, Цитников, Цотников.<br>
+<b>LANSANC</b> → Ленченко, Леонченко, Линченко, Лунченко, Лямзенко.<br>
+<b>PRADSC</b> → Приходский, Проходский, Прудский, Прудских, Прудской.<br>
+<b>STADNACAV</b> → Стадников.<br>
+<br>
+NYSIIS преобразует к одному и тому же коду немногим более двух фамилий.<br>
+<br>
+<h4>Daitch-Mokotoff Soundex</h4><br>
+Этот алгоритм в 1985 году разработали два генеалога — Гарри Мокотофф и Рэнди Дэйч, стремясь достичь лучших, относительно оригинального Soundex, результатов при работе со восточно-европейскими (в том числе русскими) фамилиями.<br>
+Этот алгоритм имеет мало общего с оригинальным Soundex, разве что результатом всё так же остается последовательность цифр, однако теперь первая буква также кодируется.<br>
+<br>
+Он имеет значительно более сложные правила конверсии — теперь в формировании результирующего кода участвуют не только одиночные символы, но и последовательности из нескольких символов. Кроме того, результат вида <b>023689</b> обеспечивает около <i>600 тысяч</i> различных вариаций кода, что вкупе с усложненными правилами уменьшает количество «лишних», т.е. «ложноположительных» слов в результирующем множестве.<br>
+<br>
+Преобразования осуществляются по следующей таблице (порядок преобразований соответствует порядку буквосочетаний в таблице):<br>
+<table>
+<tbody><tr>
+<td><b>Исходные буквосочетания</b></td>
+<td><b>В&nbsp;начале</b></td>
+<td><b>За&nbsp;гласной</b></td>
+<td><b>Остальное</b></td>
+</tr>
+<tr>
+<td>AI, AJ, AY, EI, EY, EJ, OI, OJ, OY, UI, UJ, UY</td>
+<td>0</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>AU</td>
+<td>0</td>
+<td>7</td>
+<td></td>
+</tr>
+<tr>
+<td>IA, IE, IO, IU</td>
+<td>1</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>EU</td>
+<td>1</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>A, UE, E, I, O, U, Y</td>
+<td>0</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>J</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>SCHTSCH, SCHTSH, SCHTCH, SHTCH, SHCH, SHTSH, STCH, STSCH, STRZ, STRS, STSH, SZCZ, SZCS</td>
+<td>2</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>SHT, SCHT, SCHD, ST, SZT, SHD, SZD, SD</td>
+<td>2</td>
+<td>43</td>
+<td>43</td>
+</tr>
+<tr>
+<td>CSZ, CZS, CS, CZ, DRZ, DRS, DSH, DS, DZH, DZS, DZ, TRZ, TRS, TRCH, TSH, TTSZ, TTZ, TZS, TSZ, SZ, TTCH, TCH, TTSCH, ZSCH, ZHSH, SCH, SH, TTS, TC, TS, TZ, ZH, ZS</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>SC</td>
+<td>2</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>DT, D, TH, T</td>
+<td>3</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>CHS, KS, X</td>
+<td>5</td>
+<td>54</td>
+<td>54</td>
+</tr>
+<tr>
+<td>S, Z</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>CH, CK, C, G, KH, K, Q</td>
+<td>5</td>
+<td>5</td>
+<td>5</td>
+</tr>
+<tr>
+<td>MN, NM</td>
+<td></td>
+<td>66</td>
+<td>66</td>
+</tr>
+<tr>
+<td>M, N</td>
+<td>6</td>
+<td>6</td>
+<td>6</td>
+</tr>
+<tr>
+<td>FB, B, PH, PF, F, P, V, W</td>
+<td>7</td>
+<td>7</td>
+<td>7</td>
+</tr>
+<tr>
+<td>H</td>
+<td>5</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>L</td>
+<td>8</td>
+<td>8</td>
+<td>8</td>
+</tr>
+<tr>
+<td>R</td>
+<td>9</td>
+<td>9</td>
+<td>9</td>
+</tr>
+</tbody></table>«Альтернативные» варианты буквосочетаний (используются для генерации нескольких альтернативных кодов из исходного слова):<br>
+CH → TCH<br>
+CK → TSK<br>
+C → TZ<br>
+J → DZH<br>
+<br>
+<h5>Примеры</h5><br>
+<b>095747</b> → <i>Архипцев</i>, <i>Архипцов</i>, Архипычев, Арцыбасов, Арцыбашев, Арчибасов<br>
+<b>095757</b> → Архипков, <i>Архипцев</i>, <i>Архипцов</i>, Архипычев<br>
+<b>584360</b> → Галстян, Галустян, Гильштейн, Глистин, Глуздань, Голштейн, Гольдштеин, Гольдштейн, Калустьян, Хлистун, Хлыстун, Хлюстин.<br>
+<br>
+К одному и тому же коду этот алгоритм преобразует в среднем 5 фамилий.<br>
+<br>
+Впоследствии Александр Бейдер и Стивен Морзе разработали <a href="http://stevemorse.org/phonetics/bmpm.htm">Beider-Morse Name Matching Algorithm</a>, нацеленный на уменьшение количества «ложноположительных» значений относительно Daitch-Mokotoff Soundex при работе с еврейскими (ашкенази) фамилиями.<br>
+<br>
+<h4>Metaphone</h4><br>
+Несколько лучшими характеристиками обладает алгоритм <i>Metaphone</i> (1990 год), отличающийся от предыдущих алгоритмов несколько иным подходом к процессу кодирования: он преобразует исходное слово с учетом правил английского языка, используя заметно более сложные правила, и при этом теряется значительно меньше информации, так как буквы не разбиваются на группы. Итоговый код представляет собой набор символов из множества <i>0BFHJKLMNPRSTWXY</i>, в начале слова также могут быть гласные из множества <i>AEIOU</i>.<br>
+<br>
+<h5>Алгоритм вычисления кода Metaphone</h5><ol>
+<li>Удаляем все повторяющиеся соседние буквы, за исключением буквы C.</li>
+<li>Начало слова преобразовать по следующим правилам:<br>
+KN → N<br>
+GN → N<br>
+PN → N<br>
+AE → E<br>
+WR → R</li>
+<li>Удаляем на конце букву B, если она идет после M.</li>
+<li>Заменяем C по следующим правилам<br>
+На Х: CIA → XIA, SCH → SKH, CH → XH<br>
+На S: CI → SI, CE → SE, CY → SY<br>
+На K: C → K</li>
+<li>Заменяем D по следующим правилам<br>
+На J: DGE → JGE, DGY → JGY, DGI → JGY<br>
+На T: D → T</li>
+<li>Заменяем GH → H, если это буквосочетание стоит не в конце и не перед гласной.</li>
+<li>Заменяем GN → N и GNED → NED, если эти буквосочетания стоят в конце.</li>
+<li>Заменяем G по следующим правилам<br>
+На J: GI → JI, GE → JE, GY → JY<br>
+на K: G → K</li>
+<li>Удаляем все H, идущие после гласных, но не перед гласными.</li>
+<li>Выполняем последующие преобразования по правилам:<br>
+CK → K<br>
+PH → F<br>
+Q → K<br>
+V → F<br>
+Z → S</li>
+<li>Заменяем S на X:<br>
+SH → XH<br>
+SIO → XIO<br>
+SIA → XIA</li>
+<li>Заменяем T по следующим правилам<br>
+На X: TIA → XIA, TIO → XIO<br>
+На 0: TH → 0<br>
+Удаляем: TCH → CH<br>
+</li>
+<li>В начале слова преобразовать WH → W. Если после W нет гласной, то удалить W.</li>
+<li>Если X в начале слова, то преобразовать X → S, иначе X → KS</li>
+<li>Удалить все Y, которые не находятся перед гласными.</li>
+<li>Удалить все гласные, кроме начальной.</li>
+</ol><br>
+<h5>Примеры</h5><br>
+<b>AKXN</b> → Агашин, Акаченок, Акишин, Аксионенко, Аксионов, Акчунаев, Акшанов, Акшенцев, Акшинский, Акшинцев, Акшонов.<br>
+<b>FSLX</b> → Василишин, Васильчак, Васильченко, Васильчик, Васильчиков, Васильченко, Васильчук, Василющенко.<br>
+<b>SRFM</b> → Серафимов, Серафимский, Серафимчук, Церейфман.<br>
+<br>
+Одно и то же значение кода Metaphone имеют в среднем 6 фамилий.<br>
+<br>
+<h4>Double Metaphone</h4><br>
+Double Metaphone (2000 год) несколько отличается от других фонетических алгоритмов, генерируя из исходного слова не один, а два кода (оба длиной до 4 символов) — один отражает основной вариант произношения слова, другой же — альтернативную версию. Он имеет большое количество различных правил, учитывающих, помимо всего прочего, различное происхождение слов, уделяя внимание восточно-европейским, итальянским, китайским словам и так далее. Правила преобразований достаточно многочисленны, я не буду их публиковать, а желающие смогут прочитать о них в <a href="http://www.drdobbs.com/article/184401251">статье журнала Dr Dobbs</a>.<br>
+<br>
+<h5>Примеры</h5><br>
+<b>JXRF</b> → <i>Гишаров</i>.<br>
+<b>KKRF</b> → Гагаров, Кагаров, Качаровский, <i>Качеровский</i>, Качуривский, Качуров, Качуровский, Кичеров, Кокарев, Кокоуров, Кокоуров, Кочаров, Кочуров, Кукарев, Цакиров, Цокуров, Цугров.<br>
+<b>KXRF</b> → <i>Гишаров</i>, Гочаров, Качеров, <i>Качеровский</i>, Кашаревский, Кочаров, Кочерев, Кочеряев, Кочураев, Кошарев, Кошеров.<br>
+<b>PNFS</b> → Бановский, Бахновский, Биневский, Бинявский, Буйновский, Буяновский, Паневский, Пановский, Пановских, Пеньевский, Пиневский, Пиуновский, Пихновский.<br>
+<br>
+Double Metaphone сопоставляет в среднем 8-9 фамилий одному и тому же коду.<br>
+<br>
+<h4>Русский Metaphone</h4><br>
+В 2002 году в 8-ом выпуске журнала «Программист» была опубликована <a href="http://forum.aeroion.ru/topic461.html">статья Петра Каньковски</a>, рассказывающая о его адаптации английской версии алгоритма Metaphone к суровым сибирским морозам, медведям и балалайкам. Этот алгоритм преобразует исходные слова в соответствии с правилами и нормами русского языка, учитывая фонетическое звучание безударных гласных и возможные «слияния» согласных при произношении. Он показывает очень хорошие результаты на практике, несмотря на то, что основывается на довольно простых правилах. Все буквы разбиты на группы по звучанию — гласные и согласные (<i>vowels</i> и <i>consonants</i> соответственно в английской терминологии), глухие и звонкие. Звонкие согласные преобразуются в соответствующие им парные глухие, объединяются «сливающиеся» при произношении последовательности букв, и проводятся некоторые другие манипуляции. Ниже я приведу немного доработанный вариант, который, в отличие от оригинала Петра Каньковски, привносит правила, связанные с фонетической эквивалентностью <b>Ц</b> и <b>ТС</b> или <b>ДС</b>, и не сжимает окончания — байты экономить — это не наша задача.<br>
+<br>
+<h5>Алгоритм вычисления кода русского Metaphone</h5><ol>
+<li>Для всех гласных букв проделать следующие операции.<br>
+ЙО, ИО, ЙЕ, ИЕ → И<br>
+О, Ы, Я → А<br>
+Е, Ё, Э → И<br>
+Ю → У</li>
+<li>Для всех согласных букв, за которыми следует любая согласная, кроме <b>Л</b>, <b>М</b>, <b>Н</b> или <b>Р</b>, либо же для согласных на конце слова, провести оглушение:<br>
+Б → П<br>
+З → С<br>
+Д → Т<br>
+В → Ф<br>
+Г → К</li>
+<li>Склеиваем <b>ТС</b> и <b>ДС</b> в <b>Ц</b>:<br>
+ТС → Ц</li>
+</ol>В итоге, алгоритм очень хорошо справляется со своей задачей — в результирующем наборе содержатся действительно фонетически схожие слова. И при этом остается довольно мало лишних слов, в основном благодаря тому, что гласные не игнорируются, а преобразуются и используются в итоговом коде. Однако же, есть некоторые слова, которые, не смотря на свою фонетическую схожесть, не попадают в результирующий набор из-за слишком «строгих» правил алгоритма.<br>
+<br>
+В случае Адольфа Швардсенеггера результатом работы алгоритма русского <i>Metaphone</i> будет:<br>
+<br>
+<img src="./Фонетические алгоритмы   Хабрахабр_files/fe5241180eaaee0d6b3b3ea6b5e9f9f0.png" alt="image"><br>
+<br>
+Таким образом, алгоритм в данном случае отражает реальное фонетическое сходство этих двух фамилий.<br>
+<br>
+<h5>Примеры</h5><br>
+<b>ВИТАФСКИЙ</b> → Витавский, Витовский.<br>
+<b>ВИТИНБИРК</b> → Витенберг, Виттенберг.<br>
+<b>НАСАНАФ</b> → Насанов, Насонов, Нассонов, Носонов.<br>
+<b>ПИРМАКАФ</b> → Пермаков, Пермяков, Перьмяков.<br>
+<br>
+Этот алгоритм преобразует к одному и тому же коду в среднем 1-2 фамилии.<br>
+<br>
+<h4>Caverphone</h4><br>
+Алгоритм Caverphone был разработан в 2002 году в рамках одного из новозеландских проектов для сопоставления данных в старых и новых электоральных списках, потому он наиболее ориентирован на местное произношение, хотя и для русских фамилий он дает вполне приемлемые результаты.<br>
+<br>
+<h5>Алгоритм вычисления кода Caverphone</h5><ol>
+<li>Преобразовать имя или фамилию в нижний регистр (алгоритм чувствителен к регистру).</li>
+<li>Удалить буквы <b>e</b> на конце.</li>
+<li>Преобразовать начало слова по следующей таблице (актуально для местных новозеландских имен и фамилий). При этом цифра <b>2</b> означает временную метку для согласной буквы, которая впоследствии будет удалена.<table>
+<tbody><tr>
+<td><b>cough</b></td>
+<td><b>rough</b></td>
+<td><b>tough</b></td>
+<td><b>enough</b></td>
+<td><b>gn</b></td>
+<td><b>mb</b></td>
+</tr>
+<tr>
+<td>cou2f</td>
+<td>rou2f</td>
+<td>tou2f</td>
+<td>enou2f</td>
+<td>2n</td>
+<td>m2</td>
+</tr>
+</tbody></table></li>
+<li>Провести замены символов по следующей таблице:<table>
+<tbody><tr>
+<td><b>cq</b></td>
+<td><b>ci</b></td>
+<td><b>ce</b></td>
+<td><b>cy</b></td>
+<td><b>tch</b></td>
+<td><b>c</b></td>
+<td><b>q</b></td>
+<td><b>x</b></td>
+<td><b>v</b></td>
+<td><b>dg</b></td>
+<td><b>tio</b></td>
+<td><b>tia</b></td>
+<td><b>d</b></td>
+<td><b>ph</b></td>
+<td><b>b</b></td>
+<td><b>sh</b></td>
+<td><b>z</b></td>
+</tr>
+<tr>
+<td>2q</td>
+<td>si</td>
+<td>se</td>
+<td>sy</td>
+<td>2ch</td>
+<td>k</td>
+<td>k</td>
+<td>k</td>
+<td>f</td>
+<td>2g</td>
+<td>sio</td>
+<td>sia</td>
+<td>t</td>
+<td>fh</td>
+<td>p</td>
+<td>s2</td>
+<td>s</td>
+</tr>
+</tbody></table></li>
+<li>Заменить все гласные в начале слова на <b>A</b>, в остальных случаях — на <b>3</b>. Таким образом, цифра <b>3</b> служит временной меткой для гласной буквы, которая будет использоваться в последующих преобразованиях, а затем будет удалена. После, необходимо провести замены по следующим таблицам (условные обозначения: <b>s+</b> — несколько идущих подряд символов, <b>^h</b> — символ в начале строки, <b>w$</b> — символ на конце строки):<table>
+<tbody><tr>
+<td><b>j</b></td>
+<td><b>^y3</b></td>
+<td><b>^y</b></td>
+<td><b>y</b></td>
+<td><b>3gh3</b></td>
+<td><b>gh</b></td>
+<td><b>g</b></td>
+<td><b>s+</b></td>
+<td><b>t+</b></td>
+<td><b>p+</b></td>
+<td><b>k+</b></td>
+<td><b>f+</b></td>
+<td><b>m+</b></td>
+</tr>
+<tr>
+<td>y</td>
+<td>Y3</td>
+<td>A</td>
+<td>3</td>
+<td>3kh3</td>
+<td>22</td>
+<td>k</td>
+<td>S</td>
+<td>T</td>
+<td>P</td>
+<td>K</td>
+<td>F</td>
+<td>M</td>
+</tr>
+</tbody></table><table>
+<tbody><tr>
+<td><b>n+</b></td>
+<td><b>w3</b></td>
+<td><b>wh3</b></td>
+<td><b>w$</b></td>
+<td><b>w</b></td>
+<td><b>^h</b></td>
+<td><b>h</b></td>
+<td><b>r3</b></td>
+<td><b>r$</b></td>
+<td><b>r</b></td>
+<td><b>l3</b></td>
+<td><b>l$</b></td>
+<td><b>l</b></td>
+</tr>
+<tr>
+<td>N</td>
+<td>W3</td>
+<td>Wh3</td>
+<td>3</td>
+<td>2</td>
+<td>A</td>
+<td>2</td>
+<td>R3</td>
+<td>3</td>
+<td>2</td>
+<td>L3</td>
+<td>3</td>
+<td>2</td>
+</tr>
+</tbody></table></li>
+<li>Удалить все цифры <b>2</b>. Если на конце слова осталась цифра <b>3</b>, то заменить её на <b>A</b>. Затем удалить все цифры <b>3</b>.</li>
+<li>Обрезать слово до 10 символов, либо же дополнить до 10 символов единицами.</li>
+</ol><br>
+<h5>Примеры</h5><br>
+<b>KPRLN11111</b> → Габрелян, Габриэлян, Габриэльян, Капарулин, Капралин, Капрелян.<br>
+<b>MSRFK11111</b> → Мейзерович, Мисарович, Мисюревич.<br>
+<b>PLLF111111</b> → Балалаев, Балалиев, Балалуев, Билалиев, Билалов, Билялов, Болелов, Палилов, Полилов, Полуляхов.<br>
+<br>
+Caverphone сопоставляет одному и тому же коду около 4-5 фамилий.<br>
+<br>
+<h4>Итого</h4><br>
+Большая часть этих алгоритмов реализована на множестве языков, в том числе на C, C++, Java, C# и PHP. Некоторые из них, например Soundex и Metaphone, интегрированы или реализованы в виде плагинов для многих популярных СУБД, а также используются в составе полноценных поисковых движков, например, <a href="http://lucene.apache.org/">Apache Lucene</a>. Область их применения довольно специфична, ведь значительного повышения удобства для пользователей можно добиться лишь при поиске фамилий, но тем не менее грамотное их использование — это плюс для поисковых систем.<br>
+<br>
+<h4>Ссылки</h4><ol>
+<li>Код на Java к статье. <a href="http://narod.ru/disk/6793311001/phonetic.zip.html">Яндекс.Диск</a></li>
+<li>Реализации Soundex, Refined Soundex, Metaphone, Double Metaphone, Caverphone на Java.<br>
+<a href="http://commons.apache.org/codec/">Apache Commons Codec</a></li>
+<li>Реализация NYSIIS на Java. <a href="https://gforge.cythres.cz/gf/project/egothor2edu/scmsvn/?action=browse&path=%2F%2Acheckout%2A%2Ftrunk%2Fsrc%2Forg%2Fegothor%2Fparser%2Ffilter%2FNysiis.java">Проект Egothor</a></li>
+<li>Реализация Daitch-Mokotoff Soundex на Java. <a href="http://joshualevy.tripod.com/genealogy/dmsoundex/dmsoundex.zip">http://joshualevy.tripod.com/genealogy/dmsoundex/dmsoundex.zip</a></li>
+<li>Описание Soundex. <a href="http://en.wikipedia.org/wiki/Soundex">http://en.wikipedia.org/wiki/Soundex</a></li>
+<li>Описание Daitch-Mokotoff Soundex. <a href="http://www.jewishgen.org/infofiles/soundex.html">http://www.jewishgen.org/infofiles/soundex.html</a></li>
+<li>Описание NYSIIS.<br>
+<a href="http://en.wikipedia.org/wiki/New_York_State_Identification_and_Intelligence_System">http://en.wikipedia.org/wiki/New_York_State_Identification_and_Intelligence_System</a></li>
+<li>Описание Metaphone. <a href="http://en.wikipedia.org/wiki/Metaphone">http://en.wikipedia.org/wiki/Metaphone</a></li>
+<li>Описание Double Metaphone. <a href="http://www.drdobbs.com/article/184401251">http://www.drdobbs.com/article/184401251</a></li>
+<li>Описание русского Metaphone. <a href="http://forum.aeroion.ru/topic461.html">http://forum.aeroion.ru/topic461.html</a></li>
+<li>Описание Caverphone. <a href="http://en.wikipedia.org/wiki/Caverphone">http://en.wikipedia.org/wiki/Caverphone</a></li>
+<li>Онлайн-демо Soundex. <a href="http://www.gedpage.com/soundex.html">http://www.gedpage.com/soundex.html</a></li>
+<li>Онлайн-демо NYSIIS. <a href="http://www.dropby.com/NYSIIS.html">http://www.dropby.com/NYSIIS.html</a></li>
+<li>Онлайн-демо Daitch-Mokotoff Soundex. <a href="http://stevemorse.org/census/soundex.html">http://stevemorse.org/census/soundex.html</a></li>
+<li>Онлайн-демо Metaphone. <a href="http://www.searchforancestors.com/utility/metaphone.php">http://www.searchforancestors.com/utility/metaphone.php</a></li>
+</ol>
+			
+			<div class="clear"></div>
+    </div>
+
+    
+<ul class="tags">
+	<li><a href="http://habrahabr.ru/search/?q=%5B%D1%84%D0%BE%D0%BD%D0%B5%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5%20%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D1%8B%5D&target_type=posts" rel="tag">фонетические алгоритмы</a></li><li>, <a href="http://habrahabr.ru/search/?q=%5B%D1%84%D0%BE%D0%BD%D0%B5%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%5D&target_type=posts" rel="tag">фонетический поиск</a></li><li>, <a href="http://habrahabr.ru/search/?q=%5Bsoundex%5D&target_type=posts" rel="tag">soundex</a></li><li>, <a href="http://habrahabr.ru/search/?q=%5Bdaitch-mokotoff%5D&target_type=posts" rel="tag">daitch-mokotoff</a></li><li>, <a href="http://habrahabr.ru/search/?q=%5Bmetaphone%5D&target_type=posts" rel="tag">metaphone</a></li><li>, <a href="http://habrahabr.ru/search/?q=%5Bnysiis%5D&target_type=posts" rel="tag">nysiis</a></li><li>, <a href="http://habrahabr.ru/search/?q=%5Bcaverphone%5D&target_type=posts" rel="tag">caverphone</a></li>
+</ul>
+
+		<div class="infopanel" id="infopanel_post_114947">
+
+	
+		
+		
+			<div class="voting   ">
+
+				
+				
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи."></span>
+				
+
+				<div class="mark positive ">
+					
+						<span class="score" title="Всего 154: ↑153 и ↓1">+152</span>
+					
+					
+				</div>
+				
+				
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи."></span>
+				
+	
+			</div>
+		
+	
+
+	
+		
+	<div class="favorite">
+		
+		
+			<a class="guest" href="http://habrahabr.ru/post/114947/#" onclick="return false;" title="Только зарегистрированные пользователи могут добавлять посты в избранное"></a>
+		
+	</div>
+	<div class="favs_count" title="Количество пользователей, добавивших пост в избранное">246</div>
+	
+	
+	
+	
+		
+			<div class="author">
+				<a title="Автор текста" href="http://habrahabr.ru/users/ntz/">ntz</a>
+				<span class="rating" title="рейтинг пользователя">51,5</span>
+				
+			</div>
+		
+	
+	
+	
+	
+
+	
+
+	
+
+
+	
+
+	
+	
+	
+		<div class="share">
+			<div class="twitter">
+				<a href="http://twitter.com/intent/tweet?text=%D0%A4%D0%BE%D0%BD%D0%B5%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B5+%D0%B0%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC%D1%8B+%23habr+http://habr.ru/p/114947/" title="Опубликовать ссылку в Twitter" target="_blank"></a>
+			</div>
+			<div class="vkontakte">
+				<a href="http://vkontakte.ru/share.php?url=http://habr.ru/p/114947/" title="Опубликовать ссылку во ВКонтакте" onclick="window.open(this.href, &#39;Опубликовать ссылку во Вконтакте&#39;, &#39;width=800,height=300&#39;); return false"></a>
+			</div>
+			<div class="facebook">
+				<a href="https://www.facebook.com/sharer/sharer.php?u=http://habr.ru/p/114947/" title="Опубликовать ссылку в Facebook" onclick="window.open(this.href, &#39;Опубликовать ссылку в Facebook&#39;, &#39;width=640,height=436,toolbar=0,status=0&#39;); return false"></a>
+			</div>
+			<div class="googleplus">
+				<a href="https://plus.google.com/share?url=http://habr.ru/p/114947/" title="Опубликовать ссылку в Google Plus" onclick="window.open(this.href, &#39;Опубликовать ссылку в Google Plus&#39;, &#39;width=800,height=300&#39;); return false"></a>
+			</div>
+		</div>
+	
+
+</div>
+<div class="clear"></div>
+
+
+	
+
+    
+		<script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/saved_resource"></script>
+	</div>
+
+
+	
+
+	
+
+
+	
+<div class="comments_list " id="comments">
+
+  <h2 class="title ">комментарии (<span id="comments_count">33</span>)
+  
+
+  </h2>
+
+   
+    
+<div class="comment_item" id="comment_3714660">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3714660">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714660" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 5: ↑3 и ↓2">+1</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/KriegeR/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_24481.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/KriegeR/" class="username">KriegeR</a>
+			<time datetime="2011-03-04T21:39:09+03:00"> 4 марта 2011 в 21:39</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714660" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Отличная статья! 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714660">
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3714665">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3714665">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714665" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 3: ↑3 и ↓0">+3</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/Maxima/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_9215.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/Maxima/" class="username">Maxima</a>
+			<time datetime="2011-03-04T21:39:53+03:00"> 4 марта 2011 в 21:39</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714665" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Юзал Soundex правда не помню какой именно.<br>
+Но реально очень удобно. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714665">
+	 
+		
+<div class="comment_item" id="comment_3714689">
+	
+	<span class="parent_id" data-parent_id="3714665"></span>
+	
+	
+	
+		<div class="info  " rel="3714689">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714689" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/uxIg/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_24574.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/uxIg/" class="username">uxIg</a>
+			<time datetime="2011-03-04T21:48:41+03:00"> 4 марта 2011 в 21:48</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714689" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3714689" data-parent_id="3714665" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714665" data-id="3714689" data-parent_id="3714665" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Удобно. Радует что есть поддержка Soundex'a MySQL'ом, но нет поддержки русских произношений… 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714689">
+	 
+		
+<div class="comment_item" id="comment_3714693">
+	
+	<span class="parent_id" data-parent_id="3714689"></span>
+	
+	
+	
+		<div class="info  " rel="3714693">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714693" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/Maxima/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_9215.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/Maxima/" class="username">Maxima</a>
+			<time datetime="2011-03-04T21:50:48+03:00"> 4 марта 2011 в 21:50</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714693" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3714693" data-parent_id="3714689" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714689" data-id="3714693" data-parent_id="3714689" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Ой, а я как-то её делал, надо поискать в скриптах, пару лет назад было дело. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714693">
+	 
+		
+<div class="comment_item" id="comment_3714695">
+	
+	<span class="parent_id" data-parent_id="3714693"></span>
+	
+	
+	
+		<div class="info  " rel="3714695">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714695" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/uxIg/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_24574.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/uxIg/" class="username">uxIg</a>
+			<time datetime="2011-03-04T21:52:21+03:00"> 4 марта 2011 в 21:52</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714695" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3714695" data-parent_id="3714693" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714693" data-id="3714695" data-parent_id="3714693" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Да можно… Но хотелось бы чтобы это было на уровне MySQL. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714695">
+	 
+		
+<div class="comment_item" id="comment_3714705">
+	
+	<span class="parent_id" data-parent_id="3714695"></span>
+	
+	
+	
+		<div class="info  " rel="3714705">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714705" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/Maxima/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_9215.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/Maxima/" class="username">Maxima</a>
+			<time datetime="2011-03-04T21:54:50+03:00"> 4 марта 2011 в 21:54</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714705" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3714705" data-parent_id="3714695" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714695" data-id="3714705" data-parent_id="3714695" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Да об этом я и не мечтал :-)<br>
+Поиск без Soundex (или его аналогов) просто издевательство. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714705">
+	
+	</div>
+</div>
+
+	 
+		
+<div class="comment_item" id="comment_3715904">
+	
+	<span class="parent_id" data-parent_id="3714695"></span>
+	
+	
+	
+		<div class="info  " rel="3715904">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715904" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/RReverser/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_23915.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/RReverser/" class="username">RReverser</a>
+			<time datetime="2011-03-05T13:17:37+03:00"> 5 марта 2011 в 13:17</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715904" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3715904" data-parent_id="3714695" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714695" data-id="3715904" data-parent_id="3714695" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			По идее можно реализовать пользовательскую функцию MySQL. Тоже как-то делал что-то подобное, но надо искать. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715904">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3714700">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3714700">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714700" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 4: ↑2 и ↓2">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/AnastasiaK/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_24613.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/AnastasiaK/" class="username">AnastasiaK</a>
+			<time datetime="2011-03-04T21:53:16+03:00"> 4 марта 2011 в 21:53</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714700" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Раньше не встречала таких алгоритмов, очень интересно было почитать, спасибо. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714700">
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3714757">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3714757">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714757" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/ntz/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/ntz/" class="username">ntz</a>
+			<time datetime="2011-03-04T22:19:10+03:00"> 4 марта 2011 в 22:19</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714757" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			В логике этих алгоритмов нет ничего сложного, и они легко реализуются в виде хранимых подпрограмм (или каких-либо других расширений) для большинства СУБД. <br>
+<br>
+Вообще, не совсем понятно, почему во многих системах используется именно Soundex, ведь он по многим параметрам уступает остальным алгоритмом, тому же Metaphone, например. Да, его реализация немного проще, но это — ничто по сравнению с качеством результатов.  
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714757">
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3714761">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3714761">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714761" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 1: ↑1 и ↓0">+1</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/zen/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_8075.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/zen/" class="username">zen</a>
+			<time datetime="2011-03-04T22:19:47+03:00"> 4 марта 2011 в 22:19</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714761" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Что же вы забыли n-grams! В отличие от всех рассмотренных алгоритмов, n-граммы поддерживают индексный поиск. Мы написали для постгреса такой модуль, который доступен в дистрибутиве, а совсем недавно, этот же индекс ускоряет *pattern*! 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714761">
+	 
+		
+<div class="comment_item" id="comment_3714778">
+	
+	<span class="parent_id" data-parent_id="3714761"></span>
+	
+	
+	
+		<div class="info  " rel="3714778">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714778" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 1: ↑1 и ↓0">+1</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/ntz/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/ntz/" class="username">ntz</a>
+			<time datetime="2011-03-04T22:25:44+03:00"> 4 марта 2011 в 22:25</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714778" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3714778" data-parent_id="3714761" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714761" data-id="3714778" data-parent_id="3714761" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Вы немного путаете области — метод n-грамм (если говорить о подстроках фиксированной длины n) относится к нечеткому поиску, который обычно не затрагивает фонетических аспектов, и больше основывается на понятиях метрик (Левенштейна, например). <br>
+<br>
+Кроме того, все представленные алгоритмы позволяют проводить индексирование по значению кода как по обычным словам, а индексирование в методе n-грамм — совершенной иной процесс. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714778">
+	 
+		
+<div class="comment_item" id="comment_3714801">
+	
+	<span class="parent_id" data-parent_id="3714778"></span>
+	
+	
+	
+		<div class="info  " rel="3714801">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714801" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 3: ↑2 и ↓1">+1</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/zen/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_8075.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/zen/" class="username">zen</a>
+			<time datetime="2011-03-04T22:33:25+03:00"> 4 марта 2011 в 22:33</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714801" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3714801" data-parent_id="3714778" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714778" data-id="3714801" data-parent_id="3714778" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Извините, не обратил внимание на топик :) Но, можно было бы упомянуть, что помимо фонетических алгоритмов есть и другие. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714801">
+	 
+		
+<div class="comment_item" id="comment_3717282">
+	
+	<span class="parent_id" data-parent_id="3714801"></span>
+	
+	
+	
+		<div class="info  " rel="3717282">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3717282" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/catbegemot/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_6186.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/catbegemot/" class="username">catbegemot</a>
+			<time datetime="2011-03-05T23:30:46+03:00"> 5 марта 2011 в 23:30</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3717282" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3717282" data-parent_id="3714801" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714801" data-id="3717282" data-parent_id="3714801" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Напишите статью, я думаю не только я буду благодарен. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3717282">
+	 
+		
+<div class="comment_item" id="comment_3720169">
+	
+	<span class="parent_id" data-parent_id="3717282"></span>
+	
+	
+	
+		<div class="info  " rel="3720169">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3720169" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/ntz/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/ntz/" class="username">ntz</a>
+			<time datetime="2011-03-07T16:38:25+03:00"> 7 марта 2011 в 16:38</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3720169" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3720169" data-parent_id="3717282" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3717282" data-id="3720169" data-parent_id="3717282" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Уже пишу! 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3720169">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+	 
+		
+<div class="comment_item" id="comment_3714805">
+	
+	<span class="parent_id" data-parent_id="3714761"></span>
+	
+	
+	
+		<div class="info  " rel="3714805">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714805" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/MikhailEdoshin/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/MikhailEdoshin/" class="username">MikhailEdoshin</a>
+			<time datetime="2011-03-04T22:34:23+03:00"> 4 марта 2011 в 22:34</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714805" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3714805" data-parent_id="3714761" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3714761" data-id="3714805" data-parent_id="3714761" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			В смысле индексный поиск? Это ведь всё алгоритмы фонетического индексирования, создающие из слова код его примерного произношения. Который, соответственно, можно хранить в базе и индексировать. Это ведь не edit-distance, например, где для поиска похожего слова нужно сравнивать все слова в базе. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714805">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3714771">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3714771">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714771" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 2: ↑2 и ↓0">+2</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/MikhailEdoshin/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/MikhailEdoshin/" class="username">MikhailEdoshin</a>
+			<time datetime="2011-03-04T22:24:07+03:00"> 4 марта 2011 в 22:24</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714771" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Практически все англоязычные :) Есть еще такой Phonex; разработан в Англии, вроде как несколько лучше Soundex. Отдельное спасибо за NYSIIS, в свое время не мог найти описания. <br>
+<br>
+Из всех алгоритмов у Methaphone нет формального описания (хотя его можно вычленить постфактум), есть только совершенно жуткий код, настоящий такой говнокодище — но зато самая правильная (для компьютерных алгоритмов) модель: «такое-то и такое-то сочетание в такой-то и такой-то позиции читается так-то», что Methaphone и пытается честно реализовать. Такую модель (если, конечно, написать ее правильно) легче совершенствовать, расширять и адаптировать. Все остальные алгоритмы удручают своей механистичностью и жесткостью; если для старинного Soundex'а это можно понять — он вообще применялся вручную — то почему Caverphone 2002-года состоит сплошь из магии последовательных замен, непонятно. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714771">
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3714802">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3714802">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3714802" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/bogus92/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_17951.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/bogus92/" class="username">bogus92</a>
+			<time datetime="2011-03-04T22:33:32+03:00"> 4 марта 2011 в 22:33</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3714802" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			На первом курсе писал курсовую работу, в которой реализовывал компьютера-собеседника. Использовал Soundex для сравнения слов со словарем. Русский текст просто транслитерировал латиницей и применял алгоритм. Результат получался довольно неплохим. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3714802">
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3715025">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3715025">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715025" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/57DeD/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/57DeD/" class="username">57DeD</a>
+			<time datetime="2011-03-05T01:20:53+03:00"> 5 марта 2011 в 01:20</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715025" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Занятно, что ни один из алгоритмов не учитывает ударения. В результате русские фамилии на -ин от армянских отличит только русский Metaphone. Интересно, этого сознательно добивались? 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715025">
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3715183">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3715183">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715183" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/qmax/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_38879.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/qmax/" class="username">qmax</a>
+			<time datetime="2011-03-05T04:51:43+03:00"> 5 марта 2011 в 04:51</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715183" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			обоже!<br>
+это вот именно то, что генерит «Возможно, вы имели в виду: Шварценеггер»? 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715183">
+	 
+		
+<div class="comment_item" id="comment_3715459">
+	
+	<span class="parent_id" data-parent_id="3715183"></span>
+	
+	
+	
+		<div class="info  " rel="3715459">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715459" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 2: ↑2 и ↓0">+2</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/Inskin/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/Inskin/" class="username">Inskin</a>
+			<time datetime="2011-03-05T10:45:52+03:00"> 5 марта 2011 в 10:45</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715459" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3715459" data-parent_id="3715183" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3715183" data-id="3715459" data-parent_id="3715183" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			«Зачитываю по буквам — сы-цы-хы-варзенеггер» ) 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715459">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3715356">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3715356">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715356" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/AStahl/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/AStahl/" class="username">AStahl</a>
+			<time datetime="2011-03-05T09:46:30+03:00"> 5 марта 2011 в 09:46</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715356" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Любопытные алгоритмы. <br>
+А вот ещё более интересная реализация (алгоритм вряд ли имеет название ибо самопальный).<br>
+Например:<br>
+<a href="http://nanohertz.net/?word=%D1%85%D1%80%D0%BE%D0%BD%D0%BE%D1%84%D0%B0%D0%B7%D0%B8%D1%82%D1%80%D0%BE%D0%BD">nanohertz.net/?word=%D1%85%D1%80%D0%BE%D0%BD%D0%BE%D1%84%D0%B0%D0%B7%D0%B8%D1%82%D1%80%D0%BE%D0%BD</a><br>
+<br>
+Если будете играться, то примите во внимание, что система обучена русским и английским словам, но не знает ни имён ни ругательств.<br>
+Если система выдаёт казалось бы бредовый результат, перед тем как писать «автор — козёл, код не работает» проверьте наличие искомого слова в БД путём ввода корректного написания этого слова. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715356">
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3715387">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3715387">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715387" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark positive ">
+						<span class="score" title="Всего 1: ↑1 и ↓0">+1</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/sergpenza/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_15034.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/sergpenza/" class="username">sergpenza</a>
+			<time datetime="2011-03-05T10:10:39+03:00"> 5 марта 2011 в 10:10</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715387" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			На Хабре <a href="http://habrahabr.ru/blogs/php/28752/">публиковалась</a> реализация daitch-mokotoff на php<br>
+Использую в своих проектах, по сравнению с soundex просто небо и земля. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715387">
+	 
+		
+<div class="comment_item" id="comment_3715936">
+	
+	<span class="parent_id" data-parent_id="3715387"></span>
+	
+	
+	
+		<div class="info  " rel="3715936">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715936" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/sergpenza/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_15034.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/sergpenza/" class="username">sergpenza</a>
+			<time datetime="2011-03-05T13:27:28+03:00"> 5 марта 2011 в 13:27</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715936" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3715936" data-parent_id="3715387" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3715387" data-id="3715936" data-parent_id="3715387" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Подумал, что может быть интересно для чего :)<br>
+Я использую daitch-mokotoff для исправления опечаток в поисковых запросах.<br>
+Вкратце реализовано это так: есть таблица, в которой хранятся слова в базовой форме (используется словарь морфологии) и их фонетический вид по daitch-mokotoff<br>
+При поиске для каждого слова пытаемся словарем найти базовую форму. Если такой нет, предполагаем, что человек ошибся, получаем фонетический вид поискового слова и выбираем из таблицы все слова с таким же видом. После чего для поискового слова и слова из запроса вычисляется расстояние по <a href="http://docs.php.net/manual/en/function.levenshtein.php">Левенштайну</a> (минимальное количество вставок, замен и удалений символов, необходимое для преобразования str1 в str2) и находим самое близкое слово.<br>
+Плохо работает для имен собственных, но на общеупотреблительных фразах — весьма, весьма.  
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715936">
+	
+	</div>
+</div>
+
+	 
+		
+<div class="comment_item" id="comment_4137881">
+	
+	<span class="parent_id" data-parent_id="3715387"></span>
+	
+	
+	
+		<div class="info  " rel="4137881">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_4137881" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/javascript/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_39580.png" alt=""></a>
+			<a href="http://habrahabr.ru/users/javascript/" class="username">javascript</a>
+			<time datetime="2011-08-05T13:50:36+04:00"> 5 августа 2011 в 13:50</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_4137881" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="4137881" data-parent_id="3715387" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3715387" data-id="4137881" data-parent_id="3715387" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Теперь эта же <a href="http://habrahabr.ru/blogs/javascript/125617/">реализация на javascript</a> :-) 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_4137881">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3715502">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3715502">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715502" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/eng/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/eng/" class="username">eng</a>
+			<time datetime="2011-03-05T11:10:18+03:00"> 5 марта 2011 в 11:10</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715502" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			А нет ли ошибки в примерах для Daitch-Mokotoff Soundex?<br>
+<br>
+095747 → Архипцев, Архипцов, Архипычев, Арцыбасов, Арцыбашев, Арчибасов<br>
+095757 → Архипков, Архипцев, Архипцов, Архипычев<br>
+<br>
+Одна фамилия (например. Архипцев) соответствует двум кодам. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715502">
+	 
+		
+<div class="comment_item" id="comment_3715753">
+	
+	<span class="parent_id" data-parent_id="3715502"></span>
+	
+	
+	
+		<div class="info  " rel="3715753">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715753" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/ntz/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/ntz/" class="username">ntz</a>
+			<time datetime="2011-03-05T12:33:21+03:00"> 5 марта 2011 в 12:33</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715753" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3715753" data-parent_id="3715502" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3715502" data-id="3715753" data-parent_id="3715502" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Daitch-Mokotoff Soundex может сопоставлять одному слову несколько кодов, если возможно альтернативное произношение (такие альтернативы приведены в описании). 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715753">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3715897">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3715897">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715897" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/loginsin/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/loginsin/" class="username">loginsin</a>
+			<time datetime="2011-03-05T13:15:28+03:00"> 5 марта 2011 в 13:15</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715897" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Однако если захочется найти именно «Швардсенеггера», придется попотеть. Гугл со своими фонетизмами некоторые фразы (даже с кавычками) отказывается искать. Например: «operator+ C++» (пример из головы). 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715897">
+	 
+		
+<div class="comment_item" id="comment_3715905">
+	
+	<span class="parent_id" data-parent_id="3715897"></span>
+	
+	
+	
+		<div class="info  " rel="3715905">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715905" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/loginsin/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/loginsin/" class="username">loginsin</a>
+			<time datetime="2011-03-05T13:17:38+03:00"> 5 марта 2011 в 13:17</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715905" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3715905" data-parent_id="3715897" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3715897" data-id="3715905" data-parent_id="3715897" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Этот находит, а вот «operator[] c++» уже нет. Показывает общую информацию по операторам (не только по операторам operator). 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715905">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3715910">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3715910">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3715910" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/Curious_Vik/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/Curious_Vik/" class="username">Curious_Vik</a>
+			<time datetime="2011-03-05T13:20:10+03:00"> 5 марта 2011 в 13:20</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3715910" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Такой вопрос:<br>
+Существуют ли какие-то фонетические алгоритмы (или реализации описанных), которые могут измерять расстояние между словами? Иногда хотелось бы проводить ранжирование слов по схожести произношения… 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3715910">
+	 
+		
+<div class="comment_item" id="comment_3716738">
+	
+	<span class="parent_id" data-parent_id="3715910"></span>
+	
+	
+	
+		<div class="info  " rel="3716738">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3716738" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/ntz/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/ntz/" class="username">ntz</a>
+			<time datetime="2011-03-05T18:28:40+03:00"> 5 марта 2011 в 18:28</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3716738" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3716738" data-parent_id="3715910" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3715910" data-id="3716738" data-parent_id="3715910" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Если я не ошибаюсь, специализированных алгоритмов для этого нет. Однако, можно попытаться приспособить уже существующие алгоритмы к подсчету количества преобразований, необходимых для приведения одного слова ко второму, правда я не очень хорошо себе представляю, как это возможно за оптимальное время сделать. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3716738">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3717286">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3717286">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3717286" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/catbegemot/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_6186.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/catbegemot/" class="username">catbegemot</a>
+			<time datetime="2011-03-05T23:33:26+03:00"> 5 марта 2011 в 23:33</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3717286" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Исходя из вашего текста наиболее точно (в случае англоязычных фамилий) попадает NYSIIS — не смотря на то, что он не самый новый. Или я не правильно оцениваю результаты? 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3717286">
+	 
+		
+<div class="comment_item" id="comment_3717883">
+	
+	<span class="parent_id" data-parent_id="3717286"></span>
+	
+	
+	
+		<div class="info  " rel="3717883">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3717883" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/ntz/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/stub-user-small.gif" alt=""></a>
+			<a href="http://habrahabr.ru/users/ntz/" class="username">ntz</a>
+			<time datetime="2011-03-06T12:30:27+03:00"> 6 марта 2011 в 12:30</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3717883" class="link_to_comment">#</a>
+			
+			
+				<div class="show_tree" data-id="3717883" data-parent_id="3717286" title="Показать ветку комментариев">↵</div>
+				
+				<a href="http://habrahabr.ru/post/114947/#comment_3717286" data-id="3717883" data-parent_id="3717286" class="to_parent">↑</a>
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			Сложно сказать. Нужно проводить тестирование, сравнение, и, опять же, без участия человека сложно выяснить, насколько точным является результат. По примерам также нельзя объективно оценить качество.<br>
+<br>
+Кроме того, меньше слов с одинаковым кодом — еще не значит лучше, так как в результат могут не попасть действительно похожие слова.<br>
+<br>
+Одно ясно точно — будь NYSIIS наилучшим вариантом, не стали бы изобретать новые алгоритмы. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3717883">
+	
+	</div>
+</div>
+
+	
+	</div>
+</div>
+
+   
+    
+<div class="comment_item" id="comment_3717551">
+	
+	<span class="parent_id" data-parent_id="0"></span>
+	
+	
+	
+		<div class="info  " rel="3717551">
+			<div class="folding-dot-holder"><div class="folding-dot"></div></div>
+			
+			<div id="voting_3717551" class="voting   ">
+										
+				
+					<span class="minus" title="Голосовать могут только зарегистрированные пользователи"></span>
+					<span class="plus" title="Голосовать могут только зарегистрированные пользователи"></span>
+				
+				<div class="mark  ">
+						<span class="score" title="Всего 0: ↑0 и ↓0">0</span> 
+				</div>	 
+			</div>
+			
+			<a href="http://habrahabr.ru/users/w999d/" class="avatar"><img src="./Фонетические алгоритмы   Хабрахабр_files/small_3318.jpg" alt=""></a>
+			<a href="http://habrahabr.ru/users/w999d/" class="username">w999d</a>
+			<time datetime="2011-03-06T04:45:04+03:00"> 6 марта 2011 в 04:45</time>
+			<a href="http://habrahabr.ru/post/114947/#comment_3717551" class="link_to_comment">#</a>
+			
+			
+			<span class="to_chidren"></span>
+			<div class="clear"></div>
+		</div>
+		<div class="message html_format ">
+			офигеть, прям как подарок на день рождения.<br>
+сегодня как раз всплыла задача по поиску с опечатками (типа «халадильнег») и тут такой пост. 
+		</div>
+		<div class="reply">
+			
+		</div>
+	
+	<div class="reply_comments" id="reply_comments_3717551">
+	
+	</div>
+</div>
+
+  
+</div>
+
+	
+	
+		
+			<p class="for_users_only_msg">Только зарегистрированные пользователи могут оставлять комментарии. <a href="http://habrahabr.ru/login/">Войдите</a>, пожалуйста.</p>
+		
+		
+	
+
+
+
+	
+<form action="http://habrahabr.ru/json/favorites/" method="post" id="edit_tags_form" class="hidden">
+  <input type="hidden" name="action" value="add">
+  <input type="hidden" name="ti" value="0">
+  <input type="hidden" name="tt" value="0">
+  <label>Пометьте топик понятными вам метками, если хотите</label>
+  <input type="text" name="tags_string" class="tags_string" autocomplete="off" style="">
+  <div class="description">Метки лучше разделять запятой. Например: <i>общение, социальные сети, myspace.com, подростки, мердок</i></div>
+  <input type="submit" value="Сохранить" class="submit"> или <a href="http://habrahabr.ru/post/114947/#" class="close" onclick="return close_edit_tags()">закрыть</a>
+</form>
+    
+
+
+  </div>
+  <div class="sidebar_right">
+	
+		
+
+
+
+
+	<div class="banner_240x400">
+
+		<script type="text/javascript">
+			(function(){
+				var custom = [];
+			/* custom params */
+			
+				custom[1]	= 'algorithms';
+			
+				
+
+			/* end of custom params */
+				custom.getStd = function(){for(var i=0,j,s=[];i<this.length;i++){if(this[i])s.push((!j?(j=1,i+'='):'')+escape(this[i]));else j=0}return s.length?'&custom='+s.join(';'):''};
+
+				var RndNum4NoCash = Math.round(Math.random() * 1000000000),
+					ar_Tail = escape(document.referrer || 'unknown');
+				document.write('<iframe src="http://ad.adriver.ru/cgi-bin/erle.cgi?'
+					+ 'sid=176776&target=top&bt=22&pz=0&rnd=' + RndNum4NoCash + '&tail256=' + ar_Tail + custom.getStd()
+					+ '" frameborder=0 vspace=0 hspace=0 width=240 height=400 marginwidth=0'
+					+ ' marginheight=0 scrolling=no></iframe>');
+			})();
+		</script><iframe src="./Фонетические алгоритмы   Хабрахабр_files/erle.htm" frameborder="0" vspace="0" hspace="0" width="240" height="400" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+	</div>
+
+
+
+
+
+		
+	<div id="facebook_reader_wrapper">
+		<div id="facebook_reader" class="block narrow" style="display: block; ">           <div class="connect">             <div class="button"><div class="fb-login-button fb_iframe_widget" data-show-faces="false" data-width="200" data-max-rows="1" data-scope="publish_actions" fb-xfbml-state="rendered"><span style="height: 22px; width: 68px; "><iframe id="f3870b9ae" name="fb7f32b4c" scrolling="no" style="border: none; overflow: hidden; height: 22px; width: 68px; " class="fb_ltr" src="./Фонетические алгоритмы   Хабрахабр_files/login_button.htm"></iframe></span></div></div>             <div class="text">Делитесь прочитанными статьями с вашими друзьями в Facebook <a href="https://www.facebook.com/about/timeline/apps"><img class="help-tip tip_top" title="Что это?" src="./Фонетические алгоритмы   Хабрахабр_files/bg_cicle_help.png"></a></div>             <div class="loading_text">Загрузка...</div>           </div>         </div>
+	</div>
+
+		
+
+<div class="block daily_best_posts">
+  <div class="title">Лучшее <sup>за 24 часа</sup> ↓ </div>
+  <div class="posts_list">
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152493/" class="post_name">В немецком парламенте запретили ноутбуки, депутат Пиратской партии пришёл с печатной машинкой</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152563/" class="post_name">Делаем уроки на Хабре</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152477/" class="post_name">NoSQL базы данных: понимаем суть</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152593/" class="post_name">Потрясающая, но невидимая глубина</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152509/" class="post_name">Вслед за malware, Punto (Yandex) тоже решил нарушать интерфейс</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152555/" class="post_name">Нотч отказался сертифицировать Minecraft под Windows 8</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152513/" class="post_name">Тёплый ламповый КПК Palm m105</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152525/" class="post_name">Nokia открыла предзаказ на новые Lumia в России: цена флагмана 24 990 рублей</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152501/" class="post_name">Про Unity 3D из первых рук. Интервью</a>
+      </div>
+    
+      <div class="post_item">
+        
+				
+				
+				
+				
+				
+
+        <a href="http://habrahabr.ru/post/152122/" class="post_name">Автоматизация тестирования Android приложений</a>
+      </div>
+    
+  </div>
+  <div class="all">« <a href="http://habrahabr.ru/top/">все лучшие</a></div>
+</div>
+
+		
+		
+
+
+
+<div class="block similar_posts">
+
+	<div class="title">Похожие посты ↓ </div>
+  <div class="posts_list">
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/150303/">Поиск@Mail.Ru, часть вторая: обзор архитектур подготовки данных больших поисковых систем</a>
+    				<span class="when">27.08.2012</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/149821/">Эвристика случайного поиска и теплоходы</a>
+    				<span class="when">18.08.2012</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/149498/">Поиск@Mail.Ru. Часть первая</a>
+    				<span class="when">13.08.2012</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/147205/">Яндекс.Поиск для сайта: хорошие новости для владельцев сайтов на основе CMS</a>
+    				<span class="when">05.07.2012</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/145198/">Алгоритм параллельного поиска максимальных, общих подстрок в двух строках, и его имплементация на C++ (C++11)</a>
+    				<span class="when">04.06.2012</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/120182/">Простой пример реализации фонетического поиска</a>
+    				<span class="when">03.06.2011</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/115394/">Применение алгоритмов нечеткого поиска в PHP</a>
+    				<span class="when">15.03.2011</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/111736/">Генетические алгоритмы для поиска решений и генерации</a>
+    				<span class="when">12.01.2011</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/111361/">Алгоритм Дейкстры. Поиск оптимальных маршрутов на графе</a>
+    				<span class="when">07.01.2011</span>
+      </div>
+  	
+    	<div class="post_item">
+    				<a class="post_name" href="http://habrahabr.ru/post/28752/">Фонетический поиск</a>
+    				<span class="when">09.07.2008</span>
+      </div>
+  	
+  </div>			
+</div>
+
+
+
+
+		
+		
+
+
+<div class="block live_broadcast_activity">
+  <div class="title">Прямой эфир ↓ </div>
+  <div class="posts_list">
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/anor/" class="user_name">anor</a> →
+      <a href="http://habrahabr.ru/post/152619/#comment_5187033" class="post_name">Складывающаяся клавиатура для смартфона, которая помещается в задний карман джинсов — 120$</a>&nbsp;<span class="count">3</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/Chikiro/" class="user_name">Chikiro</a> →
+      <a href="http://habrahabr.ru/post/152513/#comment_5187029" class="post_name">Тёплый ламповый КПК Palm m105</a>&nbsp;<span class="count">62</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/bogolt/" class="user_name">bogolt</a> →
+      <a href="http://habrahabr.ru/post/152583/#comment_5187027" class="post_name">Программирование в стиле русских романов</a>&nbsp;<span class="count">22</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/rednaxi/" class="user_name">rednaxi</a> →
+      <a href="http://habrahabr.ru/post/152193/#comment_5187025" class="post_name">Необычное переполнение жесткого диска или как удалить миллионы файлов из одной папки</a>&nbsp;<span class="count">122</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/shaman007/" class="user_name">shaman007</a> →
+      <a href="http://habrahabr.ru/post/152611/#comment_5187019" class="post_name">Копи деньги смолоду или пара утверждений, легко проверяемых в Excel</a>&nbsp;<span class="count">39</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/lair/" class="user_name">lair</a> →
+      <a href="http://habrahabr.ru/post/152549/#comment_5187013" class="post_name">Реферер Google Search не передается в теле запроса в iOS 6</a>&nbsp;<span class="count">7</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/pnick/" class="user_name">pnick</a> →
+      <a href="http://habrahabr.ru/post/152525/#comment_5187009" class="post_name">Nokia открыла предзаказ на новые Lumia в России: цена флагмана 24 990 рублей</a>&nbsp;<span class="count">151</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/agmt/" class="user_name">agmt</a> →
+      <a href="http://habrahabr.ru/post/152267/#comment_5187005" class="post_name">Обзор 7 дюймового планшета c HD экраном PiPO U1</a>&nbsp;<span class="count">5</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/linuxoid/" class="user_name">linuxoid</a> →
+      <a href="http://habrahabr.ru/post/152511/#comment_5187003" class="post_name">Вязанка&nbsp;новостей о&nbsp;шрифтах с&nbsp;русскими&nbsp;буквами на&nbsp;сайте Google Web&nbsp;Fonts</a>&nbsp;<span class="count">8</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/vrybas/" class="user_name">vrybas</a> →
+      <a href="http://habrahabr.ru/post/151902/#comment_5186997" class="post_name">Красной таблетки не существует</a>&nbsp;<span class="count">336</span>
+    </div>
+
+  </div>
+  
+</div>
+
+
+
+  
+		
+
+	
+
+
+   
+		
+
+<div class="block best_company">
+
+		<div class="title">Компания дня <img src="./Фонетические алгоритмы   Хабрахабр_files/bg_cicle_help.png" class="help-tip"></div>
+
+		<div class="company_info">
+			<div class="name">
+			 <img class="favicon" src="./Фонетические алгоритмы   Хабрахабр_files/small_48005.png" alt="Яндекс" height="16" width="16">
+			 <div class="company_name"><a href="http://habrahabr.ru/company/yandex/" class="title">Яндекс</a></div>
+			</div>
+
+			<p>Последний пост:
+				<a href="http://habrahabr.ru/company/yandex/blog/152349/">Досрочный ответ – курсы валют, погода и пробки в подсказках</a>
+			</p>
+
+			<div class="buttons">
+  			<div id="fans_count">6485 подписчиков</div>
+  			
+			</div>
+		</div>
+
+	</div>
+
+
+		
+	
+
+
+
+
+<div class="block qa_activity">
+  <div class="title">Q&amp;A ↓ </div>
+  <div class="posts_list">
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/dnv777/" class="user_name">dnv777</a> →
+      <a href="http://habrahabr.ru/qa/24413/#comment_118933" class="post_name">Струйный МФУ для дома за 3-6 т.р</a>&nbsp;<span class="count">4</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/vrybas/" class="user_name">vrybas</a> →
+      <a href="http://habrahabr.ru/qa/24567/#answer_100211" class="post_name">Быстрая JS библотечка для рисования таблиц для мобильной версии сайта</a>&nbsp;<span class="count">1</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/calg0n/" class="user_name">calg0n</a> →
+      <a href="http://habrahabr.ru/qa/24551/#answer_100209" class="post_name">Скорость работы PHP в Windows. Отчего так медленно?</a>&nbsp;<span class="count">1</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/DanyBoo/" class="user_name">DanyBoo</a> →
+      <a href="http://habrahabr.ru/qa/24471/#comment_118931" class="post_name">Проблема с кодировками в php и разными Linux</a>&nbsp;<span class="count">3</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/mentatxx/" class="user_name">mentatxx</a> →
+      <a href="http://habrahabr.ru/qa/24513/#answer_100207" class="post_name">Правда же, новый показатель «Просмотры поста» великолепен?</a>&nbsp;<span class="count">8</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/Anonym/" class="user_name">Anonym</a> →
+      <a href="http://habrahabr.ru/qa/24527/#answer_100205" class="post_name">Не удаётся установить операционную систему с USB</a>&nbsp;<span class="count">9</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/Rafael/" class="user_name">Rafael</a> →
+      <a href="http://habrahabr.ru/qa/24561/#answer_100203" class="post_name">Почему датацентры избегают FreeBSD?</a>&nbsp;<span class="count">1</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/foxmuldercp/" class="user_name">foxmuldercp</a> →
+      <a href="http://habrahabr.ru/qa/24397/#comment_118927" class="post_name">Возможно ли и чем вырезать на почтовом сервере все исполняемые файлы во входящих, включая входящие с архивами?</a>&nbsp;<span class="count">2</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/Rafael/" class="user_name">Rafael</a> →
+      <a href="http://habrahabr.ru/qa/24555/#comment_118925" class="post_name">Уроки After Effects</a>&nbsp;<span class="count">3</span>
+    </div>
+
+    <div class="post_item">
+      <a href="http://habrahabr.ru/users/RuLab/" class="user_name">RuLab</a> →
+      <a href="http://habrahabr.ru/qa/24495/#comment_118921" class="post_name">Как блокировать выполнение кривого плагина для Google Chrome</a>&nbsp;<span class="count">4</span>
+    </div>
+
+  </div>
+  <div class="all">« <a href="http://habrahabr.ru/qa/">все вопросы</a></div>
+  
+</div>
+
+
+		
+
+<div class="block new_vacanies">
+  <div class="title">О, работа! ↓ </div>
+  <div class="vacancies">
+		
+		<div class="job_item marked">
+			<a href="http://hantim.ru/jobs/9574-php-razrabotchik">PHP-разработчик</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10366-php-programmist">PHP-программист</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/9489-programmist-php">Программист PHP</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10759-bitriks-razyskivaetsya-programmist">«Битрикс»: разыскивается программист</a>
+		</div>
+		
+		<div class="job_item marked">
+			<a href="http://hantim.ru/jobs/10686-ruby-on-rails-razrabotchik">Ruby on Rails разработчик</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10680-programmist-servernoy-chasti">Программист серверной части</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10495-php-programmist">PHP программист</a>
+		</div>
+		
+		<div class="job_item marked">
+			<a href="http://hantim.ru/jobs/9800-opytnyy-php-razrabotchik">Опытный PHP-разработчик</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10713-pervoklassnyy-net-razrabotchik-arhitektor">Первоклассный .NET-разработчик, архитектор</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10748-c-programmist-web-highload-reklama">C++ программист (web, highload, реклама)</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10637-web-razrabotchik-php-javascript-mysql">Web-разработчик (PHP, Javascript, MySQL)</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10738-php-programmist">PHP программист</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10735-java-razrabotchik">Java разработчик</a>
+		</div>
+		
+		<div class="job_item marked">
+			<a href="http://hantim.ru/jobs/10723-web-programmist">Web-программист</a>
+		</div>
+		
+		<div class="job_item marked">
+			<a href="http://hantim.ru/jobs/10704-php-programmist">PHP-программист</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10707-php-senior-developer">PHP Senior Developer</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/7971-razrabotchik-php-ruby-sankt-peterburg">Разработчик PHP/Ruby (Санкт-Петербург)</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/9640-php-razrabotchik">PHP разработчик</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10666-bitriks-razrabotchik-php-programmist">Битрикс разработчик/php программист</a>
+		</div>
+		
+		<div class="job_item ">
+			<a href="http://hantim.ru/jobs/10691-web-programmist-na-1s-bitriks">Web-программист на 1С-Битрикс</a>
+		</div>
+		
+  </div>
+  <div class="all">« <a href="http://hantim.ru/">все вакансии</a></div>
+
+	</div>
+
+		
+		
+
+		
+
+
+<div class="block similar_events">
+	<div class="title">Ближайшие события</div>
+		<div class="events_items">
+			
+				<div class="event_item">
+					
+						<div class="date">
+						<div class="dayname dayname_6"></div>
+						<div class="day">29</div>
+						<div class="month">сен</div>
+						</div>
+					
+					<div class="title">
+						<a href="http://habrahabr.ru/events/956/">Первая большая ИТ-конференция в Омске</a>
+					</div>
+				</div>
+			
+				<div class="event_item">
+					
+						<div class="date">
+						<div class="dayname dayname_6"></div>
+						<div class="day">29</div>
+						<div class="month">сен</div>
+						</div>
+					
+					<div class="title">
+						<a href="http://habrahabr.ru/events/976/">TDD в Java c Павлом Липинским (Тренинг в Минске)</a>
+					</div>
+				</div>
+			
+				<div class="event_item">
+					
+						<div class="date">
+						<div class="dayname dayname_6"></div>
+						<div class="day">29</div>
+						<div class="month">сен</div>
+						</div>
+					
+					<div class="title">
+						<a href="http://habrahabr.ru/events/999/">OSDN 2012</a>
+					</div>
+				</div>
+			
+				<div class="event_item">
+					
+						<div class="date">
+						<div class="dayname dayname_6"></div>
+						<div class="day">29</div>
+						<div class="month">сен</div>
+						</div>
+					
+					<div class="title">
+						<a href="http://habrahabr.ru/events/1000/">Психологические и коммуникативные техники для менеджеров-практиков</a>
+					</div>
+				</div>
+			
+				<div class="event_item">
+					
+						<div class="date">
+						<div class="dayname dayname_6"></div>
+						<div class="day">29</div>
+						<div class="month">сен</div>
+						</div>
+					
+					<div class="title">
+						<a href="http://habrahabr.ru/events/1020/">.NET Субботник в Днепропетровске</a>
+					</div>
+				</div>
+			
+		</div>
+	<div class="all">« <a href="http://habrahabr.ru/events/">все события</a></div>
+</div>
+
+
+		
+	
+  </div>
+  <div class="clear"></div>
+
+			
+	
+	
+	<div class="rotated_posts">
+		
+			<div class="rotated_post ">
+				<a href="http://habrahabr.ru/post/149531/" class="grey">RuTracker взломан</a>
+			</div>
+		
+			<div class="rotated_post ">
+				<a href="http://habrahabr.ru/post/146951/" class="grey">Записи и наброски в старых тетрадях (привет из 90-х)</a>
+			</div>
+		
+			<div class="rotated_post last">
+				<a href="http://habrahabr.ru/post/146861/" class="grey">Релиз LiveStreet 1.0</a>
+			</div>
+		
+	</div>
+	
+
+		  <div id="footer">
+      
+			
+			<dl>
+				<dd><a href="http://habrahabr.ru/login/">Войти</a></dd>
+				<dd><a href="http://habrahabr.ru/register/">Регистрация</a></dd>
+			</dl>
+			
+			<dl>
+				<dt>Разделы</dt>
+
+				<dd><a href="http://habrahabr.ru/qa/">Q&amp;A</a></dd>
+				<dd><a href="http://habrahabr.ru/hubs/">Хабы</a></dd>
+				<dd><a href="http://habrahabr.ru/events/">События</a></dd>
+				<dd><a href="http://habrahabr.ru/companies/">Компании</a></dd>
+				<dd><a href="http://habrahabr.ru/job/">Работа</a></dd>
+				<dd><a href="http://habrahabr.ru/users/">Пользователи</a></dd>
+			</dl>
+			<dl>
+				<dt>Посты</dt>
+				
+				<dd><a href="http://habrahabr.ru/posts/top/">Лучшие</a></dd>
+				<dd><a href="http://habrahabr.ru/posts/collective/">Тематические</a></dd>
+				<dd><a href="http://habrahabr.ru/posts/corporative/">Корпоративные</a></dd>
+				<dd><a href="http://habrahabr.ru/sandbox/">Песочница</a></dd>
+			</dl>
+			<dl>
+				<dt>Инфо</dt>
+				<dd><a href="http://habrahabr.ru/info/about/">О сайте</a></dd>
+				<dd><a href="http://habrahabr.ru/info/help/rules/">Правила</a></dd>
+				<dd><a href="http://habrahabr.ru/info/help/">Помощь</a></dd>
+				<dd><a href="http://habrahabr.ru/info/agreement/">Соглашение</a></dd>
+				<dd><a href="http://habrahabr.ru/info/stats/">Статистика</a></dd>
+			</dl>
+			<dl>
+				<dt>Услуги</dt>
+				<dd><a href="http://habrahabr.ru/info/advertising/">Реклама</a></dd>
+				<dd><a href="http://habrahabr.ru/info/advertising/corporate/">Корпоративные пакеты</a></dd>
+				<dd><a href="http://habrahabr.ru/info/advertising/workshops/">Семинары</a></dd>
+			</dl>
+      <div class="copyright">
+    		<a class="footer_logo" href="http://thematicmedia.ru/">Тематические Медиа</a>
+    		<div class="about">
+    			© 2006–2012<br>
+    			«<a href="http://www.thematicmedia.ru/">Тематические Медиа</a>»
+			<br><br>
+			<a href="http://habrahabr.ru/feedback/">Служба поддержки</a><br><br>
+			<a href="http://m.habrahabr.ru/">Мобильная версия</a>
+		</div>
+      </div>
+
+</div>
+		</div>
+	 	
+		
+    
+		
+		
+    <script type="text/javascript">
+      $(document).ready(function(){
+        // test gggg
+        // настройки всплывающих уведомлений
+        $.jGrowl.defaults.closerTemplate = '<div>Закрыть все уведомления</div>';         
+        
+        // настройки тултипов
+        $(".help-tip").tipTip({maxWidth: "300px", edgeOffset: 10});  
+        
+      });
+      // global vars
+      var g_base_url = 'habrahabr.ru';
+      var g_show_xpanel = false;
+      var g_base_fullurl = 'http://habrahabr.ru/';
+      var g_is_guest = false;
+       
+    </script>
+		
+    <script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/shortcuts.js"></script>
+		<script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/to_top.js"></script>
+		<link href="http://habrahabr.ru/styles/1348774373/_parts/_to_top.css" rel="stylesheet" media="all">
+
+		
+			<link href="./Фонетические алгоритмы   Хабрахабр_files/facebook_reader.css" rel="stylesheet" type="text/css">
+			<script src="./Фонетические алгоритмы   Хабрахабр_files/facebook_reader.js" type="text/javascript"></script>
+			<script type="text/javascript">
+				$(document).ready(function(){
+					new FacebookReader(
+						$('#facebook_reader'),
+						'437464306275519'
+					);
+				});
+			</script>
+		
+		
+		<script type="text/javascript" src="./Фонетические алгоритмы   Хабрахабр_files/float_block.js"></script>
+		
+		
+		<!-- <script type="text/javascript" src="/javascripts/1348774373/_parts/float_block.js"></script> //-->
+		
+			
+<script type="text/javascript">
+	/*<![CDATA[*/
+	var ga = document.createElement('script');
+		ga.setAttribute('async', 'true');
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	/* ]]>*/
+</script>
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(
+	    ['_setAccount', 'UA-726094-1'],
+	    ['_setDomainName', '.habrahabr.ru'],
+	    ["_addOrganic", "mail.ru", "q"],
+	    ["_addOrganic","rambler.ru", "words"],
+	    ["_addOrganic","nigma.ru", "s"],
+	    ["_addOrganic","blogs.yandex.ru", "text"],
+	    ["_addOrganic","webalta.ru", "q"],
+	    ["_addOrganic","aport.ru", "r"],
+	    ["_addOrganic","akavita.by", "z"],
+	    ["_addOrganic","meta.ua", "q"],
+	    ["_addOrganic","bigmir.net", "q"],
+	    ["_addOrganic","tut.by", "query"],
+	    ["_addOrganic","all.by", "query"],
+	    ["_addOrganic","i.ua", "q"],
+	    ["_addOrganic","online.ua", "q"],
+	    ["_addOrganic","a.ua", "s"],
+	    ["_addOrganic","ukr.net", "search_query"],
+	    ["_addOrganic","search.com.ua", "q"],
+	    ["_addOrganic","search.ua", "query"],
+	    ["_addOrganic","poisk.ru", "text"],
+	    ["_addOrganic","km.ru", "sq"],
+	    ["_addOrganic","liveinternet.ru", "ask"],
+	    ["_addOrganic","gogo.ru", "q"],
+	    ["_addOrganic","gde.ru", "keywords"],
+	    ["_addOrganic","quintura.ru", "request"],
+	    ['_trackPageview']
+	);
+	document.documentElement.firstChild.appendChild(ga);
+</script>	
+		
+		
+		
+	
+
+<div id="gleeBox" style="display:none" class="GleeThemeDefault gleeMediumSize"><input type="text" id="gleeSearchField" value="" autocomplete="off" class="ac_input GleeThemeDefault gleeMediumSize"><div id="gleeSub"><div id="gleeSubText"></div><div id="gleeSearchActivity"></div><div id="gleeSubURL"></div></div></div><div id="AutocompleteContainter_82f13" style="position: absolute; z-index: 9999; top: 141px; left: 598px; "><div class="autocomplete-w1"><div class="autocomplete" id="Autocomplete_82f13" style="display: none; width: 300px; max-height: 400px; "></div></div></div><div id="AutocompleteContainter_bec1f" style="position: absolute; z-index: 9999; top: 900px; left: 0px; "><div class="autocomplete-w1"><div class="autocomplete" id="Autocomplete_bec1f" style="display: none; width: 300px; max-height: 400px; "></div></div></div><div id="tiptip_holder" style="max-width:300px;"><div id="tiptip_arrow"><div id="tiptip_arrow_inner"></div></div><div id="tiptip_content"></div></div><div class="to_top" style="display: block; "><div class="to_top_panel"><div class="to_top_button" title="Наверх"><span class="arrow">↑</span> <span class="label">наверх</span></div>  </div></div><div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; height: 0px; width: 0px; "><div><iframe id="fb_xdm_frame_http" name="fb_xdm_frame_http" src="./Фонетические алгоритмы   Хабрахабр_files/xd_arbiter.htm"></iframe><iframe id="fb_xdm_frame_https" name="fb_xdm_frame_https" src="./Фонетические алгоритмы   Хабрахабр_files/xd_arbiter(1).htm"></iframe></div><div></div></div></div><iframe src="./Фонетические алгоритмы   Хабрахабр_files/0(2).htm" style="width: 10px; height: 10px; position: absolute; top: -10000px; left: -10000px; "></iframe><sfmsg id="sfMsgId" data="{&quot;imageCount&quot;:0,&quot;ip&quot;:&quot;178.49.120.77&quot;}"></sfmsg></body><style type="text/css">/*This block of style rules is injected by gleeBox*/.GleeReaped { background-color: #f9f2a5 !important; outline: 1px dotted #818181 !important; } .GleeHL { -webkit-box-shadow: hsla(71, 89%, 70%, 1) -2px -2px 0px, hsla(71, 89%, 70%, 1)  2px -2px 0px, hsla(71, 100%, 45%, 1) -2px  2px 0px, hsla(71, 100%, 45%, 1)  2px  2px 0px, hsla(71, 100%, 80%, 1)  0px 0px 0px 3px, rgba(42, 35, 0, 0.8)  1px  1px 3px 3px !important; border-radius: 3px !important; color: #000 !important; outline: none !important; border: none !important; background: -webkit-gradient(linear, left bottom, left top, color-stop(0, hsla(71, 100%, 47%, 1)), color-stop(1, hsla(71, 89%, 70%, 1))) !important;} a.GleeHL, .GleeHL a {color: #000 !important;} input[type=checkbox].GleeHL, input[type=radio].GleeHL { outline: 5px solid hsla(71, 89%, 70%, 1) !important;}</style></html>

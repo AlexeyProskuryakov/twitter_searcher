@@ -1,0 +1,69 @@
+#facebook_reader_wrapper{/*min-height:102px;*/overflow: hidden;}
+#facebook_reader { font-size: 16px;font-family:Verdana, sans-serif; position: relative;display: none; }
+#facebook_reader a, 
+#facebook_reader ins { color: #666; }
+#facebook_reader a:hover, 
+#facebook_reader ins:hover { color: #a3a3a3; }
+#facebook_reader ins {text-decoration: none;border-bottom: 1px dotted;cursor: pointer; }
+#facebook_reader .connect {color: #999;position: relative;}
+#facebook_reader .connect .button {position: absolute;left: 0;top:8px;}
+#facebook_reader .connect .text{margin-left:80px;font-size: 12px;}
+#facebook_reader .connect .text .help-tip{vertical-align: text-bottom;}
+#facebook_reader .connect .loading_text {display: none; }
+#facebook_reader .connect.loading * {display: none; }
+#facebook_reader .connect.loading .loading_text {display: block;font-size: 11px;color: #999;text-align: center;padding: 1.5em 0; }
+#facebook_reader .connected {position: relative; }
+#facebook_reader .connected .user{overflow: hidden;}
+#facebook_reader .connected .user img.avatar {display: block;width: 50px;height: 50px;float: left; }
+#facebook_reader .connected .user .name {display: block;padding: 0px 0 0 60px;font-size: 15px; }
+#facebook_reader .connected .user .name a {color:#5f5f5f;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;height: 1.4em; }
+#facebook_reader .connected .user .disable {display: block;margin-left:60px;margin-top:5px;font-size:10px;line-height:10px;color: #a3a3a3;background: url(/images/sidebar/facebook_reader.close.mini.png) no-repeat left center;padding-left:10px;}
+#facebook_reader .connected .user .disable ins{color: #a3a3a3;}
+#facebook_reader .connected .user .disable ins:hover{color:#666;}
+#facebook_reader .connected .user:after {content: '';display: block;position: absolute;left: 0px;top: 0;width: 16px;height: 16px;background: url(/i/fb.png) 0 0 no-repeat; }
+
+#facebook_reader .connected .disable {font-size: .75em; }
+
+#facebook_reader .connected .history_enabled {white-space: nowrap;color:#bdbcb5;font-size:11px;line-height: 20px;}
+#facebook_reader .connected .history_enabled input{display: none;}
+#facebook_reader .connected .history_enabled label {color:#7f7f7f;line-height: 20px;}
+#facebook_reader .connected .history_enabled label .checker{vertical-align:bottom;display: inline-block;text-indent:-9999px;background: url(/images/sidebar/facebook_reader.checkbox.bg.png?r=1) no-repeat left bottom;width:61px;height:20px;}
+#facebook_reader .connected .history_enabled label.checked .checker {background: url(/images/sidebar/facebook_reader.checkbox.bg.png?r=1) no-repeat left top; }
+#facebook_reader .connected .history {}
+
+#facebook_reader .connected .history .history_toggle{color:#6aa2bd;font-size:11px;line-height: 16px;margin-left:60px;}
+#facebook_reader .connected .history .history_toggle ins{color:#6aa2bd;}
+#facebook_reader .connected .history .history_toggle::after{content:'';display:inline-block;width:4px;height:5px;right:-3px;position:relative;background: url(/images/sidebar/facebook_reader.open.png) no-repeat left top;}
+#facebook_reader .connected .history .history_toggle.open::after{background: url(/images/sidebar/facebook_reader.open.png) no-repeat left bottom;}
+
+#facebook_reader .connected .history .content {display: none;margin: 15px 0 0;margin-left:-20px;padding-left:20px;margin-right:-20px;padding-right:20px;border-top:1px solid #d5d4cc;position: relative;padding-top:10px;}
+#facebook_reader .connected .history .content::before{position:absolute;top:-4px;left:95px;background: url(/images/sidebar/facebook_reader.up.png); width:8px;height:4px;content: ' ';display: block;}  
+#facebook_reader .connected .history .content .item {margin: 0 0 10px;position: relative;line-height:14px;}
+#facebook_reader .connected .history .content .item .link {font-size: 11px;padding-right:15px;position: relative;}
+#facebook_reader .connected .history .content .item .link a{color:#7f7f7f}
+#facebook_reader .connected .history .content .item .link .delete {display: inline-block;visibility: hidden; position:absolute;right:0;top:3px;cursor:pointer;width: 11px;height: 11px;background: url(/images/sidebar/facebook_reader.item.close.png) no-repeat left top; }
+#facebook_reader .connected .history .content .item:hover .link .delete {visibility: visible; }
+#facebook_reader .connected .history .content .item .time {font-size: 9px;color: #a3a3a3;}
+#facebook_reader .connected .history .content .notifications {padding: 5px 0;font-size: 11px;padding-top:10px;}
+#facebook_reader .connected .history .content .notifications label{color:#7f7f7f;}
+#facebook_reader .connected .history .content .all {font-size: 11px;text-align: left;}
+#facebook_reader .connected .history .content .all a {color: #6DA3BD; }
+#facebook_reader .connected .history.open .content {display: block; }
+#facebook_reader .overlay {position: absolute;left: -1.5em;top: 40px;padding: 10px 1.5em;margin: 10px 0 0;width: 100%;background: #f0f0e7; }
+#facebook_reader .confirmation_overlay p {font-size: 12px;color:#7f7f7f; }
+#facebook_reader .confirmation_overlay ins {margin-left: .5em; }
+
+#facebook_reader .article_overlay {top: 0;bottom: -1px;margin: 0;font-size: .75em;padding: 0em 1.5em 0; }
+#facebook_reader .article_overlay .added{font-size: 11px;color:#a3a3a3;}
+#facebook_reader .article_overlay .added a{color:#7f7f7f;}
+#facebook_reader .article_overlay .title {font-size: 14px;margin: .5em 0 1em;height: 1.5em;line-height: 1.5em;overflow: hidden;text-overflow: ellipsis;white-space: nowrap; }
+#facebook_reader .article_overlay .title ins {font-size: .77em;margin-left: .5em; }
+#facebook_reader .article_overlay .title a{color:#5f5f5f !important;}     
+#facebook_reader .article_overlay .article_overlay_close {position: absolute;font-size: 1.5em;top: -0.35em;right: .25em;border: 0;background: url(/images/sidebar/facebook_reader.close.png) no-repeat center center;width:16px;height:16px;display:block;text-indent:-9999px;}
+#facebook_reader .notification{font-size:11px;color:#7f7f7f;}
+#facebook_reader.narrow .excess {display: none; }
+#facebook_reader.narrow .history{clear:both;padding-top:10px;}
+#facebook_reader.narrow .history_toggle{margin-left:0 !important;}
+#facebook_reader.narrow .content{margin-left:0px !important;padding-left:0px !important;margin-right:0px !important;padding-right:0px !important;}
+#facebook_reader.narrow .content::before{background: url(/images/sidebar/facebook_reader.branded.up.png) no-repeat 0 0 !important;left:40px !important;}
+#facebook_reader.narrow .overlay{background: #fff}

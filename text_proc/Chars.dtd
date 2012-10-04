@@ -1,0 +1,4 @@
+<!ELEMENT char (#PCDATA)>
+<!ELEMENT content (char)*>
+
+<!ATTLIST char name CDATA #REQUIRED>
