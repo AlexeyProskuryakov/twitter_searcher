@@ -1,7 +1,8 @@
 # coding=utf-8
 import os
-from analysing_data.booster import db_booster
+from analysing_data.booster import db_mc_handler
 from analysing_data.markov_chain_machine import markov_chain
+from db_scripts.twitter_timeline_parser import extract_messages
 import loggers
 from model.db import db_handler
 from search_engine import engines
@@ -23,7 +24,7 @@ log = loggers.logger
 main_db = db_handler()
 engine = engines.tweepy_engine(out=main_db)
 
-booster = db_booster()
+booster = db_mc_handler()
 
 
 def get_users(filename):
@@ -46,11 +47,13 @@ def get_users(filename):
     return result
 
 
-def create_model(user, is_normalise=True):
+def create_model(user, is_normalise=True, mc=None):
     """
     creating model for one user
     """
-    mc = markov_chain(user.name_, booster)
+    if not mc:
+        mc = markov_chain(user.name_, booster)
+
     timeline_text = tools.flush(user.timeline, lambda x:x['text'])
 
     for tt_el in timeline_text:
@@ -73,7 +76,9 @@ def create_model_main(users, model_id, is_normalise=True):
     mc.save()
     return mc
 
-if __name__ == '__main__':
+
+def little_differences():
+    #todo create graph differences between normal and not normal
     path = os.path.dirname(__file__)
     file_name = os.path.join(path, 'no_spam_names')
 
@@ -83,7 +88,7 @@ if __name__ == '__main__':
     #create model
     log.info('create main model')
     model = create_model_main(users, 'no_spam', is_normalise=False)
-    model_norm = create_model_main(users, 'no_spam_normal',is_normalise=True)
+    model_norm = create_model_main(users, 'no_spam_normal', is_normalise=True)
     #model = markov_chain.create('no_spam', booster)
 
     log.info('create models for any user')
@@ -95,25 +100,71 @@ if __name__ == '__main__':
         user_model_normal = create_model(user)
         user_model = create_model(user, is_normalise=False)
         log.info('calculate differences between main model and user model')
-        diff_element = diff_markov_chains(model, user_model)
-        diff_element_normal = diff_markov_chains(model, user_model_normal)
+        diff_element = diff_markov_chains(user_model_normal, model)
+        diff_element_normal = diff_markov_chains(user_model_normal, model_norm)
         log.info('the difference between main model and user model (%s) model is: %s ' % (user.name_, diff_element))
+
+        nodes, edges = model_norm.get_unique_nodes_edges()
         result.append({'user': user.name_, 'x': diff_element['content'], 'y': diff_element_normal['content']})
 
     result.sort(key=lambda x:x['x'])
 
-
     diff_model = diff_markov_chains(model, model)
-    diff_model_normal = diff_markov_chains(model_norm,model_norm)
-    diff_model_n_non_normal = diff_markov_chains(model,model_norm)
+    diff_model_normal = diff_markov_chains(model_norm, model_norm)
+    diff_model_n_non_normal = diff_markov_chains(model, model_norm)
 
     print 'non normal model %s ' % diff_model['content']
     for result_el in result:
         print result_el
 
-    model.visualise(100)
-    model_diffs = (diff_model_normal['content'],diff_model_n_non_normal['content'])
-    vis.visualise(result, x_title='diff non normal', y_title='diff normal')
+    #    model.visualise(100)
+    model_diffs = [
+            {'x': diff_model_normal['content'], 'y': diff_model_n_non_normal['content']},
+            {'x': diff_model['content'], 'y': diff_model_n_non_normal['content']}
+    ]
+    vis.visualise(result, x_title='diff non normal', y_title='diff normal', spec_symbols=model_diffs)
+
+
+if __name__ == '__main__':
+    log.info('extract messages')
+    result = extract_messages("c:/temp/tweets2009-12.txt",limit=0)
+    log.info('creating users set')
+    users = set(tools.flush(result, by_what=lambda x:x['user']))
+
+    model_main = markov_chain('main', booster)
+    result = []
+    log.info('---------users to find is %s-------------------------------' % len(users))
+    loaded_users = []
+    for user in users:
+        log.info('load user %s' % user)
+        loaded_user = engine.scrap(user, neighbourhood=0)
+        if not loaded_user:
+            continue
+            
+        model_main = create_model(loaded_user, mc=model_main)
+        create_model(loaded_user)
+        loaded_users.append(loaded_user)
+
+    log.info('---------start process differences of models--------------')
+    for user in loaded_users:
+        model_current = markov_chain.create(user.name_,booster)
+        diff_element = diff_markov_chains(model_main, model_current)
+        result.append({'name': user.name_, 'x': diff_element['content'], 'y': user.timeline_count})
+        log.info('create difference... %s' % diff_element['content'])
+
+    diff_main = diff_markov_chains(model_main, model_main)
+    nodes, edges = model_main.get_unique_nodes_edges()
+    model_diffs = [
+            {'x': diff_main['content'], 'y': float(edges) / nodes},
+    ]
+    vis.visualise(result,
+                  header='diff and tweets count',
+                  x_title='difference between this and main',
+                  y_title='count tweets',
+                  spec_symbols=model_diffs)
+
+    model_main.visualise(100)
+
 
 
 ##visualise

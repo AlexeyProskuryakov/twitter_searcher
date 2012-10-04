@@ -7,7 +7,7 @@ from properties.props import *
 log = loggers.logger
 
 __author__ = 'Alesha'
-class db_booster(database):
+class db_mc_handler(database):
     def _schema_init(self):
         self.nodes = self.db['mc_nodes']
         self.relations = self.db['mc_relations']
@@ -22,7 +22,7 @@ class db_booster(database):
         if not self._is_index_presented(self.relations):
             log.info('create relations index')
             self.relations.create_index('content', ASCENDING, unique=False)
-            self.relations.create_index([('from', ASCENDING), ('to', ASCENDING), ('model_id_', ASCENDING)],
+            self.relations.create_index([('from_', ASCENDING), ('to_', ASCENDING), ('model_id_', ASCENDING)],
                                                                                                           unique=True)
 
 
@@ -51,16 +51,14 @@ class db_booster(database):
         if not weight:
             weight = relation_element.weight
 
-        saved = self.relations.find_one({'from': relation_element.content[0],
-                                         'to': relation_element.content[1],
+        saved = self.relations.find_one({'from_': relation_element.from_,
+                                         'to_': relation_element.to_,
                                          'model_id_': relation_element.model_id_})
         if saved:
             saved['weight'] += weight
             return self.relations.save(saved)
         else:
             dict = relation_element._serialise()
-            dict['from'] = relation_element.content[0]
-            dict['to'] = relation_element.content[1]
             return self.relations.save(dict)
 
     def get_model_parameters(self, model_id):

@@ -1,5 +1,5 @@
 from analysing_data import mc_difference_logic
-from analysing_data.booster import db_booster
+from analysing_data.booster import db_mc_handler
 from analysing_data.markov_chain_machine import markov_chain
 import loggers
 from model.db import db_handler
@@ -15,7 +15,7 @@ db_handler = db_handler(truncate=False)
 
 api_engine = tweepy_engine(out=db_handler)
 
-booster = db_booster(truncate=False)
+booster = db_mc_handler(truncate=False)
 vis_processor = vis_machine
 
 log = loggers.logger

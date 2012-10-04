@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60ba1b21-42d6-41a5-a3ba-a2d185a44d10" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/visualise/vis2d_machine.py" />
       <change type="DELETED" beforePath="C:\develop\twitter_searcher\&quot;articles\Р¤РѕРЅРµС‚РёС‡РµСЃРєРёРµР°Р»РіРѕСЂРёС‚РјС‹  РҐР°Р±СЂР°С…Р°Р±СЂfiles\0(1).htm&quot;" afterPath="" />
       <change type="DELETED" beforePath="C:\develop\twitter_searcher\&quot;articles\Р¤РѕРЅРµС‚РёС‡РµСЃРєРёРµР°Р»РіРѕСЂРёС‚РјС‹  РҐР°Р±СЂР°С…Р°Р±СЂfiles\0(2).htm&quot;" afterPath="" />
       <change type="DELETED" beforePath="C:\develop\twitter_searcher\&quot;articles\Р¤РѕРЅРµС‚РёС‡РµСЃРєРёРµР°Р»РіРѕСЂРёС‚РјС‹  РҐР°Р±СЂР°С…Р°Р±СЂfiles\0.htm&quot;" afterPath="" />
@@ -82,10 +81,12 @@
       <change type="DELETED" beforePath="C:\develop\twitter_searcher\&quot;articles\РЎР»РµРЅРіРїРѕР»СЊР·РѕРІР°С‚РµР»РµР№Twitter (РЅР°РјР°С‚РµСЂРёР°Р»РµР°РЅРіР»РёР№СЃРєРѕРіРѕСЏР·С‹РєР° (Р–СѓСЂРЅР°Р» РњРѕР»РѕРґРѕР№СѓС‡РµРЅС‹Р№)_files\watch_visor.js&quot;" afterPath="" />
       <change type="DELETED" beforePath="C:\develop\twitter_searcher\&quot;articles\РЎР»РµРЅРіРїРѕР»СЊР·РѕРІР°С‚РµР»РµР№Twitter (РЅР°РјР°С‚РµСЂРёР°Р»РµР°РЅРіР»РёР№СЃРєРѕРіРѕСЏР·С‹РєР° (Р–СѓСЂРЅР°Р» РњРѕР»РѕРґРѕР№СѓС‡РµРЅС‹Р№)_files\window.xd.js&quot;" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysing_data/booster.py" afterPath="$PROJECT_DIR$/analysing_data/booster.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysing_data/markov_chain_machine.py" afterPath="$PROJECT_DIR$/analysing_data/markov_chain_machine.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/analysing_data/mc_test.py" afterPath="$PROJECT_DIR$/analysing_data/mc_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/db_scripts/twitter_timeline_parser.py" afterPath="$PROJECT_DIR$/db_scripts/twitter_timeline_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/experiments/experiment1.py" afterPath="$PROJECT_DIR$/experiments/experiment1.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/experiments/no_spam_names" afterPath="$PROJECT_DIR$/experiments/no_spam_names" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model/functions.py" afterPath="$PROJECT_DIR$/model/functions.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/text_proc/text_processing.py" afterPath="$PROJECT_DIR$/text_proc/text_processing.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
     </list>
     <ignored path="twitter_searcher.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -127,46 +128,73 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="text_processing.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/text_proc/text_processing.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="131" column="12" selection-start="4368" selection-end="4368" vertical-scroll-proportion="0.7696477">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="no_spam_names" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/experiments/no_spam_names">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="0" selection-start="167" selection-end="167" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="experiment1.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="experiment1.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/experiments/experiment1.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="105" column="21" selection-start="3383" selection-end="3383" vertical-scroll-proportion="-5.92">
+            <state line="148" column="29" selection-start="5054" selection-end="5054" vertical-scroll-proportion="0.48626372">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vis2d_machine.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/visualise/vis2d_machine.py">
+      <file leaf-file-name="tools.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="4" selection-start="507" selection-end="507" vertical-scroll-proportion="0.0">
+            <state line="47" column="0" selection-start="1119" selection-end="1119" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Chars.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/text_proc/Chars.xml">
+      <file leaf-file-name="twitter_timeline_parser.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/db_scripts/twitter_timeline_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="40" column="9" selection-start="645" selection-end="645" vertical-scroll-proportion="0.0">
+            <state line="24" column="47" selection-start="585" selection-end="585" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="booster.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/analysing_data/booster.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="90" column="8" selection-start="3923" selection-end="3923" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="collection.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://C:/Python27/Lib/site-packages/pymongo/collection.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="207" column="8" selection-start="7875" selection-end="7875" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="markov_chain_machine.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="110" column="19" selection-start="4102" selection-end="4102" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mc_model.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/analysing_data/mc_model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="84" column="8" selection-start="2744" selection-end="2744" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="engines.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/search_engine/engines.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="326" column="8" selection-start="13138" selection-end="13138" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -186,22 +214,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/visualise/vis_machine.py" />
         <option value="$PROJECT_DIR$/model/db.py" />
         <option value="$PROJECT_DIR$/spam_names" />
         <option value="$PROJECT_DIR$/search_engine/engines.py" />
         <option value="$PROJECT_DIR$/properties/props.py" />
         <option value="$PROJECT_DIR$/model/tw_model.py" />
-        <option value="$PROJECT_DIR$/analysing_data/markov_chain_machine.py" />
-        <option value="$PROJECT_DIR$/analysing_data/booster.py" />
         <option value="$PROJECT_DIR$/analysing_data/mc_difference_logic.py" />
         <option value="$PROJECT_DIR$/model/functions.py" />
         <option value="$PROJECT_DIR$/text_proc/Chars.xml" />
         <option value="$PROJECT_DIR$/experiments/no_spam_names" />
         <option value="$PROJECT_DIR$/text_proc/text_processing.py" />
-        <option value="$PROJECT_DIR$/experiments/experiment1.py" />
         <option value="$PROJECT_DIR$/visualise/vis2d_machine.py" />
+        <option value="$PROJECT_DIR$/analysing_data/booster.py" />
+        <option value="$PROJECT_DIR$/analysing_data/markov_chain_machine.py" />
+        <option value="$PROJECT_DIR$/db_scripts/twitter_timeline_parser.py" />
+        <option value="$PROJECT_DIR$/experiments/experiment1.py" />
       </list>
     </option>
   </component>
@@ -248,6 +276,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -408,17 +437,16 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Favorites" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
-    <property name="GoToClass.includeJavaFiles" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="recentsLimit" value="5" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="GoToClass.includeJavaFiles" value="false" />
   </component>
   <component name="RunManager" selected="Python.experiment1">
     <configuration default="false" name="a_hw" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -614,16 +642,16 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32982087" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23454833" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23984376" sideWeight="0.6671949" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3296875" sideWeight="0.66877973" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35884178" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33280507" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="11" y="254" width="1282" height="260" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3312203" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="11" y="254" width="1282" height="260" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23454833" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -673,57 +701,12 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/experiments/experiment1.py</url>
-          <line>75</line>
+          <line>127</line>
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/differences/d_model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="42" selection-start="2769" selection-end="2769" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/analysing_data/booster.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="110" column="11" selection-start="4641" selection-end="4641" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/analysing_data/mc_difference_logic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="238" column="49" selection-start="9205" selection-end="9205" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/db.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="111" column="41" selection-start="4273" selection-end="4273" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/search_engine/commands_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/search_engine/engines.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="265" column="0" selection-start="10314" selection-end="10314" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/search_engine/stream.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/search_engine/webdriver_engine.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="0" selection-start="183" selection-end="330" vertical-scroll-proportion="0.0" />
@@ -741,28 +724,87 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/properties/props.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="27" selection-start="644" selection-end="644" vertical-scroll-proportion="0.035789475">
+        <state line="22" column="27" selection-start="644" selection-end="644" vertical-scroll-proportion="0.035789475" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/text_proc/text_processing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="87" column="13" selection-start="2768" selection-end="2768" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/visualise/vis2d_machine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="4" selection-start="507" selection-end="507" vertical-scroll-proportion="0.0">
+        <state line="19" column="4" selection-start="528" selection-end="528" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/no_spam_differences.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/tw_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="32" selection-start="2279" selection-end="2279" vertical-scroll-proportion="-4.68">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/search_engine/engines.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="326" column="8" selection-start="13138" selection-end="13138" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysing_data/mc_model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="84" column="8" selection-start="2744" selection-end="2744" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python27/Lib/site-packages/pymongo/collection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="207" column="8" selection-start="7875" selection-end="7875" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysing_data/markov_chain_machine.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="110" column="19" selection-start="4102" selection-end="4102" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/analysing_data/booster.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="8" selection-start="3923" selection-end="3923" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tools.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="0" selection-start="1119" selection-end="1119" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db_scripts/twitter_timeline_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="47" selection-start="585" selection-end="585" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/experiments/experiment1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="105" column="21" selection-start="3383" selection-end="3383" vertical-scroll-proportion="-5.92">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/text_proc/text_processing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="131" column="12" selection-start="4368" selection-end="4368" vertical-scroll-proportion="0.7696477">
+        <state line="148" column="29" selection-start="5054" selection-end="5054" vertical-scroll-proportion="0.48626372">
           <folding />
         </state>
       </provider>

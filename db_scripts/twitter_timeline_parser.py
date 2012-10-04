@@ -1,5 +1,6 @@
 import loggers
 from model.db import db_handler
+import tools
 
 log = loggers.logger
 #get from http://snap.stanford.edu/data/bigdata/twitter7/
@@ -18,7 +19,10 @@ def _is_message_element(str):
 
 
 def extract_messages(file, to_what=db_handler(messages_truncate=True), limit=10):
-    lines = open(file).readlines(limit * 4)
+    if not limit:
+        lines = open(file).readlines()
+    else:
+        lines = open(file).readlines(limit * 4)
     messages = []
     message = None
     for line in lines:
@@ -29,7 +33,8 @@ def extract_messages(file, to_what=db_handler(messages_truncate=True), limit=10)
             if element[0] == 'T':
                 message['time'] = element[1]
             elif element[0] == 'U':
-                message['user'] = element[1]
+                user = element[1]
+                message['user'] = user[user.index('twitter.com') + len('twitter.com') + 1:]
             elif element[0] == 'W':
                 message['words'] = element[1]
         if  message and len(message) == 3:
@@ -43,5 +48,7 @@ def extract_messages(file, to_what=db_handler(messages_truncate=True), limit=10)
 
 if __name__ == '__main__':
     result = extract_messages("c:/temp/tweets2009-12.txt")
+    user = set(tools.flush(result, by_what=lambda x:x['user']))
+
     #and here - OVER 10 GB OF DATA!!!!!!!! :))))))))))))))))))))
 

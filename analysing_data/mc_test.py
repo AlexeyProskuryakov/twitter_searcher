@@ -1,4 +1,4 @@
-from analysing_data.booster import db_booster
+from analysing_data.booster import db_mc_handler
 from analysing_data.markov_chain_machine import *
 from analysing_data.mc_difference_logic import diff_markov_chains
 from db_scripts import twitter_timeline_parser
@@ -29,7 +29,7 @@ def test_generate_model():
     messages = twitter_timeline_parser.extract_messages("c:/temp/tweets2009-12.txt", limit=100)
     log.info('\n'.join([message['words'] for message in messages]))
     log.info(len(messages))
-    booster = db_booster()
+    booster = db_mc_handler()
     mc_l = markov_chain('test',booster)
     for i  in range(len(messages)):
         message = messages[i]
@@ -41,7 +41,7 @@ def test_generate_model():
 
 
 def test_model_():
-    booster = db_booster()
+    booster = db_mc_handler()
 
     mc1 = markov_chain('left_test', booster)
     mc2 = markov_chain('right_test', booster)

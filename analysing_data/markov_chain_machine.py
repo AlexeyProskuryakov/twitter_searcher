@@ -1,4 +1,4 @@
-from analysing_data.booster import db_booster
+from analysing_data.booster import db_mc_handler
 from analysing_data.mc_model import element, relation
 import loggers
 from visualise.vis_machine import mc_vis
@@ -47,8 +47,13 @@ class markov_chain(object):
 
     def save(self):
         self.state = markov_chain.state[0]
-        self.db.add_model({'words_count_': self.words_count_, 'relations_count_': self.relations_count_,
-                           'model_id_': self.model_id_, 'n_of_gramm': self.n_of_gram_, 'include': self.include})
+        self.db.add_model(
+                {'_id': self.model_id_,
+                 'words_count_': self.words_count_,
+                 'relations_count_': self.relations_count_,
+                 'model_id_': self.model_id_,
+                 'n_of_gramm': self.n_of_gram_,
+                 'include': self.include})
 
     def __load(self):
         log.debug('load by model_id_ = %s' % self.model_id_)
@@ -109,6 +114,9 @@ class markov_chain(object):
         return relations
 
     def get_unique_nodes_edges(self):
+        """
+        (count_nodes,count_edges)
+        """
         return self.db.get_model_unique_weight(self.model_id_)
 
     def print_me(self):
