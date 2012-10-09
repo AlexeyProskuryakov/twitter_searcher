@@ -79,55 +79,65 @@ def create_model_main(users, model_id, is_normalise=True):
 
 def little_differences():
     #todo create graph differences between normal and not normal
+
     path = os.path.dirname(__file__)
     file_name = os.path.join(path, 'no_spam_names')
+    file_name_spam = os.path.join(path, 'spam_names')
 
     #load users
     users = get_users(file_name)
+    users_spam = get_users(file_name_spam)
 
     #create model
-    log.info('create main model')
+    log.info('creating main models')
     model = create_model_main(users, 'no_spam', is_normalise=False)
-    model_norm = create_model_main(users, 'no_spam_normal', is_normalise=True)
-    #model = markov_chain.create('no_spam', booster)
-
-    log.info('create models for any user')
-    result = []
-    for user in users:
-        log.info('create model for user: %s' % user.name_)
-        if not user.timeline_count or not len(user.timeline):
-            continue
-        user_model_normal = create_model(user)
-        user_model = create_model(user, is_normalise=False)
-        log.info('calculate differences between main model and user model')
-        diff_element = diff_markov_chains(user_model_normal, model)
-        diff_element_normal = diff_markov_chains(user_model_normal, model_norm)
-        log.info('the difference between main model and user model (%s) model is: %s ' % (user.name_, diff_element))
-
-        nodes, edges = model_norm.get_unique_nodes_edges()
-        result.append({'user': user.name_, 'x': diff_element['content'], 'y': diff_element_normal['content']})
-
-    result.sort(key=lambda x:x['x'])
-
-    diff_model = diff_markov_chains(model, model)
-    diff_model_normal = diff_markov_chains(model_norm, model_norm)
-    diff_model_n_non_normal = diff_markov_chains(model, model_norm)
-
-    print 'non normal model %s ' % diff_model['content']
-    for result_el in result:
-        print result_el
-
-    #    model.visualise(100)
-    model_diffs = [
-            {'x': diff_model_normal['content'], 'y': diff_model_n_non_normal['content']},
-            {'x': diff_model['content'], 'y': diff_model_n_non_normal['content']}
-    ]
-    vis.visualise(result, x_title='diff non normal', y_title='diff normal', spec_symbols=model_diffs)
+    model_spam = create_model_main(users_spam, 'spam', is_normalise=False)
 
 
-if __name__ == '__main__':
+#    model = markov_chain.create('no_spam', booster)
+
+#    log.info('create models for each no spam user')
+#    result = []
+#    for user in users:
+#        log.info('create model for NO SPAM user: %s' % user.name_)
+#        if not user.timeline_count or not len(user.timeline):
+#            continue
+#        model_user = create_model(user)
+#
+#        log.info('calculate differences between main models and user model')
+#        diff_element = diff_markov_chains(model_user, model)
+#        diff_element_with_spam = diff_markov_chains(model_user, model_spam)
+#
+#        log.info('the difference between main model and user model (%s) is: %s ' % (user.name_, diff_element))
+#        log.info('the difference between main spam model and user model (%s) is: %s ' % (
+#            user.name_, diff_element_with_spam))
+#        result.append({'user': user.name_, 'x': diff_element['content'], 'y': diff_element_with_spam['content']})
+#
+#    spam_result = []
+#    for user in users_spam:
+#        log.info('create model for SPAM user: %s' % user.name_)
+#        if not user.timeline_count or not len(user.timeline):
+#            continue
+#        model_user = create_model(user)
+#
+#        log.info('calculate differences between main models and user model')
+#        diff_element = diff_markov_chains(model_user, model)
+#        diff_element_with_spam = diff_markov_chains(model_user, model_spam)
+#
+#        log.info('the difference between main model and user model (%s) is: %s ' % (user.name_, diff_element))
+#        log.info('the difference between main spam model and user model (%s) is: %s ' % (
+#            user.name_, diff_element_with_spam))
+#        spam_result.append({'user': user.name_, 'x': diff_element['content'], 'y': diff_element_with_spam['content']})
+
+#    diff_model = diff_markov_chains(model, model_spam)
+#    log.info('!!! differences between models is: %s' % diff_model['content'])
+#    vis.visualise(result, x_title='diff with non spam model', y_title='diff with spam model', spec_symbols=spam_result)
+
+
+
+def big_differences():
     log.info('extract messages')
-    result = extract_messages("c:/temp/tweets2009-12.txt",limit=0)
+    result = extract_messages("c:/temp/tweets2009-12.txt", limit=0)
     log.info('creating users set')
     users = set(tools.flush(result, by_what=lambda x:x['user']))
 
@@ -140,14 +150,14 @@ if __name__ == '__main__':
         loaded_user = engine.scrap(user, neighbourhood=0)
         if not loaded_user:
             continue
-            
+
         model_main = create_model(loaded_user, mc=model_main)
         create_model(loaded_user)
         loaded_users.append(loaded_user)
 
     log.info('---------start process differences of models--------------')
     for user in loaded_users:
-        model_current = markov_chain.create(user.name_,booster)
+        model_current = markov_chain.create(user.name_, booster)
         diff_element = diff_markov_chains(model_main, model_current)
         result.append({'name': user.name_, 'x': diff_element['content'], 'y': user.timeline_count})
         log.info('create difference... %s' % diff_element['content'])
@@ -165,7 +175,10 @@ if __name__ == '__main__':
 
     model_main.visualise(100)
 
-
+if __name__ == '__main__':
+ #   little_differences()
+    model_spam = markov_chain.create('no_spam',booster)
+    model_spam.visualise(100)
 
 ##visualise
 

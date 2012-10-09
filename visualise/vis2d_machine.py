@@ -18,7 +18,7 @@ def visualise(points, x=lambda x:x['x'], y=lambda x:x['y'], header='vis', x_titl
 
     if spec_symbols:
         for spec_symbol_el in spec_symbols:
-            plt.plot(spec_symbol_el['x'], spec_symbol_el['y'], 'g^')
+            plt.plot(x(spec_symbol_el), y(spec_symbol_el), 'g^')
 
     plt.xlabel(x_title)
     plt.ylabel(y_title)
