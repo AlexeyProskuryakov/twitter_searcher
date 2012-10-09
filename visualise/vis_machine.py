@@ -24,8 +24,6 @@ def send(data):
         log.debug(data)
         jdata = json.dumps(data)
         c = urllib2.urlopen(props.v_host, jdata)
-        #{"ae": {"directed": true, "source": "a2", "target": "b1", "weight": 10}}
-        #{"ae":{"AB":{"source":"A","target":"B","directed":false,"weight":2}}}
         log.info(c.read())
     except Exception as e:
         log.error('sending error')
@@ -42,86 +40,46 @@ def add_edges(edges):
     send(edges)
 
 
-def form_graph(m_user, db):
+def form_graph(m_user, user_weight = 10, edge_weights=None, edge_colors=None):
+    if not edge_weights:
+        edge_weights = {tw_model.followers: 10, tw_model.friends: 10, tw_model.mentions: 10}
+    if not edge_colors:
+        edge_colors = {tw_model.followers: (1, 1, 1), tw_model.friends: (2, 2, 2), tw_model.mentions: (3, 3, 3)}
+
     relations = m_user.get_relations()
     edges = {}
-    nodes = {m_user.name_: {'label': m_user.name_, 'weight': 10}}
+    nodes = {m_user.name_: {'label': m_user.name_, 'weight': user_weight}}
 
-    #followers
-    for follower in relations[tw_model.followers]:
-        if db.users.find_one({'name_': follower}):
+
+    def form_edges_nodes(rel_type, nodes, edges):
+        target_users = relations[rel_type]
+        color = edge_colors[rel_type]
+        weight = edge_weights[rel_type]
+
+        for target in  target_users:
             edges = dict(edges, **{
-                str(follower) + str(m_user.name_): {'source': m_user.name_, 'target': follower, 'weight': 5,
-                                                    'directed': True, 'r': 1.0, 'g': 0.5, 'b': 0.5}})
-            nodes = dict(nodes, **{follower: {'label': follower, 'weight': 10}})
-        else:
-            edges = dict(edges, **{
-                str(follower) + str(m_user.name_): {'source': m_user.name_, 'target': follower, 'weight': 1,
-                                                    'directed': True, 'r': 1.0, 'g': 0.5, 'b': 0.5}})
-            nodes = dict(nodes, **{follower: {'label': follower, 'weight': 2}})
+                str(target) + str(m_user.name_): {'source': m_user.name_, 'target': target, 'weight': weight,
+                                                    'directed': True, 'r': color[0], 'g': color[1], 'b': color[2]}})
+            nodes = dict(nodes, **{target: {'label': target, 'weight': user_weight}})
 
-    #friends
-    for friend in relations[tw_model.friends]:
-        if db.users.find_one({'name_': friend}):
-            edges = dict(edges, **{
-                str(friend) + str(m_user.name_): {'target': m_user.name_, 'source': friend, 'weight': 5,
-                                                  'directed': True, 'r': 0.5, 'g': 1.0, 'b': 0.5}})
-            nodes = dict(nodes, **{friend: {'label': friend, 'weight': 10}})
-        else:
-            edges = dict(edges, **{
-                str(friend) + str(m_user.name_): {'target': m_user.name_, 'source': friend, 'weight': 1,
-                                                  'directed': True, 'r': 0.5, 'g': 1.0, 'b': 0.5}})
-            nodes = dict(nodes, **{friend: {'label': friend, 'weight': 2}})
+        return nodes, edges
 
-    #mentions
-    for ment in relations[tw_model.mentions]:
-        if db.users.find_one({'name_': ment}):
-            edges = dict(edges, **{
-                str(ment) + str(m_user.name_): {'source': m_user.name_, 'target': ment, 'weight': 10, 'directed': True,
-                                                'r': 0.5, 'g': 0.5, 'b': 1.0}})
-            nodes = dict(nodes, **{ment: {'label': ment, 'weight': 10}})
-        else:
-            edges = dict(edges, **{
-                str(ment) + str(m_user.name_): {'source': m_user.name_, 'target': ment, 'weight': 5, 'directed': True,
-                                                'r': 0.5, 'g': 0.5, 'b': 1.0}})
-            nodes = dict(nodes, **{ment: {'label': ment, 'weight': 2}})
+    nodes,edges = form_edges_nodes(tw_model.friends,nodes,edges)
+    nodes,edges = form_edges_nodes(tw_model.followers,nodes,edges)
+    nodes,edges = form_edges_nodes(tw_model.mentions,nodes,edges)
 
-    return edges, nodes
+    return nodes,edges
 
-
-class mc_vis():
-    @staticmethod
-    def put_mc_nodes(nodes):
-        g_nodes = {}
-        for node in nodes:
-            id = str(node._id)
-            label = node.content
-            node = {id: {'label': label, 'size': node.weight * 10}}
-            g_nodes = dict(g_nodes, **node)
-        add_nodes(g_nodes)
-
-    @staticmethod
-    def put_mc_relations(relations):
-        g_rels = {}
-        for relation in relations:
-            id = str(relation._id)
-            source = str(relation.content[0])
-            target = str(relation.content[1])
-            edge = {id: {'source': source, 'target': target, 'weight': relation.weight * 10, 'directed': True}}
-            g_rels = dict(g_rels, **edge)
-        add_edges(g_rels)
-
-
-def process():
+def visualise_users():
     db = db_handler()
     users = db.users.find()
     for user in users:
         user = m_user.create(user)
         print user.name_
-        edges, nodes = form_graph(user, db)
+        nodes,edges = form_graph(user)
         add_nodes(nodes)
         add_edges(edges)
 
 if __name__ == '__main__':
-    put_node()
+    visualise_users()
     

@@ -19,13 +19,12 @@ def _is_message_element(str):
 
 
 def extract_messages(file, to_what=db_handler(messages_truncate=True), limit=10):
-    if not limit:
-        lines = open(file).readlines()
-    else:
-        lines = open(file).readlines(limit * 4)
-    messages = []
+    f = open(file)
+    users = set()
     message = None
-    for line in lines:
+
+    line = f.readline()
+    while line:
         if _is_message_element(line):
             if not message:
                 message = {}
@@ -37,18 +36,20 @@ def extract_messages(file, to_what=db_handler(messages_truncate=True), limit=10)
                 message['user'] = user[user.index('twitter.com') + len('twitter.com') + 1:]
             elif element[0] == 'W':
                 message['words'] = element[1]
-        if  message and len(message) == 3:
+        if message and len(message) == 3:
             if message['words'] != 'No Post Title':
                 if to_what:
+                    log.debug('save message > %s'%message)
                     to_what.save_message(message)
-                messages.append(message)
+                users.add(message['user'])
                 message = None
-    return messages
+        line = f.readline()
+    return users
 
 
 if __name__ == '__main__':
     result = extract_messages("c:/temp/tweets2009-12.txt")
     user = set(tools.flush(result, by_what=lambda x:x['user']))
 
-    #and here - OVER 10 GB OF DATA!!!!!!!! :))))))))))))))))))))
+
 

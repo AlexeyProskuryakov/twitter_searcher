@@ -32,9 +32,12 @@ diffs_input_fields = ['name_', 'date_touch_']
 messages_name = 'messages'
 messages_info_name = 'messages_info'
 
+users_not_Loaded = 'users_not_loaded'
+
 class database():
     def __init__(self, host_, port_, db_name_):
         try:
+            log.info("connect to db at host: %s port: %s db_name: %s" % (host_, port_, db_name_))
             self.conn = Connection(host_, port_)
             self.db = Database(self.conn, db_name_)
         except Exception as e:
@@ -60,6 +63,7 @@ class db_handler(database):
         self.messages = self.db[messages_name]
         self.messages_info = self.db[messages_info_name]
 
+        self.users_not_loaded = self.db[]
         if not self._is_index_presented(self.users):
             log.info("creating index for users")
             self.users.create_index('name_', ASCENDING, unique=True)
@@ -82,13 +86,11 @@ class db_handler(database):
             db_name_ = db_name
 
         database.__init__(self, host_, port_, db_name_)
-
-        log.info("init db_handler at host: %s, port: %s, db: %s" % (host, port, db_name))
         self._main_schema_ignition()
         if truncate:
             try:
                 self.conn.drop_database(db_name_)
-                #self._db_ignition(host_,port_,db_name_)
+
                 self._main_schema_ignition()
             except Exception as e:
                 log.exception(e)
@@ -98,7 +100,6 @@ class db_handler(database):
             try:
                 self.db.drop_collection(messages_info_name)
                 self.db.drop_collection(messages_name)
-                #self._db_ignition(host_,port_,db_name_)
                 self._main_schema_ignition()
             except Exception as e:
                 log.error('may be db_ignition must be?')
@@ -215,7 +216,17 @@ class db_handler(database):
         #http://twitter.com/mrletemkno
         return [message for message in self.messages.find({'user': 'http://twitter.com/' + tools.imply_dog(str(user))})]
 
-    def set_class(self,user,class_name):
-        save_user = self.users.find_one({'name_':user})
+    def set_class(self, user, class_name):
+        save_user = self.users.find_one({'name_': user})
         if save_user:
-            self.users.update({'_id':save_user['_id']},{'$set':{'class_name':class_name}})
+            self.users.update({'_id': save_user['_id']}, {'$set': {'class_name': class_name}})
+
+    def get_not_loaded_users(self, batch=1000):
+        users = []
+        for user in self.users_not_loaded.find(limit=batch):
+            users.append(user['name'])
+
+        return users
+
+    def set_user_loaded(self,user_name):
+        self.users_not_loaded.remove({'name':user_name})

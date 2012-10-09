@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE content SYSTEM "c:\HMM\Chars.dtd">
+<content>
+
+    <char name="a">
+        а
+    </char>
+    <char name="b">
+        в
+    </char>
+    <char name="c">
+        с
+    </char>
+    <char name="d">
+        б
+    </char>
+    <char name="e">
+        е
+    </char>
+    <char name="g">
+        д
+    </char>
+    <char name="h">
+        н
+    </char>
+    <char name="k">
+        к
+    </char>
+    <char name="m">
+        м
+    </char>
+    <char name="n">
+        п,н
+    </char>
+    <char name="o">
+        о
+    </char>
+    <char name="p">
+        р
+    </char>
+    <char name="q">
+        д
+    </char>
+    <char name="r">
+        г
+    </char>
+    <char name="t">
+        т
+    </char>
+    <char name="u">
+        и
+    </char>
+    <char name="w">
+        ш
+    </char>
+    <char name="x">
+        х
+    </char>
+    <char name="y">
+        у
+    </char>
+
+</content>

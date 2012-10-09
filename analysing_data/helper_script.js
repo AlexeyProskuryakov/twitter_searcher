@@ -5,6 +5,7 @@
  * Time: 20:20
  * To change this template use File | Settings | File Templates.
  */
+//script for help working with markov chain
 print_rel = function (rels) {
     rels.forEach(function (rel) {
         var fid = rel.from;

@@ -1,7 +1,6 @@
-from analysing_data.booster import db_mc_handler
 from analysing_data.mc_model import element, relation
 import loggers
-from visualise.vis_machine import mc_vis
+from visualise.markov_chain_visualise import mc_vis
 
 __author__ = 'Alesha'
 

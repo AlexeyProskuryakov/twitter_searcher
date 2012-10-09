@@ -137,12 +137,12 @@ def little_differences():
 
 def big_differences():
     log.info('extract messages')
-    result = extract_messages("c:/temp/tweets2009-12.txt", limit=0)
-    log.info('creating users set')
-    users = set(tools.flush(result, by_what=lambda x:x['user']))
+
+    users = main_db.get_not_loaded_users()
 
     model_main = markov_chain('main', booster)
     result = []
+
     log.info('---------users to find is %s-------------------------------' % len(users))
     loaded_users = []
     for user in users:
@@ -150,7 +150,7 @@ def big_differences():
         loaded_user = engine.scrap(user, neighbourhood=0)
         if not loaded_user:
             continue
-
+        main_db.set_user_loaded(user)
         model_main = create_model(loaded_user, mc=model_main)
         create_model(loaded_user)
         loaded_users.append(loaded_user)
@@ -176,8 +176,8 @@ def big_differences():
     model_main.visualise(100)
 
 if __name__ == '__main__':
- #   little_differences()
-    model_spam = markov_chain.create('no_spam',booster)
+#   little_differences()
+    model_spam = markov_chain.create('no_spam', booster)
     model_spam.visualise(100)
 
 ##visualise
