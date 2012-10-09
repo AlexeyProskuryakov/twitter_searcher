@@ -35,6 +35,7 @@ messages_info_name = 'messages_info'
 class database():
     def __init__(self, host_, port_, db_name_):
         try:
+            log.info("connect to db at host: %s port: %s db_name: %s"%(host_,port_,db_name_))
             self.conn = Connection(host_, port_)
             self.db = Database(self.conn, db_name_)
         except Exception as e:
@@ -82,8 +83,6 @@ class db_handler(database):
             db_name_ = db_name
 
         database.__init__(self, host_, port_, db_name_)
-
-        log.info("init db_handler at host: %s, port: %s, db: %s" % (host, port, db_name))
         self._main_schema_ignition()
         if truncate:
             try:

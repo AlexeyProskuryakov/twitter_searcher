@@ -127,12 +127,11 @@ def little_differences():
 
 if __name__ == '__main__':
     log.info('extract messages')
-    result = extract_messages("c:/temp/tweets2009-12.txt",limit=0)
-    log.info('creating users set')
-    users = set(tools.flush(result, by_what=lambda x:x['user']))
+    users = extract_messages("d:/aspiranture/data/ttr/tweets2009-12.txt",limit=0)
 
     model_main = markov_chain('main', booster)
     result = []
+
     log.info('---------users to find is %s-------------------------------' % len(users))
     loaded_users = []
     for user in users:

@@ -69,3 +69,4 @@ def is_inited():
 ####dictionaries for pymorphy
 dict_en_path = os.path.join(os.path.dirname(__file__), 'dicts/en/morphs.pickle')
 dict_ru_path = os.path.join(os.path.dirname(__file__), 'dicts/ru/morphs.pickle')
+

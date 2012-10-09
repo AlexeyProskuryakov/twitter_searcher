@@ -34,8 +34,6 @@ class m_user(serializable):
     """
     representing user in our model
     """
-
-
     @staticmethod
     def create(dict):
         user = m_user(dict['name_'])
