@@ -32,7 +32,7 @@ diffs_input_fields = ['name_', 'date_touch_']
 messages_name = 'messages'
 messages_info_name = 'messages_info'
 
-users_not_Loaded = 'users_not_loaded'
+users_not_loaded_name = 'users_not_loaded'
 
 class database():
     def __init__(self, host_, port_, db_name_):
@@ -63,7 +63,7 @@ class db_handler(database):
         self.messages = self.db[messages_name]
         self.messages_info = self.db[messages_info_name]
 
-        self.users_not_loaded = self.db[]
+        self.users_not_loaded = self.db[users_not_loaded_name]
         if not self._is_index_presented(self.users):
             log.info("creating index for users")
             self.users.create_index('name_', ASCENDING, unique=True)

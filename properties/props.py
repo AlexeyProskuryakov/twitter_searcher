@@ -11,6 +11,13 @@ CONSUMER_SECRET = 'cEaSWdxHnQ6I3sGYaIBufjahyDsAP0SY5lx1YCI'
 access_token = "612776846-ZC55TSeiCvufmggMVz9ZKpbQFXodTXuA9JSq9Vee"
 access_token_secret = "kxm2cuq9xNaSUBKPxIlUNJI3wKJ57VHmT0h1w1PuLWE"
 
+#for facebook
+fb_app_id = '182482928555387'
+fb_app_secret = 'd8188882ccf227f3b1c1b2f31b7f4429'
+
+
+vk_app_id = '3168657'
+vk_app_secret = '5dRPeUXgrUYfw0hoota2'
 #####   db properties
 #host = '178.49.120.77'
 host = 'localhost'

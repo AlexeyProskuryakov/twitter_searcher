@@ -94,47 +94,6 @@ def little_differences():
     model_spam = create_model_main(users_spam, 'spam', is_normalise=False)
 
 
-#    model = markov_chain.create('no_spam', booster)
-
-#    log.info('create models for each no spam user')
-#    result = []
-#    for user in users:
-#        log.info('create model for NO SPAM user: %s' % user.name_)
-#        if not user.timeline_count or not len(user.timeline):
-#            continue
-#        model_user = create_model(user)
-#
-#        log.info('calculate differences between main models and user model')
-#        diff_element = diff_markov_chains(model_user, model)
-#        diff_element_with_spam = diff_markov_chains(model_user, model_spam)
-#
-#        log.info('the difference between main model and user model (%s) is: %s ' % (user.name_, diff_element))
-#        log.info('the difference between main spam model and user model (%s) is: %s ' % (
-#            user.name_, diff_element_with_spam))
-#        result.append({'user': user.name_, 'x': diff_element['content'], 'y': diff_element_with_spam['content']})
-#
-#    spam_result = []
-#    for user in users_spam:
-#        log.info('create model for SPAM user: %s' % user.name_)
-#        if not user.timeline_count or not len(user.timeline):
-#            continue
-#        model_user = create_model(user)
-#
-#        log.info('calculate differences between main models and user model')
-#        diff_element = diff_markov_chains(model_user, model)
-#        diff_element_with_spam = diff_markov_chains(model_user, model_spam)
-#
-#        log.info('the difference between main model and user model (%s) is: %s ' % (user.name_, diff_element))
-#        log.info('the difference between main spam model and user model (%s) is: %s ' % (
-#            user.name_, diff_element_with_spam))
-#        spam_result.append({'user': user.name_, 'x': diff_element['content'], 'y': diff_element_with_spam['content']})
-
-#    diff_model = diff_markov_chains(model, model_spam)
-#    log.info('!!! differences between models is: %s' % diff_model['content'])
-#    vis.visualise(result, x_title='diff with non spam model', y_title='diff with spam model', spec_symbols=spam_result)
-
-
-
 def big_differences():
     log.info('extract messages')
 
