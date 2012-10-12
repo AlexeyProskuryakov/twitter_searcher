@@ -58,6 +58,7 @@ class m_user(serializable):
         self.followers_relations = []
         self.friends_relations = []
         self.mentions_relations = []
+        self._id = None
 
     def set_lists(self, lists_names, count):
         self.lists_names = lists_names
