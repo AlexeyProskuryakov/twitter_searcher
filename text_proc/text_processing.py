@@ -16,7 +16,7 @@ excludes_classes = [u'ПРЕДЛ', u'СОЮЗ', u'ЧАСТ', u'ADVERB', u'CONJ',
 
 split_pattern = re.compile('\s')
 
-url_pattern = re.compile(u'http://[\d\w\.\/]+')
+url_pattern = re.compile(u'(http|https)://[\d\w\.\/]+')
 mention_tag_pattern = re.compile(u'[\@][\d\w]+')
 hash_tag_pattern = re.compile(u'[\#][\d\wА-Яа-я]+')
 
@@ -127,7 +127,7 @@ def __test():
 
     for message in test_messages:
         log.info("\n\n\tfor message: %s" % message)
-        for word in get_words(message,url_generalization=lambda x:'url',is_normalise=False):
+        for word in get_words(message,url_generalization=lambda x:'url',is_normalise=True):
             log.info(word)
             #log.info('%s  [%s] %s' % (word['content'], word['type'], word['lang']if word.has_key('lang') else '' ))
 

@@ -3,7 +3,7 @@ import webbrowser
 import time
 import  tweepy
 from tweepy.error import TweepError
-import vkontakte
+#import vkontakte
 from differences.diff_machine import difference_factory
 import loggers
 from model.db import db_handler

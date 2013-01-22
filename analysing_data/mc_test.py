@@ -41,23 +41,31 @@ def test_generate_model():
 
 
 def test_model_():
-    booster = db_mc_handler()
+    booster = db_mc_handler(truncate=True)
 
-    mc1 = markov_chain('left_test', booster)
-    mc2 = markov_chain('right_test', booster)
+    mc1 = markov_chain('left_test', booster,n_of_gram_=2)
+    mc2 = markov_chain('right_test', booster,n_of_gram_=2)
 
     mc1.add_message(['a', 'b', 'c', 'd'])
+    mc1.add_message(['a', 'b', 'c', 'd'])
     mc1.add_message(['a1', 'b1', 'c1', 'd1'])
+    mc1.add_message(['a','a1','b','b1','c','c1','d','d1'])
+
     mc2.add_message(['a', 'b', 'c', 'd'])
     mc2.add_message(['a2', 'b2', 'c2', 'd2'])
 
     mc1.save()
     mc2.save()
 
-    test_difference_logic(mc1, mc2)
+    mc1.print_me()
+    mc2.print_me()
+
+#    mc1.visualise(8)
+#    mc2.visualise(8)
+
 
 if __name__ == '__main__':
-    pass
+    test_model_()
 
 
     

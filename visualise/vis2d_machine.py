@@ -1,6 +1,6 @@
 __author__ = '4ikist'
 
-import numpy as np
+
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 

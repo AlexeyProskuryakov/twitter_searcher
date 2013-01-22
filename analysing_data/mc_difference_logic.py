@@ -1,269 +1,166 @@
 # coding=utf-8
-
-from differences.d_model import difference_element, m_hash_dict
+import math
+import numpy as np
+from analysing_data.redis_handlers import model_handler
 import loggers
-from markov_chain_machine import markov_chain, element
-from model.db import db_handler, database
-from properties.props import *
+from markov_chain_machine import markov_chain
+from networkx.algorithms import centrality
+import networkx as nx
 
-__author__ = 'Alesha'
-__doc__ = """
-markov chain difference logic implementing
-
-и сказ о текстовых данных.
-
-
-Два вида данных: 
-@see https://github.com/AlexeyProskuryakov/twitter_searcher/blob/master/model/tw_model.py
-1) Пользовательские данные: вида количеств различных связей, таких как:
-    -кого читает
-    -кто его читает
-    -его упоминания
-    -количества избранных людей, а также группы этих людей. 
-
-    А также текстовых количеств:
-    -количества сообщений
-    -количества ссылок, тем и упоминаний в этом множестве.
-    -скорости распространения информации. 
-    # время, ревтиты, и прочая ересь. 
-
-
-2) Текст: набор сообщений, и их некоторых параметров. 
-По сути модель наследует раскрашенный мультиграф с весами как у узлов, так и у ребер. 
-Данную модель реализует markov_chain and element classes in 
-@see https://github.com/AlexeyProskuryakov/twitter_searcher/blob/master/analysing_data/markov_chain_machine.py
-
-При этом, если рассматривать систему в общем, следует различать входные текстовые данные и выходные. 
-То есть, что пользователь прочитал и что он написал.
-
-Для реализации методов сравнения текстовых данных @see #видение социальной сети/#графово-иерархической модели 
-потребуется находить разности между элементами этой модели. 
-
-По сему было выдвинуты следующие обозначения: 
-
-0) Так как в модели есть узлы и ребра, то присутствует как вес ребра так и вес узла. 
-Вес узла, по сути является количеством употребления слова a_i. 
-Вес ребра - количеством употребления слова a_i с другим словом a_i. 
-Причем i и j принадлежит от 0 до n где n - количество уникальных слов (ребер) в савокупности сообщений. 
-(#sp система поддерживает фразы, идущие подряд и все что душе угодно%) )
-(#sp А если этот additional_object можно юзануть для хранений даты)
-
-
-Обозначим ключевые параметры, на основе которых будет происходить вычисление разностей моделей. 
-defence tolerante:
-Из соображений множеств, считаем что пересечение этих множеств, с учетом синонимичных_преломлений*, будет являться 
-их близостью, в кластеризационном плане. В то же время их разность будет являтся дальностью.
-
-В будущем:
-model_weight = model'_weight/model_nodes_count*
-* или что-то типа
-
-1) Коэффициент EL между двумя одинаковыми по значению узлами. Используется лишь для толерантности
-EL(node,node') = (node.weight+node'.weight)*(model_weight / model'_weight)
-
-2) Коэфиициент KL[i] между множествами узлов из разных моделей которые являются соседями рассматриваемых узлов. 
-KL[i](node,node').
-
-Требующий доступа до узлов и их связей. 
-И состоящий из того же самого defence/tolerance 
-Для толерантности - берем пересечение множеств их смежных узлов в разных моделях
-Для защиты - разницу множеств их смежных узлов в разных моделях
-При этом смежность зависит от i. 
-
-I = all_nodes_near_at_i_depth(node,model).intersection(all_nodes_near_at_i(node,model'))
-
-D = all_nodes_near_at_i_depth(node,model).difference(all_nodes_near_at_i_depth(node,model'))
-
-Итак: 
-
-KnL[i](node,node') = 
-
-( sum_for_I(EL(node[j],node'[j])) * KrL[i] / 
-( sum_for_D(node[k].weight/model_weight) + sum_for_D'(node[k'].weight/model'_weight) ) 
-
-
-
-KrL[i] - является коэффициентом связей смежных узлов, подчиняющийся тем же законам - толерантности и защиты.
-Следовательно: 
-    KrL[i] = (summ_by_all_relations_between_I(rel.weight) - summ_for_D_relations(rel.weight)) / models_weights
-
-Также нам потребуется знать глубины графа, т.е. максимальное количество i для коэффициентов: КrL[i] и KnL[i]
-
-Итак формула для моделей: 
-
-tolerance(model,model') = sum_by_intersection_of_their_nodes(EL(node,node')+(KnL[0],Knl[1],...))
-defence(model,model') = sum_by_differences_of_their_nodes(node.weight/model_weight + (KnL[0],...)) 
-
-По сути толерантность/защита при стремящимся нуле будет обозначать соответствие или не соответствие двух моделей. Однако
-в виду того, что вышесказанные умозаключения не используют разности графовых параметров моделей, в дополнение, 
-к коэффициентам толерантности/защиты следует использовать еще и количества сообщений затронутых в пересечением \ разницей 
-множеств узлов модели. 
-
-Поэтому:
-
-tolerance(model,model') = sum_by_intersection_of_their_nodes(EL(node,node')+(KnL[0],Knl[1],...))
-defence(model,model') = sum_by_differences_of_their_nodes(node.weight/model_weight + (KnL[0],...))
-
-
-
-1) Модель поглощает другую модель и образуется класстер.
-2) Модели расходятся
-
-Таким образом P_clust(model_1,model_2) = f(tolerance,defence,counts_of_message)
-Возможно что-то типа: 
-
-    (tolerance/defence) / (model1_messages_all_sum)/(model2_messages_defence_summ) 
-
-Встает вопрос про применение этой классификации: 
-1) Класстеризация сообщений пользователя
-2) Сравнение кластеризации пользователей с темами. 
-
-
-
-"""
 log = loggers.logger
 
-class database_intersection_handler(database):
-    #db booster for boosting intersection key - value
-    #may be it will be redis?
-
-    state = ['not_loaded', 'loaded']
-
-    def ignition(self,name):
-        self.coll_left = self.db[str(name) + '_left']
-        self.coll_right = self.db[str(name) + '_right']
-
-    def drop_collections(self):
-        self.db.drop_collection(self.coll_right)
-        self.db.drop_collection(self.coll_left)
-
-    def __init__(self, name):
-        database.__init__(self, local_host, local_port, local_db_name)
-
-        self.ignition(name)
-        if self.coll_left.find_one() or self.coll_right.find_one():
-            self.drop_collections()
-        
-        self.state_ = self.state[0]
-        self.name = name
-
-    def load(self, intersection_left, intersection_right):
-
-        for el in intersection_left:
-            self.coll_left.save(el._serialise())
-
-        for el in intersection_right:
-            self.coll_right.save(el._serialise())
-
-        self.state_ = self.state[1]
-
-    def get_by_id(self, id, left=False):
-        if left:
-            d = self.coll_left.find_one({'_id': id})
-            if d:
-                return element.create(d)
-            return None
-        if right:
-            d = self.coll_left.find_one({'_id': id})
-            if d:
-                return element.create(d)
-            return None
+def create_graph(nodes, model):
+    g = nx.DiGraph()
+    for node in nodes:
+        g.add_node(node._id, {'content': node.content, 'weight': node.weight})
+        neigh = [el for el in model.get_node_neigh(node._id) if el in nodes]
+        rels = [model.get_relation(node._id, el._id) for el in neigh]
+        for rel in rels:
+            if rel:
+                g.add_edge(rel.from_, rel.to_, {'weight': rel.weight})
+    return g
 
 
-    def un_load(self):
-        self.drop_collections()
-        self.ignition(self.name)
-        self.state_ = self.state[0]
+def calc_defence(diff_ids, int_ids, model_id, model_w, model_handler):
+    defence = 0
+    tolerance = 0
+    for diff_id in diff_ids:
+        neighs = model_handler.get_neighbours_ids(diff_id, model_id)
+        neighs_list = list(neighs)
+        neighs_in_int = np.intersect1d(neighs_list, int_ids, True)
 
-#interested functions.....
-def _diff_size(mc1, mc2):
-    if mc1.words_count_ == mc2.words_count_:
-        return 1
-    else:
-        return abs(float(mc1.words_count_ - mc2.words_count_))
+        w_diff = model_handler.get_node_weight(diff_id, model_id)
 
+        if len(neighs_in_int):
+            neighs_in_diff = np.intersect1d(neighs_list, diff_ids)
 
-def _EL(node1, node2, mc1, mc2, diff_size=_diff_size):
-    """
-    now it use content. in owerriding it maybe more another
-    """
-    return float(node1.weight + node2.weight) / diff_size(mc1, mc2)
+            sum_rel_diff = sum([model_handler.get_relation_weight(diff_id, i, model_id) for i in neighs_in_diff])
+            sum_rel_int = sum([model_handler.get_relation_weight(diff_id, i, model_id) for i in neighs_in_int])
+            if sum_rel_diff == 0:
+                sum_rel_diff = 1
+            if sum_rel_int == 0:
+                sum_rel_int = 1
 
+            for neigh in neighs:
+                w_neigh = model_handler.get_node_weight(neigh, model_id)
+                w_r_neigh = model_handler.get_relation_weight(neigh, diff_id, model_id)
 
-def _N_def_tol(defence, tolerance, _markov_chain_left, booster_int, booster_diff, l_difference, left, EL=_EL):
-    for l_d_element in l_difference:
-        #get incident edges
-        relations = _markov_chain_left.get_relations_by_node_id(l_d_element._id)
-        sum_rel = sum([rel.weight for rel in relations])
-        defence += l_d_element.weight
-        for relation in relations:
-            rel_koeff = (float(relation.weight) / sum_rel)
-            #if adjacent element in
-            adjacent_el_id = relation.get_adjacent(l_d_element._id)
-            adjacent_el_ = booster_int.get_by_id(adjacent_el_id, left=left)
-            if adjacent_el_:
-                tolerance += EL(l_d_element, adjacent_el_, _markov_chain_left, _markov_chain_right) * rel_koeff
-            else:
-                adjacent_el_ = booster_diff.get_by_id(adjacent_el_id, left=left)
-                defence += EL(l_d_element, adjacent_el_, _markov_chain_left, _markov_chain_right) * rel_koeff
-    return defence, tolerance
+                if neigh in neighs_in_int:
+                    ch = float(math.fabs(float(w_neigh - w_diff)) * w_r_neigh)
+                    tolerance += ch / sum_rel_diff
+                else:
+                    ch = (float(w_neigh) + w_diff) * w_r_neigh
+                    defence += ch / sum_rel_int
+
+        else:
+            defence += float(w_diff) / model_w
+    return tolerance, defence
 
 
-def _main_function(defence, tolerance, mc_1, mc_2):
-    uniq_left = sum(mc_1.get_unique_nodes_edges())
-    uniq_right = sum(mc_2.get_unique_nodes_edges())
+def get_centrality(def_centrality, toll_centrality, model, nodes_int):
+    left_b_centr = centrality.betweenness_centrality(model.get_nx_graph())
+    left_c_centr = centrality.closeness_centrality(model.get_nx_graph())
+    for el in left_b_centr:
+        node = model.get_node_by_id(el)
+        if node in nodes_int:
+            toll_centrality += left_c_centr[el] + left_b_centr[el]
+        else:
+            def_centrality += left_c_centr[el] + left_b_centr[el]
+    return def_centrality, toll_centrality
 
-    k_unique = (float(uniq_left) / mc_1.words_count_ + float(uniq_right) / mc_2.words_count_)
-    return float((tolerance+defence)/abs(tolerance-defence)) * k_unique
 
+def diff_markov_chains(model_left_id, model_right_id, model_handler):
+    #log.info("start diff %s <-> %s" % (model_left_id, model_right_id))
 
-def diff_markov_chains(_markov_chain_left, _markov_chain_right, EL=_EL):
-    """
-    for using into difference machine processing like
-    difference_factory.add_i_function(diff_markov_chains)
+    left_w = model_handler.get_weight(model_left_id)
+    right_w = model_handler.get_weight(model_right_id)
 
-    difference two mc:
-    1) tolerance = by_intersection:( any_node in intersection EL of weights in input chains / their sizes + their siblings at 1..n
-    which equals KnL = difference and intersection between their relations and nodes at another models / their sizes)
-    + paths of intersection
-    2) defence = by_differences:(any node in ... his weight / their sizes + their siblings at 1..n which equals Knl ... )
-    """
-    booster_int = database_intersection_handler('intersection')
-    booster_diff = database_intersection_handler('difference')
-
-    nodes_left = set(_markov_chain_left.get_nodes())
-    nodes_right = set(_markov_chain_right.get_nodes())
-
-    #intersection and difference sets of elements (@see mc_model.element class)
-    l_intersection_nodes = list(nodes_left.intersection(nodes_right))
-    r_intersection_nodes = list(nodes_right.intersection(nodes_left))
-
-    l_difference = nodes_left.difference(nodes_right)
-    r_difference = nodes_right.difference(nodes_left)
-
-    #and boost them
-    booster_diff.load(list(l_difference), list(r_difference))
-    booster_int.load(list(l_intersection_nodes), list(r_intersection_nodes))
+    int_ids = model_handler.intersection(model_left_id, model_right_id)
+    diff_left_ids, diff_right_ids = model_handler.difference(model_left_id, model_right_id)
 
     tolerance = 0
-    defence = 0
+    model_w = math.fabs(float(left_w) - right_w) if left_w != right_w else float(left_w) / 2
+    for int_id in int_ids:
+        w_left_node = model_handler.get_node_weight(int_id, model_left_id)
+        w_right_node = model_handler.get_node_weight(int_id, model_right_id)
+        #some calculating for EL
+        el = float(w_left_node + w_right_node) / model_w
 
-    for i in range(len(l_intersection_nodes)):
-        tolerance += EL(l_intersection_nodes[i], r_intersection_nodes[i], _markov_chain_left, _markov_chain_right)
 
-    dl, tl = _N_def_tol(defence, tolerance, _markov_chain_left, booster_int, booster_diff, l_difference, True)
-    dr, tr = _N_def_tol(defence, tolerance, _markov_chain_right, booster_int, booster_diff, r_difference, False)
+#        neighs_left = model_handler.get_neighbours_ids(int_id, model_left_id)
+#        neighs_right = model_handler.get_neighbours_ids(int_id, model_right_id)
+#        neighs_left_keys = neighs_left.keys()
+#        neighs_right_keys = neighs_right.keys()
+#
+#        sim_neighs = np.intersect1d(neighs_left_keys, neighs_right_keys, True)
+#        int_neighs_left = np.intersect1d(neighs_left_keys, int_ids, True)
+#        int_neighs_right = np.intersect1d(neighs_right_keys, int_ids, True)
+#
+#        dif_neighs_left = np.intersect1d(neighs_left_keys, diff_left_ids, True)
+#        dif_neighs_right = np.intersect1d(neighs_right_keys, diff_right_ids, True)
+#
+#        #some calculating for K_rel
+#
+#        w_left_i = sum([float(neighs_left[i]) for i in int_neighs_left])
+#        w_left_d = sum([float(neighs_left[i]) for i in dif_neighs_left])
+#        w_left_s = sum([float(neighs_left[i]) for i in sim_neighs])
+#
+#        if w_left_d == 0:
+#            w_left_d = 1
+#
+#        w_el = float(w_left_i + w_left_s) / w_left_d
+#
+#        w_right_i = sum([float(neighs_right[i]) for i in int_neighs_right])
+#        w_right_d = sum([float(neighs_right[i]) for i in dif_neighs_right])
+#        w_right_s = sum([float(neighs_right[i]) for i in sim_neighs])
+#
+#        if w_right_d == 0:
+#            w_right_d = 1
+#        w_el += float(w_right_i + w_right_s) / w_right_d
+#
+#        el *= w_el
+        tolerance += el
 
-    defence += dl
-    defence += dr
+    defence_l, n_tol_l = calc_defence(diff_left_ids, int_ids, model_left_id, left_w, model_handler)
+    defence_r, n_tol_r = calc_defence(diff_right_ids, int_ids, model_right_id, right_w, model_handler)
+    defence = defence_l + defence_r
+    tolerance += n_tol_l + n_tol_r
 
-    tolerance += tl
-    tolerance += tr
+    return tolerance - defence
 
-    result = _main_function(defence, tolerance, _markov_chain_left, _markov_chain_right)
+if __name__ == '__main__':
+    handler = model_handler(truncate=True)
 
-    booster_diff.un_load()
-    booster_int.un_load()
+    mc1 = markov_chain('left_test', handler, n_of_gram_=1)
+    mc1.add_message([u'ф', 'd3', 'd2'])
+    mc1.add_message(['i1', 'd3', 'i2'])
+    mc1.add_message(['i1', 'i4'])
+    mc1.add_message(['i1', 'i2', 'i3'])
 
-    return difference_element(None, result)
+    mc1.print_me()
+
+    mc2 = markov_chain('right_test', handler, n_of_gram_=1)
+
+    mc2.add_message(['d2_', 'd1_', 'd3_'])
+    mc2.add_message(['i2', 'i1', 'i3', 'i2'])
+    mc2.add_message(['i1', 'i3', 'i4'])
+    mc2.add_message(['d1_', 'i3', 'i4', 'd1_'])
+
+    mc2.print_me()
+
+    result = diff_markov_chains(mc1.model_id_, mc2.model_id_, handler)
+    handler.sum_models(mc1.model_id_, mc2.model_id_)
+    print '\n\n\n---------------------sum:'
+    mc1.print_me()
+
+
+#    model_new_id = booster.sum_models('right_test', 'left_test')
+#    new_mc = markov_chain(model_new_id, booster)
+#
+#    new_mc.print_me()
+
+#    print centrality.betweenness_centrality(mc1.get_nx_graph(), normalized=True)
+#    print centrality.closeness_centrality(mc1.get_nx_graph(), normalized=True)
+#print
+
 

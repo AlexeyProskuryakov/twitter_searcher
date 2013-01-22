@@ -11,6 +11,8 @@ class auth():
     def __init__(self):
         pass
 
+
+
     def get_vk_auth_token(self):
         params = {'client_id': props.vk_app_id,
                   'scope': 'friends,status,groups,messages,offline',

@@ -1,17 +1,18 @@
 # coding: utf-8
-import urllib
+
 import requests
+import loggers
 from properties import props
 from engines import engine
-import lxml.html
 import json
-import md5
 from search_engine.auth import auth
+
 
 __author__ = '4ikist'
 
+log = loggers.logger
 root_req_url = 'https://api.vk.com/method/'
-fields = {'fields': 'first_name,last_name,nickname,sex,bdate,contacts,education,rate'}
+fields = {'fields': 'first_name,last_name,nickname,sex,bdate,contacts,education,rate,counters'}
 
 class vk_exception(Exception):
     def __init__(self, message, code):
@@ -47,13 +48,30 @@ class vk_engine(engine):
     def get_user_data(self, uid):
         return self._call_method(uid, 'getProfiles', fields)
 
+    def get_user_followings(self, uid):
+        return self._call_method(uid, 'subscriptions.get', {'count': 1000})
+
+    def get_user_followers(self, uid):
+        return self._call_method(uid, 'subscriptions.getFollowers', {'count': 1000})
+
+    def get_likes(self, uid):
+        users = self._call_method(uid, 'fave.getUsers', fields)
+        log.info(users)
+        photos = self._call_method(uid, 'fave.getPhotos', {})
+        log.info(photos)
+        videos = self._call_method(uid, 'fave.getVideos', {})
+        log.info(videos)
+        posts = self._call_method(uid, 'fave.getPosts', {})
+        log.info(posts)
+        links = self._call_method(uid, 'fave.getLinks', {})
+        log.info(links)
+
+
 if __name__ == '__main__':
     o = auth()
     token = o.get_vk_auth_token()
     vk = vk_engine(token)
+    vk.get_friends(props.vk_uid)
 
-    print vk.get_user_data(props.vk_uid)
-    friends = vk.get_friends(props.vk_uid)
-    for friend in friends:
-       print  vk.get_wall(friend[u'uid'])
-    print vk.get_wall(props.vk_uid)
+    vk.get_likes(props.vk_uid)
+

@@ -1,13 +1,26 @@
 import webbrowser
+import time
 import tweepy
+from differences.d_model import m_hash_dict
+from differences.diff_machine import difference_factory
 from engines import engine
 import loggers
+from model import functions
 from model.db import db_handler
+from model.tw_model import m_user, m_user_status
 from properties import props
 
 from properties.props import CONSUMER_KEY, CONSUMER_SECRET
+import tools
+
 log = loggers.logger
 __author__ = '4ikist'
+
+__doc__ = """
+get_timeline(user_name) ->
+get_relations(user_name,relations_type)
+get_
+"""
 
 class tweepy_engine(engine):
     def init_account(self):
@@ -24,7 +37,10 @@ class tweepy_engine(engine):
         log.info("!!! save it into properties at next time or now !!!")
         return auth.access_token.key, auth.access_token.secret
 
-    def __init__(self, inited=props.is_inited(), out=db_handler()):
+    def __init__(self, inited=props.is_inited(), out=None):
+        if not out:
+            out = db_handler()
+
         self.auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
         if not inited:
             self.access_token, self.access_token_secret = self.init_account()
@@ -71,7 +87,7 @@ class tweepy_engine(engine):
             if 'Rate limit exceeded' in str(e):
                 log.info('oook wil be sleep...')
                 time.sleep(3600)
-                return self._get_user_by_name(start_user)
+                return self._get_user_by_name(user_name)
             else:
                 raise e
 
@@ -115,7 +131,7 @@ class tweepy_engine(engine):
                 t_user = self._get_user_by_name(start_user)
                 return t_user
             except Exception:
-                log.warn('can not load user for get him info')
+                log.warn('can not load user')
                 return None
 
         elif isinstance(start_user, tweepy.User):
@@ -125,24 +141,36 @@ class tweepy_engine(engine):
 
     def _get_time_line(self, t_user):
         try:
-            t_timeline = t_user.timeline()
+            cur = tweepy.Cursor(self.api.user_timeline,id=t_user.id)
+            t_timeline = []
+            for t_el in cur.items():
+                try:
+                    log.info("appending user timeline")
+                    t_timeline.append(t_el)
+                except Exception as e:
+                    if 'Rate limit exceeded' in str(e):
+                        log.info('oook wil be sleep...')
+                        time.sleep(60)
 
             self._count_requests += 1
             log.debug("get timeline +1")
 
             timeline = [
-            m_hash_dict({'text': element.text, 'retweets': element.retweet_count, 'initted': element.created_at}) for
-            element in t_timeline] #retieving user perls
+            m_hash_dict({'text': element.text, 'retweets': element.retweet_count, 'initted': element.created_at})
+            for element in t_timeline
+            ] #retieving user perls
             return timeline
         except Exception as e:
             if 'Rate limit exceeded' in str(e):
                 log.info('oook wil be sleep...')
-                time.sleep(3600)
-                return self.get_user_info(start_user)
+                time.sleep(60)
+                return self._get_time_line(t_user)
+            else:
+                raise e
 
     def _get_data(self, t_user):
         """
-        forming user in our model to save into db
+        forming user in our model
         returning m_user object
         """
         try:
@@ -155,7 +183,7 @@ class tweepy_engine(engine):
             lists = t_user.lists()
             self._count_requests += 1
             log.debug("get lists +1")
-            result.set_lists(tools.flush(lists, lambda x:x.name), len(lists))
+            result.set_lists(tools.flush(lists, lambda x: x.name), len(lists))
 
             result.followers_count = t_user.followers_count
             result.friends_count = t_user.friends_count
@@ -165,10 +193,11 @@ class tweepy_engine(engine):
             result.timeline_count = t_user.statuses_count
             result.inited_ = t_user.created_at.strftime(props.time_format)
             return result
-        except TweepError as e:
+
+        except tweepy.TweepError as e:
             if 'Rate limit exceeded' in str(e):
                 log.info('oook wil be sleep...')
-                time.sleep(3600)
+                time.sleep(360)
                 return self._get_data(t_user)
 
     def get_user_info(self, start_user):
@@ -194,8 +223,8 @@ class tweepy_engine(engine):
             log.debug('creating statistic of user perls and hash_tags')
             #with processing by tools flushing text from timeline
             hashtags_urls_mentions = functions.get_hash_tags_urls_mentions(
-                tools.flush(user.timeline, lambda x:x['text']))
-            #also forming mention relations
+                tools.flush(user.timeline, lambda x: x['text']))
+            #appending timeline and also forming mention relations
             user.set_timeline_info(hashtags_urls_mentions)
 
             log.debug('retrieving relations (friends,followers)')
@@ -209,9 +238,9 @@ class tweepy_engine(engine):
             log.info("counts of request is: %s" % self._count_requests)
             log.warn('error in info for user...\n%s' % '\n' + '\n'.join(t_user.__dict__.items()))
 
-            if isinstance(e, TweepError) and 'Rate limit exceeded' in e.message:
+            if isinstance(e, tweepy.TweepError) and 'Rate limit exceeded' in e.message:
                 log.info('oook wil be sleep...')
-                time.sleep(3600)
+                time.sleep(360)
                 return self.get_user_info(start_user)
 
             if 'Invalid / expired Token' in str(e):
@@ -257,6 +286,38 @@ class tweepy_engine(engine):
                     relations[r_type].append(self._get_user_by_name(tools.imply_dog(r_name, with_dog=True)))
         return relations
 
+    def get_relations_of_user(self, user):
+        log.info('getting relations of user %s' % user)
+
+        name_ = self._get_name_from_user(user)
+        t_user = self._get_user_by_name(name_)
+        for foll in tweepy.Cursor(self.api.followers, id=t_user.id).items():
+            f_t_user = foll
+            timeline_count = f_t_user.statuses_count
+            inited_ = f_t_user.created_at.strftime(props.time_format)
+            followers_count = f_t_user.followers_count
+            friends_count = f_t_user.friends_count
+            timeline = None
+
+            self.out.save_user({'name_': f_t_user.screen_name, 'followers': followers_count, 'friends': friends_count,
+                                'inited': inited_, 'timeline_count': timeline_count, 'timeline': timeline,
+                                'type': 'follower', 'head': name_})
+
+        for friend in tweepy.Cursor(self.api.friends, id=t_user.id).items():
+            f_t_user = friend
+            timeline_count = f_t_user.statuses_count
+            inited_ = f_t_user.created_at.strftime(props.time_format)
+            followers_count = f_t_user.followers_count
+            friends_count = f_t_user.friends_count
+
+            timeline = None
+
+            self.out.save_user(
+                    {'name_': f_t_user.screen_name, 'followers': followers_count, 'friends': friends_count,
+                     'inited': inited_, 'timeline_count': timeline_count, 'timeline': timeline,
+                     'type': 'friend', 'head': name_})
+
+
     def scrap(self, start_user, neighbourhood=props.def_n, level=0, relation_types=props.relation_types):
         """
         Retrieving users from twitter and reflect to our model.
@@ -289,8 +350,8 @@ class tweepy_engine(engine):
 
             if neighbourhood > level:
                 relations = self._form_relations(user_info.name_,
-                                                 relation_types,
-                                                 user_info.get_relations())
+                    relation_types,
+                    user_info.get_relations())
 
                 for r_type in relation_types:
                     for relation_object in relations[r_type]:
@@ -300,6 +361,22 @@ class tweepy_engine(engine):
         except Exception as e:
             log.exception(e)
             log.warn('in scrapping exception as %s' % e)
+
+
+    def search(self, request):
+        response = self.api.search(request)
+        result = []
+        log.info("found %s results" % len(response))
+        for el in response:
+            re_tweets = self.api.retweets(el.id)
+            res_el = {'created': el.created_at, 'from': el.from_user, 'lang': el.iso_language_code, 'text': el.text}
+            if el.to_user:
+                res_el = dict(res_el, **{'to': el.to_user})
+            if re_tweets:
+                log.info('for message \n%s \nfound %s retweets' % (res_el, re_tweets))
+                res_el = dict(res_el, **{'retweets': re_tweets})
+            result.append(res_el)
+        return result
 
 
     def diff_process(self):

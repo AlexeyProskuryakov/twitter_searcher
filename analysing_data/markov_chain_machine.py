@@ -1,21 +1,16 @@
-from analysing_data.mc_model import element, relation
+from analysing_data.booster import create_node
+from analysing_data.redis_handlers import model_handler
+from analysing_data.mc_model import node, relation
 import loggers
 from visualise.markov_chain_visualise import mc_vis
+import networkx as nx
 
 __author__ = 'Alesha'
 
 log = loggers.logger
 
 class markov_chain(object):
-    state = ['saved', 'not_saves']
-
-    @staticmethod
-    def create(model_id_, db_booster):
-        mc = markov_chain(model_id_, db_booster)
-        mc.__load()
-        return mc
-
-    def __init__(self, model_id_, db_booster, n_of_gram_=1):
+    def __init__(self, model_id_, model_handler=model_handler(), n_of_gram_=1):
         """
         note: message must be a list of words.
         input parameters: list of words and n which any node will be at parameter n_of_gram_ms
@@ -29,109 +24,46 @@ class markov_chain(object):
         """
         self.n_of_gram_ = n_of_gram_
         self.model_id_ = model_id_
-        self.db = db_booster
+        self.handler = model_handler
         self._id = model_id_
+        self.graph = nx.DiGraph()
+        self.words_count = 0
 
-        saved = self.db.get_model_parameters(model_id_)
-        if saved:
-            self.words_count_ = saved['words_count_']
-            self.relations_count_ = saved['relations_count_']
-
-        else:
-            self.words_count_ = 0
-            self.relations_count_ = 0
-
-        self.state = markov_chain.state[1]
-        self.include = []
-
-    def save(self):
-        self.state = markov_chain.state[0]
-        self.db.add_model(
-                {'_id': self.model_id_,
-                 'words_count_': self.words_count_,
-                 'relations_count_': self.relations_count_,
-                 'model_id_': self.model_id_,
-                 'n_of_gramm': self.n_of_gram_,
-                 'include': self.include})
-
-    def __load(self):
-        log.debug('load by model_id_ = %s' % self.model_id_)
-        parameters = self.db.get_model_parameters(self.model_id_)
-        new_dict = self.__dict__
-        if not parameters:
-            raise Exception('no any parameters for this model. May be it not saved?')
-        for params in parameters.items():
-            new_dict[params[0]] = params[1]
-        self.__dict__ = new_dict
-
-    def add_message(self, message, additional_object=None):
+    def add_message(self, message):
         """
         message must be list of words
         """
-        #cheking about saved state of model
-        if self.state == markov_chain.state[0]:
-            self.state = markov_chain.state[1]
-            #generationg start and stop nodes
-        start_node, stop_node = element.get_start_stop(self.model_id_, additional_object)
-        prev_id = self.db.add_node_or_increment(start_node)
-        last_id = self.db.add_node_or_increment(stop_node)
-        #processing message
+        #processing nodes
+        elem_ids = []
         message_len = len(message)
-        for i in range(message_len):
-            el = message[i]
-            elem = element(el, 1, additional_object, self.model_id_)
-            element_id = self.db.add_node_or_increment(elem)
-            #creating relation between previous and now element (for start -> one -> two)
-            relation_now = relation((prev_id, element_id), 1, additional_object, self.model_id_)
-            self.db.add_relation_or_increment(relation_now)
-            prev_id = element_id
+        for i in range(0, message_len):
+            if i + self.n_of_gram_ <= message_len:
+                elem = node(message[i:i + self.n_of_gram_], 1, self.model_id_)
+                elem_id = self.handler.add_node_or_increment(elem)
+                elem_ids.append(elem_id)
+                #processing relations
+        len_ids = len(elem_ids)
+        for i in range(len_ids):
+            if i + 1 < len_ids:
+                rel = relation(elem_ids[i], elem_ids[i + 1], 1, model_id_=self.model_id_)
+                self.handler.add_relation_or_increment(rel)
 
-            #if end - creating relation between now (prev) and last_id  (for n_element -> stop)
-            if i + 1 == message_len:
-                relation_end = relation((prev_id, last_id), 1, additional_object, self.model_id_)
-                self.db.add_relation_or_increment(relation_end)
-
-        self.words_count_ += len(message)
-        self.relations_count_ = self.words_count_ - 1
+        self.words_count += len_ids
 
 
-    def get_node_by_id(self, id):
-        return element.create(self.db.nodes.find_one({'_id': id}))
+    def get_model_weight(self):
+        return len(self.handler.get_nodes(self.model_id_))
+
 
     def get_nodes(self):
-        return self.db.get_nodes(self.model_id_)
+        return self.handler.get_nodes(self.model_id_)
 
-    def get_relations(self):
-        return self.db.get_relations(self.model_id_)
-
-    def get_relations_by_node_id(self, id, from_=False, to_=False):
-        relations = []
-        if from_:
-            relations.extend(self.db.get_relations_from(id, model_id=self.model_id_))
-        if to_:
-            relations.extend(self.db.get_relations_to(id, model_id=self.model_id_))
-        return relations
-
-    def get_unique_nodes_edges(self):
-        """
-        (count_nodes,count_edges)
-        """
-        return self.db.get_model_unique_weight(self.model_id_)
-
-    def print_me(self):
-        log.info('nodes: %s' % self.words_count_)
-        nodes = self.get_nodes()
-        for node in nodes:
-            log.info(node)
-        log.info('edges: %s' % self.relations_count_)
-        edges = self.get_relations()
-        for edge in edges:
-            log.info('%s ---> %s ---> %s' % (
-                self.get_node_by_id(edge.content[0]), edge.weight, self.get_node_by_id(edge.content[1])))
+    def get_relation_weight(self, from_id, to_id):
+        return self.handler.get_relation_weight(from_id, to_id)
 
     def visualise(self, buff_size):
         nodes = self.get_nodes()
-        relations = self.get_relations()
+        relations = self.handler.get_relations()
         len_nodes = len(nodes)
         len_relations = len(relations)
         for i in range(0, len_nodes, buff_size):
@@ -148,3 +80,40 @@ class markov_chain(object):
             else:
                 mc_vis.put_mc_relations(relations[i:])
 
+    def get_nx_graph(self):
+        if not self.graph:
+            self.graph = nx.DiGraph()
+            for node in self.get_nodes():
+                self.graph.add_node(node._id, {'content': node.content, 'weight': node.weight})
+
+                for rel in self.handler.get_relations(node._id, self.model_id_):
+                    self.graph.add_edge(rel.from_, rel.to_, {'weight': rel.weight})
+
+        return self.graph
+
+    def print_me(self):
+        log.info('\n\n-------------%s' % self.model_id_)
+        nodes = self.get_nodes()
+        for node in nodes:
+            log.info('\n---------------node: %s %s [%s]' % (node.content, node.weight, node._id))
+
+            edges = self.handler.get_relations(node._id, self.model_id_)
+            for edge in edges:
+                log.info('%s --- %s --- %s' % (
+                    self.handler.get_node(edge.from_, self.model_id_).content, edge.weight,
+                    self.handler.get_node(edge.to_, self.model_id_).content))
+
+#    def get_betweenness_centrality(self):
+#        filled = nx.algorithms.betweenness_centrality(self.graph)
+#        nodes = []
+#        for el in filled:
+#            node = self.get_node_by_id(el)
+#            nodes.append({})
+#
+
+
+def create_model(messages, model_id, booster):
+    mc = markov_chain(model_id, booster)
+    for message in messages:
+        mc.add_message(message)
+    return mc
